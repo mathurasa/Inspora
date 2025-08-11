@@ -1,0 +1,392 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Automations - Inspora{% endblock %}
+
+{% block content %}
+<div class="row">
+    <!-- Header -->
+    <div class="col-12 mb-4">
+        <div class="d-flex justify-content-between align-items-center">
+            <div>
+                <h1 class="h3 mb-0">Automations</h1>
+                <p class="text-muted">Workflow automation and business rules</p>
+            </div>
+            <div class="btn-group" role="group">
+                <a href="{% url 'automations:automation_create' %}" class="btn btn-primary">
+                    <i class="bi bi-plus-circle"></i> New Automation
+                </a>
+                <button type="button" class="btn btn-outline-primary dropdown-toggle dropdown-toggle-split" data-bs-toggle="dropdown">
+                    <span class="visually-hidden">Toggle Dropdown</span>
+                </button>
+                <ul class="dropdown-menu">
+                    <li><a class="dropdown-item" href="{% url 'automations:automation_create' %}?type=notification">Notification Rule</a></li>
+                    <li><a class="dropdown-item" href="{% url 'automations:automation_create' %}?type=status_change">Status Change</a></li>
+                    <li><a class="dropdown-item" href="{% url 'automations:automation_create' %}?type=assignment">Assignment Rule</a></li>
+                    <li><a class="dropdown-item" href="{% url 'automations:automation_create' %}?type=workflow">Workflow</a></li>
+                    <li><hr class="dropdown-divider"></li>
+                    <li><a class="dropdown-item" href="{% url 'automations:automation_create' %}?type=custom">Custom Rule</a></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <!-- Filters and Search -->
+    <div class="col-12 mb-4">
+        <div class="dashboard-card">
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-3">
+                        <div class="input-group">
+                            <span class="input-group-text"><i class="bi bi-search"></i></span>
+                            <input type="text" class="form-control" id="searchInput" placeholder="Search automations...">
+                        </div>
+                    </div>
+                    <div class="col-md-2">
+                        <select class="form-select" id="typeFilter">
+                            <option value="">All Types</option>
+                            <option value="notification">Notification</option>
+                            <option value="status_change">Status Change</option>
+                            <option value="assignment">Assignment</option>
+                            <option value="workflow">Workflow</option>
+                            <option value="custom">Custom</option>
+                        </select>
+                    </div>
+                    <div class="col-md-2">
+                        <select class="form-select" id="statusFilter">
+                            <option value="">All Statuses</option>
+                            <option value="active">Active</option>
+                            <option value="inactive">Inactive</option>
+                            <option value="draft">Draft</option>
+                            <option value="testing">Testing</option>
+                        </select>
+                    </div>
+                    <div class="col-md-2">
+                        <select class="form-select" id="priorityFilter">
+                            <option value="">All Priorities</option>
+                            <option value="low">Low</option>
+                            <option value="medium">Medium</option>
+                            <option value="high">High</option>
+                            <option value="critical">Critical</option>
+                        </select>
+                    </div>
+                    <div class="col-md-2">
+                        <select class="form-select" id="templateFilter">
+                            <option value="">All Automations</option>
+                            <option value="templated">Templated</option>
+                            <option value="custom">Custom</option>
+                        </select>
+                    </div>
+                    <div class="col-md-1">
+                        <button class="btn btn-outline-secondary w-100" id="clearFilters">
+                            <i class="bi bi-x-lg"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Automation Grid -->
+    <div class="col-12">
+        {% if automations %}
+            <div class="row" id="automationGrid">
+                {% for automation in automations %}
+                <div class="col-lg-4 col-md-6 mb-4 automation-item" 
+                     data-type="{{ automation.automation_type }}" 
+                     data-status="{{ automation.status }}"
+                     data-priority="{{ automation.priority }}"
+                     data-template="{{ automation.is_template|yesno:'templated,custom' }}"
+                     data-name="{{ automation.name|lower }}">
+                    <div class="dashboard-card h-100">
+                        <div class="card-body">
+                            <div class="d-flex justify-content-between align-items-start mb-3">
+                                <h5 class="card-title mb-0">
+                                    <a href="{% url 'automations:automation_detail' automation.pk %}" class="text-decoration-none">
+                                        {{ automation.name }}
+                                    </a>
+                                </h5>
+                                <div class="dropdown">
+                                    <button class="btn btn-sm btn-outline-secondary" type="button" data-bs-toggle="dropdown">
+                                        <i class="bi bi-three-dots-vertical"></i>
+                                    </button>
+                                    <ul class="dropdown-menu">
+                                        <li><a class="dropdown-item" href="{% url 'automations:automation_detail' automation.pk %}">View</a></li>
+                                        <li><a class="dropdown-item" href="{% url 'automations:automation_edit' automation.pk %}">Edit</a></li>
+                                        <li><a class="dropdown-item" href="{% url 'automations:automation_test' automation.pk %}">Test</a></li>
+                                        <li><a class="dropdown-item" href="{% url 'automations:automation_executions' automation.pk %}">Executions</a></li>
+                                        <li><hr class="dropdown-divider"></li>
+                                        <li><a class="dropdown-item text-danger" href="{% url 'automations:automation_delete' automation.pk %}">Delete</a></li>
+                                    </ul>
+                                </div>
+                            </div>
+
+                            <p class="text-muted small mb-3">{{ automation.description|truncatewords:20 }}</p>
+
+                            <div class="mb-3">
+                                <span class="badge bg-primary me-2">{{ automation.get_automation_type_display }}</span>
+                                <span class="badge bg-{{ automation.status|default:'secondary' }}">{{ automation.get_status_display }}</span>
+                                <span class="task-priority {{ automation.priority }}">{{ automation.get_priority_display }}</span>
+                                {% if automation.is_template %}
+                                    <span class="badge bg-warning">Template</span>
+                                {% endif %}
+                            </div>
+
+                            <!-- Automation Stats -->
+                            <div class="row text-center mb-3">
+                                <div class="col-4">
+                                    <div class="border-end">
+                                        <small class="text-muted d-block">Rules</small>
+                                        <strong>{{ automation.get_rule_count }}</strong>
+                                    </div>
+                                </div>
+                                <div class="col-4">
+                                    <div class="border-end">
+                                        <small class="text-muted d-block">Actions</small>
+                                        <strong>{{ automation.get_action_count }}</strong>
+                                    </div>
+                                </div>
+                                <div class="col-4">
+                                    <small class="text-muted d-block">Executions</small>
+                                    <strong>{{ automation.get_execution_count }}</strong>
+                                </div>
+                            </div>
+
+                            <!-- Automation Triggers -->
+                            <div class="mb-3">
+                                <small class="text-muted d-block">Triggers:</small>
+                                <div class="d-flex flex-wrap gap-1">
+                                    {% for trigger in automation.triggers.all|slice:":3" %}
+                                    <span class="badge bg-light text-dark">{{ trigger.trigger_type }}</span>
+                                    {% endfor %}
+                                    {% if automation.triggers.count > 3 %}
+                                    <span class="badge bg-light text-dark">+{{ automation.triggers.count|add:"-3" }} more</span>
+                                    {% endif %}
+                                </div>
+                            </div>
+
+                            <!-- Execution Limits -->
+                            {% if automation.execution_limit %}
+                            <div class="mb-3">
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <small class="text-muted">Execution Limit</small>
+                                    <small class="text-muted">{{ automation.get_execution_count }}/{{ automation.execution_limit }}</small>
+                                </div>
+                                <div class="progress" style="height: 6px;">
+                                    <div class="progress-bar {% if automation.get_execution_count >= automation.execution_limit %}bg-danger{% elif automation.get_execution_count >= automation.execution_limit|multiply:0.8 %}bg-warning{% else %}bg-success{% endif %}" 
+                                         style="width: {{ automation.get_execution_percentage }}%"></div>
+                                </div>
+                            </div>
+                            {% endif %}
+
+                            <div class="d-flex justify-content-between align-items-center">
+                                <small class="text-muted">
+                                    <i class="bi bi-person"></i>
+                                    {% if automation.created_by %}
+                                        {{ automation.created_by.get_full_name_or_username }}
+                                    {% else %}
+                                        System
+                                    {% endif %}
+                                </small>
+                                <small class="text-muted">
+                                    <i class="bi bi-clock"></i>
+                                    {{ automation.updated_at|timesince }} ago
+                                </small>
+                            </div>
+
+                            {% if automation.team %}
+                            <div class="mt-2">
+                                <small class="text-muted">
+                                    <i class="bi bi-people"></i> {{ automation.team.name }}
+                                </small>
+                            </div>
+                            {% endif %}
+
+                            <!-- Last Execution -->
+                            {% if automation.get_last_execution %}
+                            <div class="mt-2">
+                                <small class="text-muted">
+                                    <i class="bi bi-play-circle"></i> Last run: {{ automation.get_last_execution.created_at|timesince }} ago
+                                </small>
+                            </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        {% else %}
+            <div class="col-12">
+                <div class="dashboard-card">
+                    <div class="card-body text-center py-5">
+                        <i class="bi bi-gear text-muted" style="font-size: 4rem;"></i>
+                        <h3 class="mt-3">No automations yet</h3>
+                        <p class="text-muted">Create your first automation to streamline your workflow.</p>
+                        <a href="{% url 'automations:automation_create' %}" class="btn btn-primary btn-lg">
+                            <i class="bi bi-plus-circle"></i> Create Your First Automation
+                        </a>
+                    </div>
+                </div>
+            </div>
+        {% endif %}
+    </div>
+
+    <!-- Automation Templates -->
+    {% if automation_templates %}
+    <div class="col-12 mt-4">
+        <div class="dashboard-card">
+            <div class="card-body">
+                <h5 class="card-title">
+                    <i class="bi bi-collection"></i> Automation Templates
+                </h5>
+                
+                <div class="row">
+                    {% for template in automation_templates %}
+                    <div class="col-md-3 mb-3">
+                        <div class="border rounded p-3 text-center">
+                            <div class="mb-2">
+                                <i class="bi bi-gear text-primary" style="font-size: 2rem;"></i>
+                            </div>
+                            <h6 class="mb-1">{{ template.name }}</h6>
+                            <small class="text-muted">{{ template.automations.count }} automations</small>
+                            {% if template.description %}
+                                <p class="text-muted small mt-2">{{ template.description|truncatewords:10 }}</p>
+                            {% endif %}
+                            <a href="{% url 'automations:automation_create' %}?template={{ template.pk }}" class="btn btn-outline-primary btn-sm mt-2">
+                                Use Template
+                            </a>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+
+    <!-- Automation Summary -->
+    {% if automations %}
+    <div class="col-12 mt-4">
+        <div class="dashboard-card">
+            <div class="card-body">
+                <h5 class="card-title">
+                    <i class="bi bi-graph-up"></i> Automation Summary
+                </h5>
+                
+                <div class="row">
+                    <div class="col-md-3 text-center">
+                        <div class="p-3">
+                            <div class="display-6 text-primary">{{ automations|length }}</div>
+                            <small class="text-muted">Total Automations</small>
+                        </div>
+                    </div>
+                    <div class="col-md-3 text-center">
+                        <div class="p-3">
+                            <div class="display-6 text-success">{{ active_automations_count|default:0 }}</div>
+                            <small class="text-muted">Active Automations</small>
+                        </div>
+                    </div>
+                    <div class="col-md-3 text-center">
+                        <div class="p-3">
+                            <div class="display-6 text-warning">{{ total_executions_count|default:0 }}</div>
+                            <small class="text-muted">Total Executions</small>
+                        </div>
+                    </div>
+                    <div class="col-md-3 text-center">
+                        <div class="p-3">
+                            <div class="display-6 text-info">{{ successful_executions_count|default:0 }}</div>
+                            <small class="text-muted">Successful</small>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="row mt-3">
+                    <div class="col-md-6">
+                        <h6>Automation Type Distribution</h6>
+                        <div class="d-flex flex-wrap gap-2">
+                            {% for type, count in type_distribution.items %}
+                            <span class="badge bg-primary">{{ type|title }}: {{ count }}</span>
+                            {% endfor %}
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <h6>Most Executed Automations</h6>
+                        <div class="list-group list-group-flush">
+                            {% for automation in most_executed_automations|slice:":3" %}
+                            <div class="list-group-item border-0 px-0 py-2">
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <span>{{ automation.name }}</span>
+                                    <span class="badge bg-primary">{{ automation.get_execution_count }} executions</span>
+                                </div>
+                            </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const searchInput = document.getElementById('searchInput');
+    const typeFilter = document.getElementById('typeFilter');
+    const statusFilter = document.getElementById('statusFilter');
+    const priorityFilter = document.getElementById('priorityFilter');
+    const templateFilter = document.getElementById('templateFilter');
+    const clearFilters = document.getElementById('clearFilters');
+    const automationItems = document.querySelectorAll('.automation-item');
+
+    function filterAutomations() {
+        const searchTerm = searchInput.value.toLowerCase();
+        const typeValue = typeFilter.value;
+        const statusValue = statusFilter.value;
+        const priorityValue = priorityFilter.value;
+        const templateValue = templateFilter.value;
+
+        automationItems.forEach(item => {
+            const name = item.dataset.name;
+            const type = item.dataset.type;
+            const status = item.dataset.status;
+            const priority = item.dataset.priority;
+            const template = item.dataset.template;
+
+            const matchesSearch = name.includes(searchTerm);
+            const matchesType = !typeValue || type === typeValue;
+            const matchesStatus = !statusValue || status === statusValue;
+            const matchesPriority = !priorityValue || priority === priorityValue;
+            const matchesTemplate = !templateValue || template === templateValue;
+
+            if (matchesSearch && matchesType && matchesStatus && matchesPriority && matchesTemplate) {
+                item.style.display = 'block';
+            } else {
+                item.style.display = 'none';
+            }
+        });
+    }
+
+    // Event listeners
+    searchInput.addEventListener('input', filterAutomations);
+    typeFilter.addEventListener('change', filterAutomations);
+    statusFilter.addEventListener('change', filterAutomations);
+    priorityFilter.addEventListener('change', filterAutomations);
+    templateFilter.addEventListener('change', filterAutomations);
+    
+    clearFilters.addEventListener('click', function() {
+        searchInput.value = '';
+        typeFilter.value = '';
+        statusFilter.value = '';
+        priorityFilter.value = '';
+        templateFilter.value = '';
+        filterAutomations();
+    });
+
+    // Initialize filters
+    filterAutomations();
+});
+</script>
+{% endblock %}

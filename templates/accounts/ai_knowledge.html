@@ -1,0 +1,570 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}AI Knowledge Base - Inspora{% endblock %}
+
+{% block extra_css %}
+<style>
+    .knowledge-container {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        min-height: 100vh;
+        padding: 2rem 0;
+    }
+
+    .knowledge-header {
+        text-align: center;
+        color: white;
+        margin-bottom: 3rem;
+    }
+
+    .knowledge-header h1 {
+        font-size: 3rem;
+        font-weight: 800;
+        margin-bottom: 1rem;
+        background: linear-gradient(135deg, #ffffff 0%, #e2e8f0 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+    }
+
+    .knowledge-header p {
+        font-size: 1.2rem;
+        opacity: 0.9;
+        max-width: 600px;
+        margin: 0 auto;
+    }
+
+    .search-section {
+        background: white;
+        border-radius: 20px;
+        padding: 2rem;
+        margin-bottom: 3rem;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+    }
+
+    .search-form {
+        display: flex;
+        gap: 1rem;
+        margin-bottom: 2rem;
+    }
+
+    .search-input {
+        flex: 1;
+        padding: 1rem 1.5rem;
+        border: 2px solid #e2e8f0;
+        border-radius: 12px;
+        font-size: 1.1rem;
+        transition: all 0.3s ease;
+        background: #f8fafc;
+    }
+
+    .search-input:focus {
+        outline: none;
+        border-color: #667eea;
+        background: white;
+        box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+    }
+
+    .search-button {
+        padding: 1rem 2rem;
+        background: linear-gradient(135deg, #667eea, #764ba2);
+        border: none;
+        border-radius: 12px;
+        color: white;
+        font-size: 1.1rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        box-shadow: 0 5px 15px rgba(102, 126, 234, 0.3);
+    }
+
+    .search-button:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 10px 25px rgba(102, 126, 234, 0.4);
+    }
+
+    .search-tips {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.5rem;
+        justify-content: center;
+    }
+
+    .search-tip {
+        background: rgba(102, 126, 234, 0.1);
+        color: #667eea;
+        padding: 0.5rem 1rem;
+        border-radius: 20px;
+        font-size: 0.9rem;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        border: 1px solid rgba(102, 126, 234, 0.2);
+    }
+
+    .search-tip:hover {
+        background: rgba(102, 126, 234, 0.2);
+        transform: translateY(-1px);
+    }
+
+    .results-section {
+        background: white;
+        border-radius: 20px;
+        padding: 2rem;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+    }
+
+    .results-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 2rem;
+        padding-bottom: 1rem;
+        border-bottom: 2px solid #f1f5f9;
+    }
+
+    .results-count {
+        font-size: 1.2rem;
+        color: #64748b;
+        font-weight: 600;
+    }
+
+    .results-sort {
+        display: flex;
+        gap: 1rem;
+        align-items: center;
+    }
+
+    .sort-select {
+        padding: 0.5rem 1rem;
+        border: 2px solid #e2e8f0;
+        border-radius: 8px;
+        background: white;
+        color: #374151;
+        font-size: 0.9rem;
+    }
+
+    .knowledge-item {
+        background: #f8fafc;
+        border-radius: 16px;
+        padding: 2rem;
+        margin-bottom: 1.5rem;
+        border-left: 4px solid #667eea;
+        transition: all 0.3s ease;
+        cursor: pointer;
+    }
+
+    .knowledge-item:hover {
+        background: white;
+        transform: translateY(-2px);
+        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+        border-left-color: #764ba2;
+    }
+
+    .knowledge-header-row {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        margin-bottom: 1rem;
+    }
+
+    .knowledge-title {
+        font-size: 1.4rem;
+        font-weight: 700;
+        color: #1e293b;
+        margin: 0;
+        line-height: 1.3;
+    }
+
+    .knowledge-category {
+        background: linear-gradient(135deg, #667eea, #764ba2);
+        color: white;
+        padding: 0.5rem 1rem;
+        border-radius: 20px;
+        font-size: 0.8rem;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        flex-shrink: 0;
+    }
+
+    .knowledge-content {
+        color: #64748b;
+        line-height: 1.6;
+        margin-bottom: 1.5rem;
+    }
+
+    .knowledge-meta {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        font-size: 0.9rem;
+        color: #94a3b8;
+    }
+
+    .knowledge-tags {
+        display: flex;
+        gap: 0.5rem;
+        flex-wrap: wrap;
+    }
+
+    .knowledge-tag {
+        background: rgba(102, 126, 234, 0.1);
+        color: #667eea;
+        padding: 0.25rem 0.75rem;
+        border-radius: 12px;
+        font-size: 0.8rem;
+        border: 1px solid rgba(102, 126, 234, 0.2);
+    }
+
+    .usage-count {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        font-weight: 600;
+    }
+
+    .empty-state {
+        text-align: center;
+        padding: 4rem 2rem;
+        color: #64748b;
+    }
+
+    .empty-state i {
+        font-size: 4rem;
+        margin-bottom: 1rem;
+        opacity: 0.5;
+    }
+
+    .empty-state h3 {
+        font-size: 1.5rem;
+        margin-bottom: 1rem;
+        color: #374151;
+    }
+
+    .empty-state p {
+        font-size: 1.1rem;
+        margin-bottom: 2rem;
+        max-width: 500px;
+        margin-left: auto;
+        margin-right: auto;
+    }
+
+    .popular-topics {
+        background: white;
+        border-radius: 20px;
+        padding: 2rem;
+        margin-bottom: 2rem;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+    }
+
+    .popular-topics h3 {
+        font-size: 1.5rem;
+        font-weight: 700;
+        color: #1e293b;
+        margin-bottom: 1.5rem;
+        text-align: center;
+    }
+
+    .topics-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 1rem;
+    }
+
+    .topic-card {
+        background: #f8fafc;
+        border-radius: 12px;
+        padding: 1.5rem;
+        text-align: center;
+        transition: all 0.3s ease;
+        cursor: pointer;
+        border: 2px solid transparent;
+    }
+
+    .topic-card:hover {
+        background: white;
+        border-color: #667eea;
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(102, 126, 234, 0.2);
+    }
+
+    .topic-icon {
+        width: 50px;
+        height: 50px;
+        background: linear-gradient(135deg, #667eea, #764ba2);
+        border-radius: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0 auto 1rem;
+        font-size: 1.5rem;
+        color: white;
+    }
+
+    .topic-name {
+        font-weight: 600;
+        color: #374151;
+        margin-bottom: 0.5rem;
+    }
+
+    .topic-count {
+        font-size: 0.9rem;
+        color: #64748b;
+    }
+
+    @media (max-width: 768px) {
+        .knowledge-header h1 {
+            font-size: 2rem;
+        }
+        
+        .search-form {
+            flex-direction: column;
+        }
+        
+        .search-button {
+            width: 100%;
+        }
+        
+        .results-header {
+            flex-direction: column;
+            gap: 1rem;
+            align-items: stretch;
+        }
+        
+        .knowledge-header-row {
+            flex-direction: column;
+            gap: 1rem;
+        }
+        
+        .knowledge-category {
+            align-self: flex-start;
+        }
+        
+        .knowledge-meta {
+            flex-direction: column;
+            gap: 1rem;
+            align-items: flex-start;
+        }
+        
+        .topics-grid {
+            grid-template-columns: 1fr;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="knowledge-container">
+    <div class="container">
+        <!-- Header -->
+        <div class="knowledge-header">
+            <h1>AI Knowledge Base</h1>
+            <p>Search through our comprehensive knowledge base to find answers, tips, and best practices</p>
+        </div>
+
+        <!-- Search Section -->
+        <div class="search-section">
+            <form method="get" class="search-form">
+                <input type="text" 
+                       name="q" 
+                       value="{{ query }}" 
+                       class="search-input" 
+                       placeholder="Search for topics, features, or questions..."
+                       required>
+                <button type="submit" class="search-button">
+                    <i class="fas fa-search me-2"></i>Search
+                </button>
+            </form>
+            
+            <div class="search-tips">
+                <div class="search-tip" onclick="searchFor('project management')">Project Management</div>
+                <div class="search-tip" onclick="searchFor('task organization')">Task Organization</div>
+                <div class="search-tip" onclick="searchFor('team collaboration')">Team Collaboration</div>
+                <div class="search-tip" onclick="searchFor('AI features')">AI Features</div>
+                <div class="search-tip" onclick="searchFor('workflow optimization')">Workflow Optimization</div>
+            </div>
+        </div>
+
+        <!-- Popular Topics -->
+        <div class="popular-topics">
+            <h3><i class="fas fa-fire me-2"></i>Popular Topics</h3>
+            <div class="topics-grid">
+                <div class="topic-card" onclick="searchFor('getting started')">
+                    <div class="topic-icon">
+                        <i class="fas fa-rocket"></i>
+                    </div>
+                    <div class="topic-name">Getting Started</div>
+                    <div class="topic-count">15 articles</div>
+                </div>
+                <div class="topic-card" onclick="searchFor('project templates')">
+                    <div class="topic-icon">
+                        <i class="fas fa-layer-group"></i>
+                    </div>
+                    <div class="topic-name">Project Templates</div>
+                    <div class="topic-count">12 articles</div>
+                </div>
+                <div class="topic-card" onclick="searchFor('team management')">
+                    <div class="topic-icon">
+                        <i class="fas fa-users-cog"></i>
+                    </div>
+                    <div class="topic-name">Team Management</div>
+                    <div class="topic-count">18 articles</div>
+                </div>
+                <div class="topic-card" onclick="searchFor('AI assistant')">
+                    <div class="topic-icon">
+                        <i class="fas fa-robot"></i>
+                    </div>
+                    <div class="topic-name">AI Assistant</div>
+                    <div class="topic-count">8 articles</div>
+                </div>
+                <div class="topic-card" onclick="searchFor('productivity tips')">
+                    <div class="topic-icon">
+                        <i class="fas fa-lightbulb"></i>
+                    </div>
+                    <div class="topic-name">Productivity Tips</div>
+                    <div class="topic-count">22 articles</div>
+                </div>
+                <div class="topic-card" onclick="searchFor('integrations')">
+                    <div class="topic-icon">
+                        <i class="fas fa-plug"></i>
+                    </div>
+                    <div class="topic-name">Integrations</div>
+                    <div class="topic-count">10 articles</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Search Results -->
+        <div class="results-section">
+            <div class="results-header">
+                <div class="results-count">
+                    {% if query %}
+                        {% if results %}
+                            {{ results|length }} result{{ results|length|pluralize }} for "{{ query }}"
+                        {% else %}
+                            No results found for "{{ query }}"
+                        {% endif %}
+                    {% else %}
+                        Search for topics to get started
+                    {% endif %}
+                </div>
+                
+                {% if results %}
+                <div class="results-sort">
+                    <label for="sort-select">Sort by:</label>
+                    <select id="sort-select" class="sort-select" onchange="sortResults(this.value)">
+                        <option value="relevance">Relevance</option>
+                        <option value="usage">Most Used</option>
+                        <option value="date">Latest</option>
+                    </select>
+                </div>
+                {% endif %}
+            </div>
+
+            {% if query %}
+                {% if results %}
+                    {% for article in results %}
+                    <div class="knowledge-item" onclick="viewArticle({{ article.id }})">
+                        <div class="knowledge-header-row">
+                            <h3 class="knowledge-title">{{ article.title }}</h3>
+                            <span class="knowledge-category">{{ article.category }}</span>
+                        </div>
+                        
+                        <div class="knowledge-content">
+                            {{ article.content|truncatewords:30 }}
+                        </div>
+                        
+                        <div class="knowledge-meta">
+                            <div class="knowledge-tags">
+                                {% for tag in article.tags %}
+                                <span class="knowledge-tag">{{ tag }}</span>
+                                {% endfor %}
+                            </div>
+                            <div class="usage-count">
+                                <i class="fas fa-eye me-1"></i>
+                                {{ article.usage_count }} views
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                {% else %}
+                    <div class="empty-state">
+                        <i class="fas fa-search"></i>
+                        <h3>No results found</h3>
+                        <p>Try adjusting your search terms or browse our popular topics above. You can also ask our AI assistant for help!</p>
+                        <a href="{% url 'accounts:ai_chat' %}" class="btn btn-primary">
+                            <i class="fas fa-comments me-2"></i>Ask AI Assistant
+                        </a>
+                    </div>
+                {% endif %}
+            {% else %}
+                <div class="empty-state">
+                    <i class="fas fa-search"></i>
+                    <h3>Ready to search?</h3>
+                    <p>Enter a topic, question, or feature name above to find relevant articles and guides. You can also click on the popular topics or search tips to get started.</p>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+function searchFor(query) {
+    document.querySelector('input[name="q"]').value = query;
+    document.querySelector('.search-form').submit();
+}
+
+function viewArticle(articleId) {
+    // This would typically open the full article
+    // For now, we'll show a notification
+    showNotification('Article viewer coming soon!', 'info');
+}
+
+function sortResults(sortBy) {
+    // This would typically sort the results
+    // For now, we'll show a notification
+    showNotification(`Sorting by ${sortBy}...`, 'info');
+}
+
+// Add smooth animations
+document.addEventListener('DOMContentLoaded', function() {
+    const elements = document.querySelectorAll('.knowledge-item, .topic-card, .search-section');
+    
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.style.opacity = '1';
+                entry.target.style.transform = 'translateY(0)';
+            }
+        });
+    });
+    
+    elements.forEach(el => {
+        el.style.opacity = '0';
+        el.style.transform = 'translateY(20px)';
+        el.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+        observer.observe(el);
+    });
+});
+
+function showNotification(message, type = 'info') {
+    const notification = document.createElement('div');
+    notification.className = `alert alert-${type === 'error' ? 'danger' : type} alert-dismissible fade show position-fixed`;
+    notification.style.cssText = 'top: 20px; right: 20px; z-index: 9999; min-width: 300px;';
+    notification.innerHTML = `
+        ${message}
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    `;
+    
+    document.body.appendChild(notification);
+    
+    setTimeout(() => {
+        if (notification.parentNode) {
+            notification.parentNode.removeChild(notification);
+        }
+    }, 5000);
+}
+</script>
+{% endblock %}

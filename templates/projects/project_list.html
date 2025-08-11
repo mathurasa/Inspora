@@ -1,0 +1,220 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Projects - Inspora{% endblock %}
+
+{% block content %}
+<div class="row">
+    <!-- Header -->
+    <div class="col-12 mb-4">
+        <div class="d-flex justify-content-between align-items-center">
+            <div>
+                <h1 class="h3 mb-0">Projects</h1>
+                <p class="text-muted">Manage and organize your work</p>
+            </div>
+            <a href="{% url 'projects:project_create' %}" class="btn btn-primary">
+                <i class="bi bi-plus-circle"></i> New Project
+            </a>
+        </div>
+    </div>
+
+    <!-- Filters and Search -->
+    <div class="col-12 mb-4">
+        <div class="dashboard-card">
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-4">
+                        <div class="input-group">
+                            <span class="input-group-text"><i class="bi bi-search"></i></span>
+                            <input type="text" class="form-control" id="searchInput" placeholder="Search projects...">
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <select class="form-select" id="statusFilter">
+                            <option value="">All Statuses</option>
+                            <option value="planning">Planning</option>
+                            <option value="active">Active</option>
+                            <option value="on_hold">On Hold</option>
+                            <option value="completed">Completed</option>
+                            <option value="cancelled">Cancelled</option>
+                        </select>
+                    </div>
+                    <div class="col-md-3">
+                        <select class="form-select" id="priorityFilter">
+                            <option value="">All Priorities</option>
+                            <option value="low">Low</option>
+                            <option value="medium">Medium</option>
+                            <option value="high">High</option>
+                            <option value="urgent">Urgent</option>
+                        </select>
+                    </div>
+                    <div class="col-md-2">
+                        <button class="btn btn-outline-secondary w-100" id="clearFilters">
+                            Clear
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Project Grid -->
+    <div class="col-12">
+        {% if projects %}
+            <div class="row" id="projectGrid">
+                {% for project in projects %}
+                <div class="col-lg-4 col-md-6 mb-4 project-item" 
+                     data-status="{{ project.status }}" 
+                     data-priority="{{ project.priority }}"
+                     data-name="{{ project.name|lower }}">
+                    <div class="dashboard-card h-100">
+                        <div class="card-body">
+                            <div class="d-flex justify-content-between align-items-start mb-3">
+                                <h5 class="card-title mb-0">
+                                    <a href="{% url 'projects:project_detail' project.pk %}" class="text-decoration-none">
+                                        {{ project.name }}
+                                    </a>
+                                </h5>
+                                <div class="dropdown">
+                                    <button class="btn btn-sm btn-outline-secondary" type="button" data-bs-toggle="dropdown">
+                                        <i class="bi bi-three-dots-vertical"></i>
+                                    </button>
+                                    <ul class="dropdown-menu">
+                                        <li><a class="dropdown-item" href="{% url 'projects:project_detail' project.pk %}">View</a></li>
+                                        <li><a class="dropdown-item" href="{% url 'projects:project_edit' project.pk %}">Edit</a></li>
+                                        <li><a class="dropdown-item" href="{% url 'projects:project_board' project.pk %}">Board View</a></li>
+                                        <li><hr class="dropdown-divider"></li>
+                                        <li><a class="dropdown-item text-danger" href="{% url 'projects:project_delete' project.pk %}">Delete</a></li>
+                                    </ul>
+                                </div>
+                            </div>
+
+                            <p class="card-text text-muted">{{ project.description|truncatewords:20 }}</p>
+
+                            <div class="mb-3">
+                                <span class="project-status {{ project.status }}">{{ project.get_status_display }}</span>
+                                <span class="task-priority {{ project.priority }} ms-2">{{ project.get_priority_display }}</span>
+                            </div>
+
+                            <div class="mb-3">
+                                <div class="d-flex justify-content-between align-items-center mb-1">
+                                    <small class="text-muted">Progress</small>
+                                    <small class="text-muted">{{ project.get_progress_percentage }}%</small>
+                                </div>
+                                <div class="progress">
+                                    <div class="progress-bar" style="width: {{ project.get_progress_percentage }}%"></div>
+                                </div>
+                            </div>
+
+                            <div class="row text-center mb-3">
+                                <div class="col-4">
+                                    <div class="border-end">
+                                        <small class="text-muted d-block">Tasks</small>
+                                        <strong>{{ project.tasks.count }}</strong>
+                                    </div>
+                                </div>
+                                <div class="col-4">
+                                    <div class="border-end">
+                                        <small class="text-muted d-block">Members</small>
+                                        <strong>{{ project.get_active_members_count }}</strong>
+                                    </div>
+                                </div>
+                                <div class="col-4">
+                                    <small class="text-muted d-block">Overdue</small>
+                                    <strong class="text-danger">{{ project.get_overdue_tasks_count }}</strong>
+                                </div>
+                            </div>
+
+                            <div class="d-flex justify-content-between align-items-center">
+                                <small class="text-muted">
+                                    <i class="bi bi-calendar"></i>
+                                    {% if project.due_date %}
+                                        Due: {{ project.due_date|date:"M d, Y" }}
+                                    {% else %}
+                                        No due date
+                                    {% endif %}
+                                </small>
+                                <small class="text-muted">
+                                    <i class="bi bi-clock"></i>
+                                    {{ project.updated_at|timesince }} ago
+                                </small>
+                            </div>
+
+                            {% if project.team %}
+                            <div class="mt-2">
+                                <small class="text-muted">
+                                    <i class="bi bi-people"></i> {{ project.team.name }}
+                                </small>
+                            </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        {% else %}
+            <div class="col-12">
+                <div class="dashboard-card">
+                    <div class="card-body text-center py-5">
+                        <i class="bi bi-folder text-muted" style="font-size: 4rem;"></i>
+                        <h3 class="mt-3">No projects yet</h3>
+                        <p class="text-muted">Create your first project to get started with organizing your work.</p>
+                        <a href="{% url 'projects:project_create' %}" class="btn btn-primary btn-lg">
+                            <i class="bi bi-plus-circle"></i> Create Your First Project
+                        </a>
+                    </div>
+                </div>
+            </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const searchInput = document.getElementById('searchInput');
+    const statusFilter = document.getElementById('statusFilter');
+    const priorityFilter = document.getElementById('priorityFilter');
+    const clearFilters = document.getElementById('clearFilters');
+    const projectItems = document.querySelectorAll('.project-item');
+
+    function filterProjects() {
+        const searchTerm = searchInput.value.toLowerCase();
+        const statusValue = statusFilter.value;
+        const priorityValue = priorityFilter.value;
+
+        projectItems.forEach(item => {
+            const name = item.dataset.name;
+            const status = item.dataset.status;
+            const priority = item.dataset.priority;
+
+            const matchesSearch = name.includes(searchTerm);
+            const matchesStatus = !statusValue || status === statusValue;
+            const matchesPriority = !priorityValue || priority === priorityValue;
+
+            if (matchesSearch && matchesStatus && matchesPriority) {
+                item.style.display = 'block';
+            } else {
+                item.style.display = 'none';
+            }
+        });
+    }
+
+    // Event listeners
+    searchInput.addEventListener('input', filterProjects);
+    statusFilter.addEventListener('change', filterProjects);
+    priorityFilter.addEventListener('change', filterProjects);
+    
+    clearFilters.addEventListener('click', function() {
+        searchInput.value = '';
+        statusFilter.value = '';
+        priorityFilter.value = '';
+        filterProjects();
+    });
+
+    // Initialize filters
+    filterProjects();
+});
+</script>
+{% endblock %}

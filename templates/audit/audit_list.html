@@ -1,0 +1,637 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Audit Logs - Inspora{% endblock %}
+
+{% block extra_css %}
+<style>
+    .audit-item {
+        border-left: 4px solid #dee2e6;
+        transition: all 0.2s ease;
+    }
+    .audit-item:hover {
+        transform: translateX(5px);
+        box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    }
+    .audit-item.info {
+        border-left-color: #17a2b8;
+    }
+    .audit-item.warning {
+        border-left-color: #ffc107;
+    }
+    .audit-item.error {
+        border-left-color: #dc3545;
+    }
+    .audit-item.critical {
+        border-left-color: #6f42c1;
+    }
+    .audit-item.success {
+        border-left-color: #28a745;
+    }
+    .audit-meta {
+        font-size: 0.875rem;
+        color: #6c757d;
+    }
+    .audit-details {
+        background-color: #f8f9fa;
+        border-radius: 0.375rem;
+        padding: 0.75rem;
+        margin-top: 0.5rem;
+        font-family: monospace;
+        font-size: 0.875rem;
+    }
+    .audit-actions {
+        opacity: 0;
+        transition: opacity 0.2s ease;
+    }
+    .audit-item:hover .audit-actions {
+        opacity: 1;
+    }
+    .severity-badge {
+        font-size: 0.75rem;
+        padding: 0.25rem 0.5rem;
+    }
+    .event-type-badge {
+        font-size: 0.75rem;
+        padding: 0.25rem 0.5rem;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <!-- Header -->
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h1 class="h3 mb-0">Audit Logs</h1>
+            <p class="text-muted">Complete activity trail for compliance and security</p>
+        </div>
+        <div class="btn-group" role="group">
+            <button type="button" class="btn btn-outline-primary" id="exportLogs">
+                <i class="bi bi-download"></i> Export Logs
+            </button>
+            <button type="button" class="btn btn-outline-secondary" id="refreshLogs">
+                <i class="bi bi-arrow-clockwise"></i> Refresh
+            </button>
+        </div>
+    </div>
+
+    <!-- Filters and Search -->
+    <div class="card mb-4">
+        <div class="card-body">
+            <div class="row g-3">
+                <div class="col-md-3">
+                    <label for="severityFilter" class="form-label">Severity</label>
+                    <select class="form-select" id="severityFilter">
+                        <option value="">All Severities</option>
+                        <option value="info">Info</option>
+                        <option value="warning">Warning</option>
+                        <option value="error">Error</option>
+                        <option value="critical">Critical</option>
+                    </select>
+                </div>
+                <div class="col-md-3">
+                    <label for="eventTypeFilter" class="form-label">Event Type</label>
+                    <select class="form-select" id="eventTypeFilter">
+                        <option value="">All Event Types</option>
+                        <option value="create">Create</option>
+                        <option value="update">Update</option>
+                        <option value="delete">Delete</option>
+                        <option value="login">Login</option>
+                        <option value="logout">Logout</option>
+                        <option value="permission">Permission Change</option>
+                        <option value="data_access">Data Access</option>
+                    </select>
+                </div>
+                <div class="col-md-3">
+                    <label for="userFilter" class="form-label">User</label>
+                    <select class="form-select" id="userFilter">
+                        <option value="">All Users</option>
+                        <option value="system">System</option>
+                        <option value="admin">Admin</option>
+                        <option value="user">Regular User</option>
+                    </select>
+                </div>
+                <div class="col-md-3">
+                    <label for="dateRangeFilter" class="form-label">Date Range</label>
+                    <select class="form-select" id="dateRangeFilter">
+                        <option value="">All Time</option>
+                        <option value="today">Today</option>
+                        <option value="yesterday">Yesterday</option>
+                        <option value="week">This Week</option>
+                        <option value="month">This Month</option>
+                        <option value="quarter">This Quarter</option>
+                        <option value="year">This Year</option>
+                    </select>
+                </div>
+            </div>
+            <div class="row mt-3">
+                <div class="col-md-8">
+                    <label for="searchAuditLogs" class="form-label">Search</label>
+                    <input type="text" class="form-control" id="searchAuditLogs" placeholder="Search audit logs...">
+                </div>
+                <div class="col-md-4">
+                    <label for="objectTypeFilter" class="form-label">Object Type</label>
+                    <select class="form-select" id="objectTypeFilter">
+                        <option value="">All Objects</option>
+                        <option value="user">User</option>
+                        <option value="project">Project</option>
+                        <option value="task">Task</option>
+                        <option value="goal">Goal</option>
+                        <option value="portfolio">Portfolio</option>
+                        <option value="template">Template</option>
+                        <option value="form">Form</option>
+                        <option value="automation">Automation</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Audit Logs List -->
+    <div class="card">
+        <div class="card-header">
+            <div class="d-flex justify-content-between align-items-center">
+                <span id="auditCount">0 audit logs</span>
+                <div class="form-check">
+                    <input class="form-check-input" type="checkbox" id="autoRefresh" checked>
+                    <label class="form-check-label" for="autoRefresh">
+                        Auto-refresh
+                    </label>
+                </div>
+            </div>
+        </div>
+        <div class="card-body p-0">
+            <div id="auditList">
+                <!-- Audit logs will be loaded here -->
+                <div class="text-center py-5">
+                    <div class="spinner-border text-primary" role="status">
+                        <span class="visually-hidden">Loading...</span>
+                    </div>
+                    <p class="mt-2 text-muted">Loading audit logs...</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Audit Summary -->
+    <div class="row mt-4">
+        <div class="col-md-2">
+            <div class="card text-center">
+                <div class="card-body">
+                    <h5 class="card-title text-info" id="totalCount">0</h5>
+                    <p class="card-text">Total</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-2">
+            <div class="card text-center">
+                <div class="card-body">
+                    <h5 class="card-title text-primary" id="infoCount">0</h5>
+                    <p class="card-text">Info</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-2">
+            <div class="card text-center">
+                <div class="card-body">
+                    <h5 class="card-title text-warning" id="warningCount">0</h5>
+                    <p class="card-text">Warning</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-2">
+            <div class="card text-center">
+                <div class="card-body">
+                    <h5 class="card-title text-danger" id="errorCount">0</h5>
+                    <p class="card-text">Error</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-2">
+            <div class="card text-center">
+                <div class="card-body">
+                    <h5 class="card-title text-danger" id="criticalCount">0</h5>
+                    <p class="card-text">Critical</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-2">
+            <div class="card text-center">
+                <div class="card-body">
+                    <h5 class="card-title text-success" id="todayCount">0</h5>
+                    <p class="card-text">Today</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    let auditLogs = [];
+    let filteredAuditLogs = [];
+    let autoRefreshInterval;
+
+    // Initialize
+    loadAuditLogs();
+    setupEventListeners();
+    startAutoRefresh();
+
+    function loadAuditLogs() {
+        // Simulate loading audit logs (replace with actual API call)
+        setTimeout(() => {
+            auditLogs = generateSampleAuditLogs();
+            filteredAuditLogs = [...auditLogs];
+            renderAuditLogs();
+            updateCounts();
+        }, 1000);
+    }
+
+    function generateSampleAuditLogs() {
+        const severities = ['info', 'warning', 'error', 'critical'];
+        const eventTypes = ['create', 'update', 'delete', 'login', 'logout', 'permission', 'data_access'];
+        const users = ['system', 'admin', 'user'];
+        const objectTypes = ['user', 'project', 'task', 'goal', 'portfolio', 'template', 'form', 'automation'];
+        
+        return Array.from({length: 50}, (_, i) => ({
+            id: i + 1,
+            event_type: eventTypes[Math.floor(Math.random() * eventTypes.length)],
+            severity: severities[Math.floor(Math.random() * severities.length)],
+            description: `Sample audit log description ${i + 1} for demonstration purposes`,
+            user: users[Math.floor(Math.random() * users.length)],
+            user_id: Math.floor(Math.random() * 100) + 1,
+            ip_address: `192.168.1.${Math.floor(Math.random() * 255) + 1}`,
+            user_agent: 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36',
+            object_type: objectTypes[Math.floor(Math.random() * objectTypes.length)],
+            object_id: Math.floor(Math.random() * 1000) + 1,
+            details: {
+                before: { field1: 'old_value', field2: 'old_value2' },
+                after: { field1: 'new_value', field2: 'new_value2' },
+                changed_fields: ['field1', 'field2']
+            },
+            created_at: new Date(Date.now() - Math.random() * 30 * 24 * 60 * 60 * 1000),
+            session_id: `session_${Math.floor(Math.random() * 10000)}`,
+            additional_data: {
+                browser: 'Chrome',
+                os: 'Windows',
+                location: 'Office'
+            }
+        }));
+    }
+
+    function renderAuditLogs() {
+        const container = document.getElementById('auditList');
+        
+        if (filteredAuditLogs.length === 0) {
+            container.innerHTML = `
+                <div class="text-center py-5">
+                    <i class="bi bi-shield-check text-muted" style="font-size: 3rem;"></i>
+                    <p class="mt-2 text-muted">No audit logs found</p>
+                </div>
+            `;
+            return;
+        }
+
+        container.innerHTML = filteredAuditLogs.map(log => `
+            <div class="audit-item p-3 border-bottom ${log.severity}" data-id="${log.id}">
+                <div class="d-flex justify-content-between align-items-start">
+                    <div class="flex-grow-1">
+                        <div class="d-flex align-items-center mb-2">
+                            <span class="badge bg-${getSeverityColor(log.severity)} severity-badge me-2">${log.severity.toUpperCase()}</span>
+                            <span class="badge bg-${getEventTypeColor(log.event_type)} event-type-badge me-2">${log.event_type}</span>
+                            <h6 class="mb-0 me-2">${log.description}</h6>
+                        </div>
+                        <div class="audit-meta mb-2">
+                            <span class="me-3"><i class="bi bi-person"></i> ${log.user} (ID: ${log.user_id})</span>
+                            <span class="me-3"><i class="bi bi-clock"></i> ${formatTimeAgo(log.created_at)}</span>
+                            <span class="me-3"><i class="bi bi-geo-alt"></i> ${log.ip_address}</span>
+                            <span class="me-3"><i class="bi bi-box"></i> ${log.object_type} #${log.object_id}</span>
+                        </div>
+                        <div class="audit-details">
+                            <strong>Details:</strong><br>
+                            <strong>Before:</strong> ${JSON.stringify(log.details.before, null, 2)}<br>
+                            <strong>After:</strong> ${JSON.stringify(log.details.after, null, 2)}<br>
+                            <strong>Changed Fields:</strong> ${log.details.changed_fields.join(', ')}
+                        </div>
+                        <div class="audit-meta mt-2">
+                            <small>
+                                <span class="me-3"><i class="bi bi-browser-chrome"></i> ${log.additional_data.browser}</span>
+                                <span class="me-3"><i class="bi bi-windows"></i> ${log.additional_data.os}</span>
+                                <span class="me-3"><i class="bi bi-geo-alt"></i> ${log.additional_data.location}</span>
+                                <span><i class="bi bi-hash"></i> ${log.session_id}</span>
+                            </small>
+                        </div>
+                    </div>
+                    <div class="audit-actions ms-3">
+                        <div class="btn-group btn-group-sm" role="group">
+                            <button class="btn btn-outline-info btn-sm" onclick="viewAuditDetails(${log.id})" title="View Details">
+                                <i class="bi bi-eye"></i>
+                            </button>
+                            <button class="btn btn-outline-secondary btn-sm" onclick="exportAuditLog(${log.id})" title="Export">
+                                <i class="bi bi-download"></i>
+                            </button>
+                            <button class="btn btn-outline-danger btn-sm" onclick="flagAuditLog(${log.id})" title="Flag for Review">
+                                <i class="bi bi-flag"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        `).join('');
+    }
+
+    function getSeverityColor(severity) {
+        const colors = {
+            'info': 'info',
+            'warning': 'warning',
+            'error': 'danger',
+            'critical': 'danger'
+        };
+        return colors[severity] || 'secondary';
+    }
+
+    function getEventTypeColor(eventType) {
+        const colors = {
+            'create': 'success',
+            'update': 'primary',
+            'delete': 'danger',
+            'login': 'info',
+            'logout': 'secondary',
+            'permission': 'warning',
+            'data_access': 'dark'
+        };
+        return colors[eventType] || 'secondary';
+    }
+
+    function formatTimeAgo(date) {
+        const now = new Date();
+        const diffMs = now - date;
+        const diffMins = Math.floor(diffMs / 60000);
+        const diffHours = Math.floor(diffMs / 3600000);
+        const diffDays = Math.floor(diffMs / 86400000);
+
+        if (diffMins < 1) return 'Just now';
+        if (diffMins < 60) return `${diffMins}m ago`;
+        if (diffHours < 24) return `${diffHours}h ago`;
+        if (diffDays < 7) return `${diffDays}d ago`;
+        return date.toLocaleDateString();
+    }
+
+    function updateCounts() {
+        const total = auditLogs.length;
+        const info = auditLogs.filter(l => l.severity === 'info').length;
+        const warning = auditLogs.filter(l => l.severity === 'warning').length;
+        const error = auditLogs.filter(l => l.severity === 'error').length;
+        const critical = auditLogs.filter(l => l.severity === 'critical').length;
+        const today = auditLogs.filter(l => {
+            const today = new Date();
+            const logDate = new Date(l.created_at);
+            return logDate.toDateString() === today.toDateString();
+        }).length;
+
+        document.getElementById('totalCount').textContent = total;
+        document.getElementById('infoCount').textContent = info;
+        document.getElementById('warningCount').textContent = warning;
+        document.getElementById('errorCount').textContent = error;
+        document.getElementById('criticalCount').textContent = critical;
+        document.getElementById('todayCount').textContent = today;
+        document.getElementById('auditCount').textContent = `${filteredAuditLogs.length} audit logs`;
+    }
+
+    function setupEventListeners() {
+        // Severity filter
+        document.getElementById('severityFilter').addEventListener('change', filterAuditLogs);
+        
+        // Event type filter
+        document.getElementById('eventTypeFilter').addEventListener('change', filterAuditLogs);
+        
+        // User filter
+        document.getElementById('userFilter').addEventListener('change', filterAuditLogs);
+        
+        // Date range filter
+        document.getElementById('dateRangeFilter').addEventListener('change', filterAuditLogs);
+        
+        // Object type filter
+        document.getElementById('objectTypeFilter').addEventListener('change', filterAuditLogs);
+        
+        // Search
+        document.getElementById('searchAuditLogs').addEventListener('input', filterAuditLogs);
+        
+        // Export logs
+        document.getElementById('exportLogs').addEventListener('click', exportAllLogs);
+        
+        // Refresh logs
+        document.getElementById('refreshLogs').addEventListener('click', loadAuditLogs);
+        
+        // Auto-refresh toggle
+        document.getElementById('autoRefresh').addEventListener('change', function() {
+            if (this.checked) {
+                startAutoRefresh();
+            } else {
+                stopAutoRefresh();
+            }
+        });
+    }
+
+    function filterAuditLogs() {
+        const severityFilter = document.getElementById('severityFilter').value;
+        const eventTypeFilter = document.getElementById('eventTypeFilter').value;
+        const userFilter = document.getElementById('userFilter').value;
+        const dateRangeFilter = document.getElementById('dateRangeFilter').value;
+        const objectTypeFilter = document.getElementById('objectTypeFilter').value;
+        const searchTerm = document.getElementById('searchAuditLogs').value.toLowerCase();
+
+        filteredAuditLogs = auditLogs.filter(log => {
+            const severityMatch = !severityFilter || log.severity === severityFilter;
+            const eventTypeMatch = !eventTypeFilter || log.event_type === eventTypeFilter;
+            const userMatch = !userFilter || log.user === userFilter;
+            const objectTypeMatch = !objectTypeFilter || log.object_type === objectTypeFilter;
+            const searchMatch = !searchTerm || 
+                log.description.toLowerCase().includes(searchTerm) ||
+                log.user.toLowerCase().includes(searchTerm) ||
+                log.object_type.toLowerCase().includes(searchTerm);
+
+            let dateMatch = true;
+            if (dateRangeFilter) {
+                const now = new Date();
+                const logDate = new Date(log.created_at);
+                
+                switch (dateRangeFilter) {
+                    case 'today':
+                        dateMatch = logDate.toDateString() === now.toDateString();
+                        break;
+                    case 'yesterday':
+                        const yesterday = new Date(now.getTime() - 24 * 60 * 60 * 1000);
+                        dateMatch = logDate.toDateString() === yesterday.toDateString();
+                        break;
+                    case 'week':
+                        const weekAgo = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000);
+                        dateMatch = logDate > weekAgo;
+                        break;
+                    case 'month':
+                        const monthAgo = new Date(now.getTime() - 30 * 24 * 60 * 60 * 1000);
+                        dateMatch = logDate > monthAgo;
+                        break;
+                    case 'quarter':
+                        const quarterAgo = new Date(now.getTime() - 90 * 24 * 60 * 60 * 1000);
+                        dateMatch = logDate > quarterAgo;
+                        break;
+                    case 'year':
+                        const yearAgo = new Date(now.getTime() - 365 * 24 * 60 * 60 * 1000);
+                        dateMatch = logDate > yearAgo;
+                        break;
+                }
+            }
+
+            return severityMatch && eventTypeMatch && userMatch && objectTypeMatch && searchMatch && dateMatch;
+        });
+
+        renderAuditLogs();
+        updateCounts();
+    }
+
+    function exportAllLogs() {
+        const csvContent = generateCSV(filteredAuditLogs);
+        downloadCSV(csvContent, 'audit_logs_export.csv');
+        showToast('Audit logs exported successfully', 'success');
+    }
+
+    function generateCSV(logs) {
+        const headers = ['ID', 'Event Type', 'Severity', 'Description', 'User', 'IP Address', 'Object Type', 'Object ID', 'Created At'];
+        const rows = logs.map(log => [
+            log.id,
+            log.event_type,
+            log.severity,
+            log.description,
+            log.user,
+            log.ip_address,
+            log.object_type,
+            log.object_id,
+            log.created_at.toISOString()
+        ]);
+        
+        return [headers, ...rows].map(row => row.map(cell => `"${cell}"`).join(',')).join('\n');
+    }
+
+    function downloadCSV(content, filename) {
+        const blob = new Blob([content], { type: 'text/csv;charset=utf-8;' });
+        const link = document.createElement('a');
+        const url = URL.createObjectURL(blob);
+        link.setAttribute('href', url);
+        link.setAttribute('download', filename);
+        link.style.visibility = 'hidden';
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+    }
+
+    function startAutoRefresh() {
+        autoRefreshInterval = setInterval(() => {
+            // Simulate new audit logs
+            if (Math.random() > 0.8) {
+                const newLog = {
+                    id: Date.now(),
+                    event_type: 'data_access',
+                    severity: 'info',
+                    description: 'New audit log entry generated',
+                    user: 'system',
+                    user_id: 1,
+                    ip_address: '127.0.0.1',
+                    user_agent: 'System Generated',
+                    object_type: 'system',
+                    object_id: 1,
+                    details: {
+                        before: {},
+                        after: {},
+                        changed_fields: []
+                    },
+                    created_at: new Date(),
+                    session_id: 'system_session',
+                    additional_data: {
+                        browser: 'System',
+                        os: 'System',
+                        location: 'System'
+                    }
+                };
+                auditLogs.unshift(newLog);
+                filteredAuditLogs = [...auditLogs];
+                renderAuditLogs();
+                updateCounts();
+            }
+        }, 60000); // Check every minute
+    }
+
+    function stopAutoRefresh() {
+        if (autoRefreshInterval) {
+            clearInterval(autoRefreshInterval);
+        }
+    }
+
+    // Global functions for audit log actions
+    window.viewAuditDetails = function(id) {
+        const log = auditLogs.find(l => l.id === id);
+        if (log) {
+            const details = `
+                <strong>Full Audit Log Details:</strong><br><br>
+                <strong>ID:</strong> ${log.id}<br>
+                <strong>Event Type:</strong> ${log.event_type}<br>
+                <strong>Severity:</strong> ${log.severity}<br>
+                <strong>Description:</strong> ${log.description}<br>
+                <strong>User:</strong> ${log.user} (ID: ${log.user_id})<br>
+                <strong>IP Address:</strong> ${log.ip_address}<br>
+                <strong>User Agent:</strong> ${log.user_agent}<br>
+                <strong>Object Type:</strong> ${log.object_type}<br>
+                <strong>Object ID:</strong> ${log.object_id}<br>
+                <strong>Session ID:</strong> ${log.session_id}<br>
+                <strong>Created At:</strong> ${log.created_at.toISOString()}<br>
+                <strong>Additional Data:</strong> ${JSON.stringify(log.additional_data, null, 2)}
+            `;
+            
+            // Show in a modal or alert (simplified for demo)
+            alert(details);
+        }
+    };
+
+    window.exportAuditLog = function(id) {
+        const log = auditLogs.find(l => l.id === id);
+        if (log) {
+            const csvContent = generateCSV([log]);
+            downloadCSV(csvContent, `audit_log_${id}.csv`);
+            showToast('Audit log exported successfully', 'success');
+        }
+    };
+
+    window.flagAuditLog = function(id) {
+        const log = auditLogs.find(l => l.id === id);
+        if (log) {
+            log.severity = 'critical';
+            filteredAuditLogs = [...auditLogs];
+            renderAuditLogs();
+            updateCounts();
+            showToast('Audit log flagged for review', 'warning');
+        }
+    };
+
+    function showToast(message, type = 'info') {
+        // Simple toast implementation
+        const toast = document.createElement('div');
+        toast.className = `alert alert-${type} alert-dismissible fade show position-fixed`;
+        toast.style.cssText = 'top: 20px; right: 20px; z-index: 9999; min-width: 300px;';
+        toast.innerHTML = `
+            ${message}
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        `;
+        document.body.appendChild(toast);
+        
+        setTimeout(() => {
+            if (toast.parentNode) {
+                toast.remove();
+            }
+        }, 3000);
+    }
+});
+</script>
+{% endblock %}

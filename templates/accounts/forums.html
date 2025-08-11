@@ -1,0 +1,345 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Community Forums - Inspora{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-12">
+            <!-- Hero Section -->
+            <div class="text-center mb-5">
+                <h1 class="display-4 fw-bold mb-4">
+                    <i class="fas fa-comments text-primary"></i> Community Forums
+                </h1>
+                <p class="lead text-muted mb-4">
+                    Connect with fellow Inspora users, share knowledge, and get answers to your questions.
+                </p>
+                <div class="row justify-content-center">
+                    <div class="col-md-8">
+                        <div class="alert alert-info">
+                            <i class="fas fa-users me-2"></i>
+                            <strong>Join the conversation!</strong> Our community has over 10,000 active members sharing insights and best practices.
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Forum Categories -->
+            <div class="row mb-5">
+                <div class="col-md-6 col-lg-3 mb-4">
+                    <div class="card border-0 shadow-sm h-100">
+                        <div class="card-body text-center p-4">
+                            <div class="mb-3">
+                                <i class="fas fa-question-circle fa-3x text-primary"></i>
+                            </div>
+                            <h5 class="card-title">General Discussion</h5>
+                            <p class="card-text text-muted">General questions and discussions about Inspora.</p>
+                            <div class="d-flex justify-content-between align-items-center">
+                                <small class="text-muted">1.2k topics</small>
+                                <a href="#general" class="btn btn-outline-primary btn-sm">Browse</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="col-md-6 col-lg-3 mb-4">
+                    <div class="card border-0 shadow-sm h-100">
+                        <div class="card-body text-center p-4">
+                            <div class="mb-3">
+                                <i class="fas fa-project-diagram fa-3x text-success"></i>
+                            </div>
+                            <h5 class="card-title">Project Management</h5>
+                            <p class="card-text text-muted">Tips, tricks, and best practices for project management.</p>
+                            <div class="d-flex justify-content-between align-items-center">
+                                <small class="text-muted">856 topics</small>
+                                <a href="#project-management" class="btn btn-outline-success btn-sm">Browse</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="col-md-6 col-lg-3 mb-4">
+                    <div class="card border-0 shadow-sm h-100">
+                        <div class="card-body text-center p-4">
+                            <div class="mb-3">
+                                <i class="fas fa-users fa-3x text-info"></i>
+                            </div>
+                            <h5 class="card-title">Team Collaboration</h5>
+                            <p class="card-text text-muted">Team building, communication, and collaboration strategies.</p>
+                            <div class="d-flex justify-content-between align-items-center">
+                                <small class="text-muted">642 topics</small>
+                                <a href="#team-collaboration" class="btn btn-outline-info btn-sm">Browse</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="col-md-6 col-lg-3 mb-4">
+                    <div class="card border-0 shadow-sm h-100">
+                        <div class="card-body text-center p-4">
+                            <div class="mb-3">
+                                <i class="fas fa-lightbulb fa-3x text-warning"></i>
+                            </div>
+                            <h5 class="card-title">Feature Requests</h5>
+                            <p class="card-text text-muted">Suggest new features and improvements for Inspora.</p>
+                            <div class="d-flex justify-content-between align-items-center">
+                                <small class="text-muted">324 topics</small>
+                                <a href="#feature-requests" class="btn btn-outline-warning btn-sm">Browse</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Search and Filter -->
+            <div class="card mb-4">
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-8">
+                            <div class="input-group">
+                                <input type="text" class="form-control" id="forumSearch" placeholder="Search forums for topics, questions, or discussions...">
+                                <button class="btn btn-primary" type="button" onclick="searchForums()">
+                                    <i class="fas fa-search"></i> Search
+                                </button>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <select class="form-select" id="forumFilter">
+                                <option value="">All Categories</option>
+                                <option value="general">General Discussion</option>
+                                <option value="project-management">Project Management</option>
+                                <option value="team-collaboration">Team Collaboration</option>
+                                <option value="feature-requests">Feature Requests</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Recent Discussions -->
+            <div class="mb-5">
+                <h2 class="mb-4"><i class="fas fa-clock text-primary"></i> Recent Discussions</h2>
+                <div class="row">
+                    <div class="col-12">
+                        <div class="card border-0 shadow-sm">
+                            <div class="list-group list-group-flush">
+                                <!-- Discussion 1 -->
+                                <div class="list-group-item d-flex justify-content-between align-items-start">
+                                    <div class="ms-2 me-auto">
+                                        <div class="fw-bold">
+                                            <a href="#" class="text-decoration-none">Best practices for remote team collaboration?</a>
+                                        </div>
+                                        <small class="text-muted">
+                                            <i class="fas fa-user me-1"></i>Sarah Johnson
+                                            <i class="fas fa-clock ms-2 me-1"></i>2 hours ago
+                                            <i class="fas fa-comments ms-2 me-1"></i>15 replies
+                                        </small>
+                                    </div>
+                                    <span class="badge bg-primary rounded-pill">Team Collaboration</span>
+                                </div>
+                                
+                                <!-- Discussion 2 -->
+                                <div class="list-group-item d-flex justify-content-between align-items-start">
+                                    <div class="ms-2 me-auto">
+                                        <div class="fw-bold">
+                                            <a href="#" class="text-decoration-none">How to set up automated workflows?</a>
+                                        </div>
+                                        <small class="text-muted">
+                                            <i class="fas fa-user me-1"></i>Mike Chen
+                                            <i class="fas fa-clock ms-2 me-1"></i>5 hours ago
+                                            <i class="fas fa-comments ms-2 me-1"></i>8 replies
+                                        </small>
+                                    </div>
+                                    <span class="badge bg-success rounded-pill">Project Management</span>
+                                </div>
+                                
+                                <!-- Discussion 3 -->
+                                <div class="list-group-item d-flex justify-content-between align-items-start">
+                                    <div class="ms-2 me-auto">
+                                        <div class="fw-bold">
+                                            <a href="#" class="text-decoration-none">New user looking for getting started tips</a>
+                                        </div>
+                                        <small class="text-muted">
+                                            <i class="fas fa-user me-1"></i>Alex Rodriguez
+                                            <i class="fas fa-clock ms-2 me-1"></i>1 day ago
+                                            <i class="fas fa-comments ms-2 me-1"></i>23 replies
+                                        </small>
+                                    </div>
+                                    <span class="badge bg-info rounded-pill">General Discussion</span>
+                                </div>
+                                
+                                <!-- Discussion 4 -->
+                                <div class="list-group-item d-flex justify-content-between align-items-start">
+                                    <div class="ms-2 me-auto">
+                                        <div class="fw-bold">
+                                            <a href="#" class="text-decoration-none">Request: Dark mode theme option</a>
+                                        </div>
+                                        <small class="text-muted">
+                                            <i class="fas fa-user me-1"></i>Emma Wilson
+                                            <i class="fas fa-clock ms-2 me-1"></i>2 days ago
+                                            <i class="fas fa-comments ms-2 me-1"></i>45 replies
+                                        </small>
+                                    </div>
+                                    <span class="badge bg-warning rounded-pill">Feature Request</span>
+                                </div>
+                                
+                                <!-- Discussion 5 -->
+                                <div class="list-group-item d-flex justify-content-between align-items-start">
+                                    <div class="ms-2 me-auto">
+                                        <div class="fw-bold">
+                                            <a href="#" class="text-decoration-none">Project template sharing community</a>
+                                        </div>
+                                        <small class="text-muted">
+                                            <i class="fas fa-user me-1"></i>David Kim
+                                            <i class="fas fa-clock ms-2 me-1"></i>3 days ago
+                                            <i class="fas fa-comments ms-2 me-1"></i>12 replies
+                                        </small>
+                                    </div>
+                                    <span class="badge bg-success rounded-pill">Project Management</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Popular Topics -->
+            <div class="mb-5">
+                <h2 class="mb-4"><i class="fas fa-fire text-danger"></i> Popular Topics</h2>
+                <div class="row">
+                    <div class="col-md-6 col-lg-4 mb-4">
+                        <div class="card border-0 shadow-sm h-100">
+                            <div class="card-body">
+                                <h6 class="card-title text-primary">
+                                    <i class="fas fa-star me-2"></i>Getting Started Guide
+                                </h6>
+                                <p class="card-text">Comprehensive guide for new users to get up and running quickly.</p>
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <small class="text-muted">2.1k views</small>
+                                    <span class="badge bg-success">Pinned</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="col-md-6 col-lg-4 mb-4">
+                        <div class="card border-0 shadow-sm h-100">
+                            <div class="card-body">
+                                <h6 class="card-title text-success">
+                                    <i class="fas fa-trophy me-2"></i>Monthly Tips & Tricks
+                                </h6>
+                                <p class="card-text">Monthly collection of productivity tips and hidden features.</p>
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <small class="text-muted">1.8k views</small>
+                                    <span class="badge bg-warning">Updated</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="col-md-6 col-lg-4 mb-4">
+                        <div class="card border-0 shadow-sm h-100">
+                            <div class="card-body">
+                                <h6 class="card-title text-info">
+                                    <i class="fas fa-users me-2"></i>Community Guidelines
+                                </h6>
+                                <p class="card-text">Rules and guidelines for maintaining a positive community environment.</p>
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <small class="text-muted">956 views</small>
+                                    <span class="badge bg-info">Important</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Start New Discussion -->
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="mb-0"><i class="fas fa-plus-circle text-success"></i> Start a New Discussion</h3>
+                </div>
+                <div class="card-body">
+                    <form>
+                        <div class="row">
+                            <div class="col-md-8">
+                                <div class="mb-3">
+                                    <label for="discussionTitle" class="form-label">Discussion Title</label>
+                                    <input type="text" class="form-control" id="discussionTitle" placeholder="Enter a clear, descriptive title for your discussion...">
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="mb-3">
+                                    <label for="discussionCategory" class="form-label">Category</label>
+                                    <select class="form-select" id="discussionCategory">
+                                        <option value="">Select Category</option>
+                                        <option value="general">General Discussion</option>
+                                        <option value="project-management">Project Management</option>
+                                        <option value="team-collaboration">Team Collaboration</option>
+                                        <option value="feature-requests">Feature Requests</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <label for="discussionContent" class="form-label">Discussion Content</label>
+                            <textarea class="form-control" id="discussionContent" rows="4" placeholder="Describe your question, share your thoughts, or start a discussion..."></textarea>
+                        </div>
+                        <div class="d-flex justify-content-between align-items-center">
+                            <small class="text-muted">
+                                <i class="fas fa-info-circle me-1"></i>
+                                Be respectful and follow our community guidelines
+                            </small>
+                            <button type="button" class="btn btn-success" onclick="startDiscussion()">
+                                <i class="fas fa-paper-plane me-2"></i>Start Discussion
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+function searchForums() {
+    const searchTerm = document.getElementById('forumSearch').value;
+    const category = document.getElementById('forumFilter').value;
+    
+    if (searchTerm.trim()) {
+        alert('Search functionality coming soon! Searching for: ' + searchTerm + 
+              (category ? ' in category: ' + category : ''));
+    }
+}
+
+function startDiscussion() {
+    const title = document.getElementById('discussionTitle').value;
+    const category = document.getElementById('discussionCategory').value;
+    const content = document.getElementById('discussionContent').value;
+    
+    if (!title.trim() || !category || !content.trim()) {
+        alert('Please fill in all fields to start a discussion.');
+        return;
+    }
+    
+    alert('Discussion creation coming soon! Your discussion "' + title + '" will be posted in the next update.');
+}
+
+// Add filter functionality
+document.getElementById('forumFilter').addEventListener('change', function() {
+    const category = this.value;
+    if (category) {
+        alert('Filtering by category: ' + category + ' (coming soon!)');
+    }
+});
+
+// Add interactive elements
+document.querySelectorAll('.list-group-item a').forEach(link => {
+    link.addEventListener('click', function(e) {
+        e.preventDefault();
+        alert('Discussion viewer coming soon! You can read and reply to discussions in the next update.');
+    });
+});
+</script>
+{% endblock %}

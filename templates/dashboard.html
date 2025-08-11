@@ -1,0 +1,177 @@
+{% extends 'base.html' %}
+
+{% block title %}Dashboard - Inspora{% endblock %}
+
+{% block extra_css %}
+<style>
+    .hero-section {
+        background: rgba(255, 255, 255, 0.95);
+        border-radius: 20px;
+        padding: 3rem;
+        margin: 2rem 0;
+        box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+    }
+    
+    .feature-card {
+        background: white;
+        border-radius: 15px;
+        padding: 2rem;
+        margin: 1rem 0;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        transition: transform 0.3s ease;
+    }
+    
+    .feature-card:hover {
+        transform: translateY(-5px);
+    }
+    
+    .stats-card {
+        background: linear-gradient(135deg, #f06a6f, #ff8a80);
+        color: white;
+        border-radius: 15px;
+        padding: 1.5rem;
+        text-align: center;
+        margin: 1rem 0;
+    }
+    
+    .api-status {
+        background: rgba(40, 167, 69, 0.1);
+        border: 2px solid #28a745;
+        border-radius: 10px;
+        padding: 1rem;
+        margin: 1rem 0;
+    }
+    
+    .status-badge {
+        background: #28a745;
+        color: white;
+        padding: 0.25rem 0.75rem;
+        border-radius: 20px;
+        font-size: 0.8rem;
+        font-weight: 600;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<!-- Hero Section -->
+<div class="hero-section text-center">
+    <h1 class="display-4 fw-bold mb-4">🚀 Welcome to <span style="color: #f06a6f;">Inspora</span></h1>
+    <p class="lead mb-4">Your enterprise-grade work management platform is now running successfully!</p>
+    
+    <div class="row justify-content-center">
+        <div class="col-md-3">
+            <div class="stats-card">
+                <i class="fas fa-project-diagram fa-2x mb-2"></i>
+                <h4>Projects</h4>
+                <h2>∞</h2>
+                <small>Unlimited</small>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="stats-card">
+                <i class="fas fa-tasks fa-2x mb-2"></i>
+                <h4>Tasks</h4>
+                <h2>∞</h2>
+                <small>Unlimited</small>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="stats-card">
+                <i class="fas fa-users fa-2x mb-2"></i>
+                <h4>Team Members</h4>
+                <h2>∞</h2>
+                <small>Unlimited</small>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="stats-card">
+                <i class="fas fa-robot fa-2x mb-2"></i>
+                <h4>AI Features</h4>
+                <h2>🚀</h2>
+                <small>Coming Soon</small>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Features Grid -->
+<div class="row">
+    <div class="col-md-4 mb-4">
+        <div class="feature-card text-center h-100">
+            <div style="font-size: 3rem; color: #f06a6f; margin-bottom: 1rem;">
+                <i class="fas fa-project-diagram"></i>
+            </div>
+            <h4>Project Management</h4>
+            <p class="text-muted">Create, organize, and track projects with multiple views.</p>
+            <a href="/projects/" class="btn btn-primary">Explore Projects</a>
+        </div>
+    </div>
+    <div class="col-md-4 mb-4">
+        <div class="feature-card text-center h-100">
+            <div style="font-size: 3rem; color: #f06a6f; margin-bottom: 1rem;">
+                <i class="fas fa-tasks"></i>
+            </div>
+            <h4>Task Management</h4>
+            <p class="text-muted">Manage tasks with dependencies, subtasks, and workflows.</p>
+            <a href="/tasks/" class="btn btn-primary">View Tasks</a>
+        </div>
+    </div>
+    <div class="col-md-4 mb-4">
+        <div class="feature-card text-center h-100">
+            <div style="font-size: 3rem; color: #f06a6f; margin-bottom: 1rem;">
+                <i class="fas fa-users"></i>
+            </div>
+            <h4>Team Collaboration</h4>
+            <p class="text-muted">Build teams, assign roles, and collaborate effectively.</p>
+            <a href="/teams/" class="btn btn-primary">Manage Teams</a>
+        </div>
+    </div>
+</div>
+
+<!-- API Status -->
+<div class="feature-card">
+    <h3 class="mb-4"><i class="fas fa-code text-info me-2"></i>API Status & Endpoints</h3>
+    <div class="api-status">
+        <h5 class="mb-2"><i class="fas fa-check-circle text-success me-2"></i>All API endpoints are working correctly!</h5>
+        <p class="mb-0">The Inspora API is fully functional and ready for integration.</p>
+    </div>
+    
+    <div class="row mt-4">
+        <div class="col-md-6">
+            <h6>Core Endpoints:</h6>
+            <ul class="list-group">
+                <li class="list-group-item d-flex justify-content-between">
+                    <span><strong>Main API:</strong> /api/</span>
+                    <span class="status-badge">Active</span>
+                </li>
+                <li class="list-group-item d-flex justify-content-between">
+                    <span><strong>Authentication:</strong> /api/token/</span>
+                    <span class="status-badge">Active</span>
+                </li>
+                <li class="list-group-item d-flex justify-content-between">
+                    <span><strong>Accounts API:</strong> /api/accounts/</span>
+                    <span class="status-badge">Active</span>
+                </li>
+            </ul>
+        </div>
+        <div class="col-md-6">
+            <h6>App Endpoints:</h6>
+            <ul class="list-group">
+                <li class="list-group-item d-flex justify-content-between">
+                    <span><strong>Projects API:</strong> /api/projects/</span>
+                    <span class="status-badge">Active</span>
+                </li>
+                <li class="list-group-item d-flex justify-content-between">
+                    <span><strong>Tasks API:</strong> /api/tasks/</span>
+                    <span class="status-badge">Active</span>
+                </li>
+                <li class="list-group-item d-flex justify-content-between">
+                    <span><strong>Admin Panel:</strong> /admin/</span>
+                    <span class="status-badge">Active</span>
+                </li>
+            </ul>
+        </div>
+    </div>
+</div>
+{% endblock %}

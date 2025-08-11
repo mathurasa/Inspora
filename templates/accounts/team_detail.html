@@ -1,0 +1,132 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}{{ team.name }} - Inspora{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center mb-4">
+                        <div>
+                            <h1 class="h3 mb-0">
+                                <i class="fas fa-users text-primary"></i> {{ team.name }}
+                            </h1>
+                            <p class="text-muted">
+                                {% if team.description %}{{ team.description }}{% else %}No description provided{% endif %}
+                            </p>
+                        </div>
+                        <div class="btn-group" role="group">
+                            <a href="{% url 'accounts:team_edit' team.pk %}" class="btn btn-outline-primary">
+                                <i class="fas fa-edit"></i> Edit Team
+                            </a>
+                            <a href="{% url 'accounts:team_members' team.pk %}" class="btn btn-primary">
+                                <i class="fas fa-users"></i> Manage Members
+                            </a>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <!-- Team Information -->
+                        <div class="col-md-8">
+                            <div class="card mb-4">
+                                <div class="card-header">
+                                    <h5 class="mb-0"><i class="fas fa-info-circle"></i> Team Information</h5>
+                                </div>
+                                <div class="card-body">
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <p><strong>Status:</strong> 
+                                                <span class="badge bg-{% if team.is_public %}success{% else %}warning{% endif %}">
+                                                    {% if team.is_public %}Public{% else %}Private{% endif %}
+                                                </span>
+                                            </p>
+                                            <p><strong>Created:</strong> {{ team.created_at|date:"F d, Y" }}</p>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <p><strong>Max Members:</strong> {{ team.max_members|default:"Unlimited" }}</p>
+                                            <p><strong>Current Members:</strong> {{ team.members.count }}</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Team Projects -->
+                            <div class="card mb-4">
+                                <div class="card-header">
+                                    <h5 class="mb-0"><i class="fas fa-project-diagram"></i> Team Projects</h5>
+                                </div>
+                                <div class="card-body">
+                                    {% if team.projects.all %}
+                                        <div class="row">
+                                            {% for project in team.projects.all %}
+                                            <div class="col-md-6 mb-3">
+                                                <div class="card border">
+                                                    <div class="card-body">
+                                                        <h6 class="card-title">{{ project.name }}</h6>
+                                                        <p class="card-text small text-muted">
+                                                            {{ project.description|truncatewords:15 }}
+                                                        </p>
+                                                        <div class="d-flex justify-content-between align-items-center">
+                                                            <span class="badge bg-{{ project.status }}">
+                                                                {{ project.get_status_display }}
+                                                            </span>
+                                                            <a href="{% url 'projects:project_detail' project.pk %}" 
+                                                               class="btn btn-sm btn-outline-primary">
+                                                                View
+                                                            </a>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            {% endfor %}
+                                        </div>
+                                    {% else %}
+                                        <p class="text-muted text-center py-3">No projects assigned to this team yet.</p>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Team Members -->
+                        <div class="col-md-4">
+                            <div class="card">
+                                <div class="card-header">
+                                    <h5 class="mb-0"><i class="fas fa-users"></i> Team Members</h5>
+                                </div>
+                                <div class="card-body">
+                                    {% if team.members.all %}
+                                        <div class="list-group list-group-flush">
+                                            {% for member in team.members.all %}
+                                            <div class="list-group-item d-flex justify-content-between align-items-center">
+                                                <div>
+                                                    <div class="fw-bold">{{ member.user.get_full_name|default:member.user.username }}</div>
+                                                    <small class="text-muted">{{ member.role|title }}</small>
+                                                </div>
+                                                <span class="badge bg-primary rounded-pill">{{ member.role|title }}</span>
+                                            </div>
+                                            {% endfor %}
+                                        </div>
+                                        <div class="mt-3">
+                                            <a href="{% url 'accounts:team_members' team.pk %}" class="btn btn-primary btn-sm w-100">
+                                                <i class="fas fa-users"></i> Manage Members
+                                            </a>
+                                        </div>
+                                    {% else %}
+                                        <p class="text-muted text-center py-3">No members in this team yet.</p>
+                                        <a href="{% url 'accounts:team_members' team.pk %}" class="btn btn-primary btn-sm w-100">
+                                            <i class="fas fa-user-plus"></i> Add Members
+                                        </a>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

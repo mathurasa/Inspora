@@ -1,0 +1,244 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Customer Stories - Inspora{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-12">
+            <!-- Hero Section -->
+            <div class="text-center mb-5">
+                <h1 class="display-4 fw-bold mb-4">
+                    <i class="fas fa-users text-primary"></i> Customer Success Stories
+                </h1>
+                <p class="lead text-muted mb-4">
+                    Discover how teams around the world are transforming their work with Inspora.
+                </p>
+            </div>
+
+            <!-- Featured Story -->
+            <div class="card border-0 shadow-sm mb-5">
+                <div class="card-body p-5">
+                    <div class="row">
+                        <div class="col-lg-8">
+                            <h2 class="mb-4">TechCorp: Scaling from 10 to 100+ Team Members</h2>
+                            <p class="lead text-muted mb-4">
+                                "Inspora transformed our project management from chaos to clarity. We've increased our delivery speed by 40% and improved team satisfaction significantly."
+                            </p>
+                            <div class="row mb-4">
+                                <div class="col-md-4">
+                                    <div class="text-center">
+                                        <div class="display-6 text-primary fw-bold">40%</div>
+                                        <small class="text-muted">Faster Delivery</small>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="text-center">
+                                        <div class="display-6 text-success fw-bold">100+</div>
+                                        <small class="text-muted">Team Members</small>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="text-center">
+                                        <div class="display-6 text-info fw-bold">95%</div>
+                                        <small class="text-muted">Satisfaction Rate</small>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="d-flex align-items-center">
+                                <img src="https://via.placeholder.com/60x60" class="rounded-circle me-3" alt="CEO">
+                                <div>
+                                    <h6 class="mb-1">Sarah Johnson</h6>
+                                    <small class="text-muted">CEO, TechCorp</small>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-4 text-center">
+                            <img src="https://via.placeholder.com/300x200" class="img-fluid rounded" alt="TechCorp Office">
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Success Stories Grid -->
+            <div class="row mb-5">
+                <div class="col-md-6 col-lg-4 mb-4">
+                    <div class="card border-0 shadow-sm h-100">
+                        <div class="card-body">
+                            <div class="mb-3">
+                                <span class="badge bg-success">Startup</span>
+                                <span class="badge bg-primary">SaaS</span>
+                            </div>
+                            <h5 class="card-title">StartupXYZ: From Idea to Market in 6 Months</h5>
+                            <p class="card-text">How a small startup used Inspora to coordinate their entire product launch, from development to marketing.</p>
+                            <div class="d-flex justify-content-between align-items-center">
+                                <small class="text-muted">5 min read</small>
+                                <a href="#" class="btn btn-outline-primary btn-sm">Read Story</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="col-md-6 col-lg-4 mb-4">
+                    <div class="card border-0 shadow-sm h-100">
+                        <div class="card-body">
+                            <div class="mb-3">
+                                <span class="badge bg-warning">Enterprise</span>
+                                <span class="badge bg-info">Healthcare</span>
+                            </div>
+                            <h5 class="card-title">HealthCare Plus: Managing 50+ Projects</h5>
+                            <p class="card-text">A healthcare organization streamlined their project portfolio and improved patient care delivery.</p>
+                            <div class="d-flex justify-content-between align-items-center">
+                                <small class="text-muted">7 min read</small>
+                                <a href="#" class="btn btn-outline-primary btn-sm">Read Story</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="col-md-6 col-lg-4 mb-4">
+                    <div class="card border-0 shadow-sm h-100">
+                        <div class="card-body">
+                            <div class="mb-3">
+                                <span class="badge bg-danger">Non-Profit</span>
+                                <span class="badge bg-secondary">Education</span>
+                            </div>
+                            <h5 class="card-title">EduFoundation: Empowering 1000+ Students</h5>
+                            <p class="card-text">How an educational foundation used Inspora to coordinate volunteer programs and student support initiatives.</p>
+                            <div class="d-flex justify-content-between align-items-center">
+                                <small class="text-muted">6 min read</small>
+                                <a href="#" class="btn btn-outline-primary btn-sm">Read Story</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Industry Success -->
+            <div class="mb-5">
+                <h2 class="mb-4"><i class="fas fa-industry text-primary"></i> Success by Industry</h2>
+                <div class="row">
+                    <div class="col-md-6 col-lg-3 mb-4">
+                        <div class="card border-0 shadow-sm text-center h-100">
+                            <div class="card-body">
+                                <i class="fas fa-code fa-3x text-primary mb-3"></i>
+                                <h6 class="card-title">Technology</h6>
+                                <p class="card-text text-muted">Software development, IT services, and tech startups.</p>
+                                <span class="badge bg-success">150+ Success Stories</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="col-md-6 col-lg-3 mb-4">
+                        <div class="card border-0 shadow-sm text-center h-100">
+                            <div class="card-body">
+                                <i class="fas fa-heartbeat fa-3x text-danger mb-3"></i>
+                                <h6 class="card-title">Healthcare</h6>
+                                <p class="card-text text-muted">Hospitals, clinics, and healthcare organizations.</p>
+                                <span class="badge bg-success">75+ Success Stories</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="col-md-6 col-lg-3 mb-4">
+                        <div class="card border-0 shadow-sm text-center h-100">
+                            <div class="card-body">
+                                <i class="fas fa-graduation-cap fa-3x text-info mb-3"></i>
+                                <h6 class="card-title">Education</h6>
+                                <p class="card-text text-muted">Schools, universities, and training organizations.</p>
+                                <span class="badge bg-success">100+ Success Stories</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="col-md-6 col-lg-3 mb-4">
+                        <div class="card border-0 shadow-sm text-center h-100">
+                            <div class="card-body">
+                                <i class="fas fa-building fa-3x text-warning mb-3"></i>
+                                <h6 class="card-title">Finance</h6>
+                                <p class="card-text text-muted">Banks, investment firms, and financial services.</p>
+                                <span class="badge bg-success">50+ Success Stories</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Metrics & Results -->
+            <div class="card mb-5">
+                <div class="card-header">
+                    <h3 class="mb-0"><i class="fas fa-chart-bar text-success"></i> Customer Success Metrics</h3>
+                </div>
+                <div class="card-body">
+                    <div class="row text-center">
+                        <div class="col-md-3 mb-4">
+                            <div class="display-4 text-primary fw-bold">500+</div>
+                            <p class="text-muted">Success Stories</p>
+                        </div>
+                        <div class="col-md-3 mb-4">
+                            <div class="display-4 text-success fw-bold">95%</div>
+                            <p class="text-muted">Customer Satisfaction</p>
+                        </div>
+                        <div class="col-md-3 mb-4">
+                            <div class="display-4 text-info fw-bold">40%</div>
+                            <p class="text-muted">Average Productivity Increase</p>
+                        </div>
+                        <div class="col-md-3 mb-4">
+                            <div class="display-4 text-warning fw-bold">2.5x</div>
+                            <p class="text-muted">Faster Project Delivery</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Share Your Story -->
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="mb-0"><i class="fas fa-pen text-primary"></i> Share Your Success Story</h3>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-lg-8">
+                            <p class="lead">Have a success story with Inspora? We'd love to hear about it!</p>
+                            <p>Share how Inspora has helped your team achieve their goals, and you could be featured in our next customer spotlight.</p>
+                            <a href="mailto:stories@inspora.com" class="btn btn-primary">
+                                <i class="fas fa-envelope me-2"></i>Share Your Story
+                            </a>
+                        </div>
+                        <div class="col-lg-4 text-center">
+                            <i class="fas fa-lightbulb fa-4x text-warning mb-3"></i>
+                            <h6>Get Featured</h6>
+                            <p class="text-muted">Your story could inspire the next generation of Inspora users!</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+// Add interactive elements
+document.querySelectorAll('.btn').forEach(button => {
+    button.addEventListener('click', function(e) {
+        if (this.textContent.includes('Read Story')) {
+            e.preventDefault();
+            alert('Story viewer coming soon! You can read the full customer success stories in the next update.');
+        }
+    });
+});
+
+// Add hover effects
+document.querySelectorAll('.card').forEach(card => {
+    card.addEventListener('mouseenter', function() {
+        this.style.transform = 'translateY(-5px)';
+        this.style.transition = 'transform 0.3s ease';
+    });
+    
+    card.addEventListener('mouseleave', function() {
+        this.style.transform = 'translateY(0)';
+    });
+});
+</script>
+{% endblock %}

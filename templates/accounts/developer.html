@@ -1,0 +1,406 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Developer Support - Inspora{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-12">
+            <!-- Hero Section -->
+            <div class="text-center mb-5">
+                <h1 class="display-4 fw-bold mb-4">
+                    <i class="fas fa-code text-primary"></i> Developer Support
+                </h1>
+                <p class="lead text-muted mb-4">
+                    Build powerful integrations and extend Inspora's capabilities with our comprehensive developer tools and APIs.
+                </p>
+            </div>
+
+            <!-- Quick Start -->
+            <div class="row mb-5">
+                <div class="col-lg-8">
+                    <div class="card border-0 shadow-sm">
+                        <div class="card-header">
+                            <h3 class="mb-0"><i class="fas fa-rocket text-success"></i> Quick Start</h3>
+                        </div>
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <h5>1. Get API Keys</h5>
+                                    <p class="text-muted">Generate your API keys from the developer dashboard.</p>
+                                    <code class="bg-light p-2 rounded">GET /api/keys/generate</code>
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <h5>2. Test Endpoints</h5>
+                                    <p class="text-muted">Use our sandbox environment to test your integrations.</p>
+                                    <code class="bg-light p-2 rounded">https://sandbox.inspora.com/api</code>
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <h5>3. Build Integration</h5>
+                                    <p class="text-muted">Use our SDKs and examples to build your first integration.</p>
+                                    <code class="bg-light p-2 rounded">npm install @inspora/sdk</code>
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <h5>4. Deploy & Monitor</h5>
+                                    <p class="text-muted">Deploy your integration and monitor performance.</p>
+                                    <code class="bg-light p-2 rounded">POST /api/webhooks/register</code>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="col-lg-4">
+                    <div class="card border-0 shadow-sm">
+                        <div class="card-header">
+                            <h4 class="mb-0"><i class="fas fa-info-circle text-info"></i> API Status</h4>
+                        </div>
+                        <div class="card-body">
+                            <div class="mb-3">
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <span>Core API</span>
+                                    <span class="badge bg-success">Operational</span>
+                                </div>
+                            </div>
+                            <div class="mb-3">
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <span>Webhooks</span>
+                                    <span class="badge bg-success">Operational</span>
+                                </div>
+                            </div>
+                            <div class="mb-3">
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <span>File Storage</span>
+                                    <span class="badge bg-warning">Minor Issues</span>
+                                </div>
+                            </div>
+                            <div class="mb-3">
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <span>AI Services</span>
+                                    <span class="badge bg-success">Operational</span>
+                                </div>
+                            </div>
+                            <a href="#" class="btn btn-outline-primary btn-sm">View Detailed Status</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- API Documentation -->
+            <div class="mb-5">
+                <h2 class="mb-4"><i class="fas fa-book text-primary"></i> API Documentation</h2>
+                <div class="row">
+                    <div class="col-md-6 col-lg-4 mb-4">
+                        <div class="card border-0 shadow-sm h-100">
+                            <div class="card-body">
+                                <div class="d-flex align-items-center mb-3">
+                                    <i class="fas fa-users fa-2x text-primary me-3"></i>
+                                    <div>
+                                        <h6 class="mb-1">Authentication</h6>
+                                        <small class="text-muted">API Keys & OAuth</small>
+                                    </div>
+                                </div>
+                                <p class="card-text">Learn how to authenticate your requests and manage API keys securely.</p>
+                                <a href="#" class="btn btn-outline-primary btn-sm">View Docs</a>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="col-md-6 col-lg-4 mb-4">
+                        <div class="card border-0 shadow-sm h-100">
+                            <div class="card-body">
+                                <div class="d-flex align-items-center mb-3">
+                                    <i class="fas fa-project-diagram fa-2x text-success me-3"></i>
+                                    <div>
+                                        <h6 class="mb-1">Projects & Tasks</h6>
+                                        <small class="text-muted">Core API</small>
+                                    </div>
+                                </div>
+                                <p class="card-text">Manage projects, tasks, and workflows through our RESTful API endpoints.</p>
+                                <a href="#" class="btn btn-outline-success btn-sm">View Docs</a>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="col-md-6 col-lg-4 mb-4">
+                        <div class="card border-0 shadow-sm h-100">
+                            <div class="card-body">
+                                <div class="d-flex align-items-center mb-3">
+                                    <i class="fas fa-robot fa-2x text-info me-3"></i>
+                                    <div>
+                                        <h6 class="mb-1">AI Services</h6>
+                                        <small class="text-muted">Machine Learning</small>
+                                    </div>
+                                </div>
+                                <p class="card-text">Integrate with Inspora's AI features for intelligent automation and insights.</p>
+                                <a href="#" class="btn btn-outline-info btn-sm">View Docs</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- SDKs & Libraries -->
+            <div class="mb-5">
+                <h2 class="mb-4"><i class="fas fa-puzzle-piece text-success"></i> SDKs & Libraries</h2>
+                <div class="row">
+                    <div class="col-md-6 col-lg-3 mb-4">
+                        <div class="card border-0 shadow-sm text-center h-100">
+                            <div class="card-body">
+                                <i class="fab fa-js-square fa-3x text-warning mb-3"></i>
+                                <h6 class="card-title">JavaScript/Node.js</h6>
+                                <p class="card-text text-muted">Official SDK for JavaScript and Node.js applications.</p>
+                                <div class="mb-3">
+                                    <code class="bg-light p-2 rounded">npm install @inspora/sdk</code>
+                                </div>
+                                <a href="#" class="btn btn-outline-warning btn-sm">View Docs</a>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="col-md-6 col-lg-3 mb-4">
+                        <div class="card border-0 shadow-sm text-center h-100">
+                            <div class="card-body">
+                                <i class="fab fa-python fa-3x text-primary mb-3"></i>
+                                <h6 class="card-title">Python</h6>
+                                <p class="card-text text-muted">Python SDK for building integrations and automation scripts.</p>
+                                <div class="mb-3">
+                                    <code class="bg-light p-2 rounded">pip install inspora-sdk</code>
+                                </div>
+                                <a href="#" class="btn btn-outline-primary btn-sm">View Docs</a>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="col-md-6 col-lg-3 mb-4">
+                        <div class="card border-0 shadow-sm text-center h-100">
+                            <div class="card-body">
+                                <i class="fab fa-java fa-3x text-danger mb-3"></i>
+                                <h6 class="card-title">Java</h6>
+                                <p class="card-text text-muted">Java SDK for enterprise applications and Android development.</p>
+                                <div class="mb-3">
+                                    <code class="bg-light p-2 rounded">implementation 'com.inspora:sdk'</code>
+                                </div>
+                                <a href="#" class="btn btn-outline-danger btn-sm">View Docs</a>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="col-md-6 col-lg-3 mb-4">
+                        <div class="card border-0 shadow-sm text-center h-100">
+                            <div class="card-body">
+                                <i class="fas fa-code fa-3x text-success mb-3"></i>
+                                <h6 class="card-title">REST API</h6>
+                                <p class="card-text text-muted">Direct REST API access for any programming language.</p>
+                                <div class="mb-3">
+                                    <code class="bg-light p-2 rounded">curl -H "Authorization: Bearer {token}"</code>
+                                </div>
+                                <a href="#" class="btn btn-outline-success btn-sm">View Docs</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Code Examples -->
+            <div class="mb-5">
+                <h2 class="mb-4"><i class="fas fa-code text-info"></i> Code Examples</h2>
+                <div class="row">
+                    <div class="col-lg-6 mb-4">
+                        <div class="card border-0 shadow-sm">
+                            <div class="card-header">
+                                <h5 class="mb-0">Create a Project (JavaScript)</h5>
+                            </div>
+                            <div class="card-body">
+                                <pre class="bg-light p-3 rounded"><code>const { InsporaClient } = require('@inspora/sdk');
+
+const client = new InsporaClient({
+  apiKey: 'your-api-key',
+  environment: 'production'
+});
+
+const project = await client.projects.create({
+  name: 'My New Project',
+  description: 'Project created via API',
+  teamId: 'team-123'
+});
+
+console.log('Project created:', project.id);</code></pre>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="col-lg-6 mb-4">
+                        <div class="card border-0 shadow-sm">
+                            <div class="card-header">
+                                <h5 class="mb-0">Create a Project (Python)</h5>
+                            </div>
+                            <div class="card-body">
+                                <pre class="bg-light p-3 rounded"><code>from inspora import InsporaClient
+
+client = InsporaClient(
+    api_key='your-api-key',
+    environment='production'
+)
+
+project = client.projects.create(
+    name='My New Project',
+    description='Project created via API',
+    team_id='team-123'
+)
+
+print(f'Project created: {project.id}')</code></pre>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Webhooks -->
+            <div class="mb-5">
+                <h2 class="mb-4"><i class="fas fa-bell text-warning"></i> Webhooks</h2>
+                <div class="card border-0 shadow-sm">
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-lg-8">
+                                <h5>Real-time Notifications</h5>
+                                <p class="text-muted">Set up webhooks to receive real-time notifications when events occur in Inspora.</p>
+                                <div class="mb-3">
+                                    <h6>Available Events:</h6>
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <ul class="list-unstyled">
+                                                <li><i class="fas fa-check text-success me-2"></i>Project Created/Updated</li>
+                                                <li><i class="fas fa-check text-success me-2"></i>Task Assigned/Completed</li>
+                                                <li><i class="fas fa-check text-success me-2"></i>Team Member Added</li>
+                                            </ul>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <ul class="list-unstyled">
+                                                <li><i class="fas fa-check text-success me-2"></i>File Uploaded</li>
+                                                <li><i class="fas fa-check text-success me-2"></i>Comment Added</li>
+                                                <li><i class="fas fa-check text-success me-2"></i>Deadline Approaching</li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+                                <a href="#" class="btn btn-primary">Set Up Webhooks</a>
+                            </div>
+                            <div class="col-lg-4">
+                                <div class="bg-light p-3 rounded">
+                                    <h6>Webhook Example:</h6>
+                                    <pre class="small"><code>POST /your-endpoint
+{
+  "event": "task.completed",
+  "data": {
+    "task_id": "task-123",
+    "project_id": "proj-456",
+    "completed_by": "user-789"
+  }
+}</code></pre>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Developer Resources -->
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="mb-0"><i class="fas fa-tools text-primary"></i> Developer Resources</h3>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-6 col-lg-3 mb-4">
+                            <div class="text-center">
+                                <i class="fas fa-github fa-2x text-dark mb-3"></i>
+                                <h6>GitHub Repository</h6>
+                                <p class="text-muted">Open source examples and community contributions.</p>
+                                <a href="#" class="btn btn-outline-dark btn-sm">View on GitHub</a>
+                            </div>
+                        </div>
+                        
+                        <div class="col-md-6 col-lg-3 mb-4">
+                            <div class="text-center">
+                                <i class="fas fa-comments fa-2x text-info mb-3"></i>
+                                <h6>Developer Forum</h6>
+                                <p class="text-muted">Get help from the developer community.</p>
+                                <a href="#" class="btn btn-outline-info btn-sm">Join Discussion</a>
+                            </div>
+                        </div>
+                        
+                        <div class="col-md-6 col-lg-3 mb-4">
+                            <div class="text-center">
+                                <i class="fas fa-book fa-2x text-success mb-3"></i>
+                                <h6>API Reference</h6>
+                                <p class="text-muted">Complete API documentation and examples.</p>
+                                <a href="#" class="btn btn-outline-success btn-sm">View Reference</a>
+                            </div>
+                        </div>
+                        
+                        <div class="col-md-6 col-lg-3 mb-4">
+                            <div class="text-center">
+                                <i class="fas fa-headset fa-2x text-warning mb-3"></i>
+                                <h6>Developer Support</h6>
+                                <p class="text-muted">Get technical support for your integrations.</p>
+                                <a href="#" class="btn btn-outline-warning btn-sm">Contact Support</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+// Add interactive elements
+document.querySelectorAll('.btn').forEach(button => {
+    button.addEventListener('click', function(e) {
+        if (this.textContent.includes('View Docs') || this.textContent.includes('View Reference')) {
+            e.preventDefault();
+            alert('Documentation viewer coming soon! You can access full API documentation in the next update.');
+        }
+    });
+});
+
+// Add syntax highlighting simulation
+document.querySelectorAll('pre code').forEach(codeBlock => {
+    codeBlock.addEventListener('click', function() {
+        const text = this.textContent;
+        navigator.clipboard.writeText(text).then(() => {
+            alert('Code copied to clipboard!');
+        }).catch(() => {
+            // Fallback for older browsers
+            const textArea = document.createElement('textarea');
+            textArea.value = text;
+            document.body.appendChild(textArea);
+            textArea.select();
+            document.execCommand('copy');
+            document.body.removeChild(textArea);
+            alert('Code copied to clipboard!');
+        });
+    });
+    
+    // Add copy button
+    const copyBtn = document.createElement('button');
+    copyBtn.className = 'btn btn-sm btn-outline-secondary position-absolute top-0 end-0 m-2';
+    copyBtn.textContent = 'Copy';
+    copyBtn.onclick = function() {
+        const text = codeBlock.textContent;
+        navigator.clipboard.writeText(text).then(() => {
+            this.textContent = 'Copied!';
+            setTimeout(() => {
+                this.textContent = 'Copy';
+            }, 2000);
+        });
+    };
+    
+    const preElement = codeBlock.parentElement;
+    preElement.style.position = 'relative';
+    preElement.appendChild(copyBtn);
+});
+</script>
+{% endblock %}

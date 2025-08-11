@@ -1,0 +1,262 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Certifications - Inspora{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-12">
+            <!-- Hero Section -->
+            <div class="text-center mb-5">
+                <h1 class="display-4 fw-bold mb-4">
+                    <i class="fas fa-certificate text-warning"></i> Certifications
+                </h1>
+                <p class="lead text-muted mb-4">
+                    Earn recognized credentials and demonstrate your expertise with Inspora.
+                </p>
+                <div class="row justify-content-center">
+                    <div class="col-md-8">
+                        <div class="alert alert-success">
+                            <i class="fas fa-trophy me-2"></i>
+                            <strong>Congratulations!</strong> You've earned 1 certification. Keep learning to unlock more!
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Available Certifications -->
+            <div class="mb-5">
+                <h2 class="mb-4"><i class="fas fa-star text-primary"></i> Available Certifications</h2>
+                <div class="row">
+                    <!-- Certified User -->
+                    <div class="col-lg-4 mb-4">
+                        <div class="card border-0 shadow-sm h-100">
+                            <div class="card-header bg-success text-white text-center">
+                                <h4 class="mb-0"><i class="fas fa-user-check me-2"></i>Earned</h4>
+                            </div>
+                            <div class="card-body text-center">
+                                <i class="fas fa-certificate fa-4x text-success mb-3"></i>
+                                <h5 class="card-title">Inspora Certified User</h5>
+                                <p class="card-text">Basic proficiency in using Inspora for project management and team collaboration.</p>
+                                <div class="mb-3">
+                                    <span class="badge bg-success me-2">Beginner Level</span>
+                                    <span class="badge bg-info">2-3 hours</span>
+                                </div>
+                                <div class="alert alert-success">
+                                    <i class="fas fa-check-circle me-2"></i>
+                                    <strong>Completed!</strong> Earned on Dec 15, 2024
+                                </div>
+                                <a href="#" class="btn btn-success">View Certificate</a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Project Manager -->
+                    <div class="col-lg-4 mb-4">
+                        <div class="card border-0 shadow-sm h-100">
+                            <div class="card-header bg-primary text-white text-center">
+                                <h4 class="mb-0"><i class="fas fa-clock me-2"></i>In Progress</h4>
+                            </div>
+                            <div class="card-body text-center">
+                                <i class="fas fa-medal fa-4x text-primary mb-3"></i>
+                                <h5 class="card-title">Inspora Project Manager</h5>
+                                <p class="card-text">Advanced project management skills and workflow optimization expertise.</p>
+                                <div class="mb-3">
+                                    <span class="badge bg-warning me-2">Intermediate Level</span>
+                                    <span class="badge bg-info">4-5 hours</span>
+                                </div>
+                                <div class="progress mb-3">
+                                    <div class="progress-bar bg-primary" role="progressbar" style="width: 60%">60%</div>
+                                </div>
+                                <a href="#" class="btn btn-primary">Continue Learning</a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Power User -->
+                    <div class="col-lg-4 mb-4">
+                        <div class="card border-0 shadow-sm h-100">
+                            <div class="card-header bg-secondary text-white text-center">
+                                <h4 class="mb-0"><i class="fas fa-lock me-2"></i>Locked</h4>
+                            </div>
+                            <div class="card-body text-center">
+                                <i class="fas fa-crown fa-4x text-secondary mb-3"></i>
+                                <h5 class="card-title">Inspora Power User</h5>
+                                <p class="card-text">Expert-level skills in team management, automation, and advanced features.</p>
+                                <div class="mb-3">
+                                    <span class="badge bg-danger me-2">Advanced Level</span>
+                                    <span class="badge bg-info">6-8 hours</span>
+                                </div>
+                                <div class="alert alert-secondary">
+                                    <i class="fas fa-lock me-2"></i>
+                                    Requires Project Manager certification
+                                </div>
+                                <button class="btn btn-secondary" disabled>Locked</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Certification Benefits -->
+            <div class="mb-5">
+                <h2 class="mb-4"><i class="fas fa-gift text-success"></i> Certification Benefits</h2>
+                <div class="row">
+                    <div class="col-md-6 col-lg-3 mb-4">
+                        <div class="card border-0 shadow-sm text-center h-100">
+                            <div class="card-body">
+                                <i class="fas fa-unlock fa-3x text-primary mb-3"></i>
+                                <h5 class="card-title">Unlock Features</h5>
+                                <p class="card-text">Access advanced features and capabilities as you earn certifications.</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="col-md-6 col-lg-3 mb-4">
+                        <div class="card border-0 shadow-sm text-center h-100">
+                            <div class="card-body">
+                                <i class="fas fa-users fa-3x text-success mb-3"></i>
+                                <h5 class="card-title">Team Recognition</h5>
+                                <p class="card-text">Showcase your expertise to team members and stakeholders.</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="col-md-6 col-lg-3 mb-4">
+                        <div class="card border-0 shadow-sm text-center h-100">
+                            <div class="card-body">
+                                <i class="fas fa-briefcase fa-3x text-info mb-3"></i>
+                                <h5 class="card-title">Career Growth</h5>
+                                <p class="card-text">Demonstrate professional development and skill advancement.</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="col-md-6 col-lg-3 mb-4">
+                        <div class="card border-0 shadow-sm text-center h-100">
+                            <div class="card-body">
+                                <i class="fas fa-shield-alt fa-3x text-warning mb-3"></i>
+                                <h5 class="card-title">Admin Access</h5>
+                                <p class="card-text">Gain administrative privileges for team and organization management.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Certification Requirements -->
+            <div class="mb-5">
+                <h2 class="mb-4"><i class="fas fa-list-check text-info"></i> Certification Requirements</h2>
+                <div class="table-responsive">
+                    <table class="table table-hover">
+                        <thead class="table-light">
+                            <tr>
+                                <th>Certification</th>
+                                <th>Prerequisites</th>
+                                <th>Required Courses</th>
+                                <th>Time Estimate</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr class="table-success">
+                                <td><strong>Certified User</strong></td>
+                                <td>None</td>
+                                <td>Getting Started with Inspora</td>
+                                <td>2-3 hours</td>
+                                <td><span class="badge bg-success">Completed</span></td>
+                            </tr>
+                            <tr class="table-primary">
+                                <td><strong>Project Manager</strong></td>
+                                <td>Certified User</td>
+                                <td>Advanced Project Management</td>
+                                <td>4-5 hours</td>
+                                <td><span class="badge bg-primary">60% Complete</span></td>
+                            </tr>
+                            <tr class="table-secondary">
+                                <td><strong>Power User</strong></td>
+                                <td>Project Manager</td>
+                                <td>Power User & Admin</td>
+                                <td>6-8 hours</td>
+                                <td><span class="badge bg-secondary">Locked</span></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Your Achievements -->
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="mb-0"><i class="fas fa-trophy text-warning"></i> Your Achievements</h3>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-6 mb-4">
+                            <div class="d-flex align-items-center">
+                                <div class="me-3">
+                                    <i class="fas fa-certificate fa-2x text-success"></i>
+                                </div>
+                                <div>
+                                    <h6 class="mb-1">Inspora Certified User</h6>
+                                    <small class="text-muted">Earned on Dec 15, 2024</small>
+                                    <br>
+                                    <small class="text-success">Score: 95%</small>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="col-md-6 mb-4">
+                            <div class="d-flex align-items-center">
+                                <div class="me-3">
+                                    <i class="fas fa-medal fa-2x text-primary"></i>
+                                </div>
+                                <div>
+                                    <h6 class="mb-1">Project Manager (In Progress)</h6>
+                                    <small class="text-muted">Started on Dec 16, 2024</small>
+                                    <br>
+                                    <small class="text-primary">Progress: 60%</small>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="text-center mt-3">
+                        <a href="{% url 'accounts:academy' %}" class="btn btn-primary">
+                            <i class="fas fa-graduation-cap me-2"></i>Continue Learning
+                        </a>
+                        <a href="{% url 'accounts:help_center' %}" class="btn btn-outline-primary">
+                            <i class="fas fa-question-circle me-2"></i>Get Help
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+// Add interactive elements
+document.querySelectorAll('.btn').forEach(button => {
+    button.addEventListener('click', function(e) {
+        if (this.textContent.includes('View Certificate')) {
+            e.preventDefault();
+            alert('Certificate viewer coming soon! You can download your certificate in the next update.');
+        }
+    });
+});
+
+// Simulate progress updates
+setInterval(() => {
+    const progressBars = document.querySelectorAll('.progress-bar');
+    progressBars.forEach(bar => {
+        const currentWidth = parseInt(bar.style.width);
+        if (currentWidth < 100 && currentWidth > 0) {
+            bar.style.width = Math.min(currentWidth + Math.random() * 2, 100) + '%';
+            bar.textContent = Math.round(parseInt(bar.style.width)) + '%';
+        }
+    });
+}, 8000);
+</script>
+{% endblock %}

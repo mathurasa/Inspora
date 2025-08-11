@@ -1,0 +1,262 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Inspora Academy - Inspora{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-12">
+            <!-- Hero Section -->
+            <div class="text-center mb-5">
+                <h1 class="display-4 fw-bold mb-4">
+                    <i class="fas fa-graduation-cap text-primary"></i> Inspora Academy
+                </h1>
+                <p class="lead text-muted mb-4">
+                    Master Inspora with our comprehensive learning paths, courses, and certifications.
+                </p>
+                <div class="row justify-content-center">
+                    <div class="col-md-8">
+                        <div class="alert alert-info">
+                            <i class="fas fa-info-circle me-2"></i>
+                            <strong>New!</strong> Complete any learning path to earn a certificate and unlock advanced features.
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Learning Paths -->
+            <div class="mb-5">
+                <h2 class="mb-4"><i class="fas fa-road text-primary"></i> Learning Paths</h2>
+                <div class="row">
+                    <!-- Beginner Path -->
+                    <div class="col-lg-4 mb-4">
+                        <div class="card border-0 shadow-sm h-100">
+                            <div class="card-header bg-primary text-white text-center">
+                                <h4 class="mb-0"><i class="fas fa-seedling me-2"></i>Beginner</h4>
+                            </div>
+                            <div class="card-body">
+                                <h5 class="card-title">Getting Started with Inspora</h5>
+                                <p class="card-text">Perfect for new users. Learn the basics and get your first project running.</p>
+                                <ul class="list-unstyled">
+                                    <li><i class="fas fa-check text-success me-2"></i>Platform Overview</li>
+                                    <li><i class="fas fa-check text-success me-2"></i>First Project Setup</li>
+                                    <li><i class="fas fa-check text-success me-2"></i>Basic Task Management</li>
+                                    <li><i class="fas fa-check text-success me-2"></i>Team Invitation</li>
+                                </ul>
+                                <div class="mt-3">
+                                    <span class="badge bg-success me-2">4 modules</span>
+                                    <span class="badge bg-info">2-3 hours</span>
+                                </div>
+                            </div>
+                            <div class="card-footer text-center">
+                                <a href="#" class="btn btn-primary">Start Learning</a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Intermediate Path -->
+                    <div class="col-lg-4 mb-4">
+                        <div class="card border-0 shadow-sm h-100">
+                            <div class="card-header bg-success text-white text-center">
+                                <h4 class="mb-0"><i class="fas fa-tree me-2"></i>Intermediate</h4>
+                            </div>
+                            <div class="card-body">
+                                <h5 class="card-title">Advanced Project Management</h5>
+                                <p class="card-text">Take your skills to the next level with advanced features and workflows.</p>
+                                <ul class="list-unstyled">
+                                    <li><i class="fas fa-check text-success me-2"></i>Advanced Workflows</li>
+                                    <li><i class="fas fa-check text-success me-2"></i>Automation Rules</li>
+                                    <li><i class="fas fa-check text-success me-2"></i>Reporting & Analytics</li>
+                                    <li><i class="fas fa-check text-success me-2"></i>Integration Setup</li>
+                                </ul>
+                                <div class="mt-3">
+                                    <span class="badge bg-success me-2">6 modules</span>
+                                    <span class="badge bg-info">4-5 hours</span>
+                                </div>
+                            </div>
+                            <div class="card-footer text-center">
+                                <a href="#" class="btn btn-success">Start Learning</a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Advanced Path -->
+                    <div class="col-lg-4 mb-4">
+                        <div class="card border-0 shadow-sm h-100">
+                            <div class="card-header bg-warning text-dark text-center">
+                                <h4 class="mb-0"><i class="fas fa-crown me-2"></i>Advanced</h4>
+                            </div>
+                            <div class="card-body">
+                                <h5 class="card-title">Power User & Admin</h5>
+                                <p class="card-text">Become an Inspora expert and learn to manage teams and organizations.</p>
+                                <ul class="list-unstyled">
+                                    <li><i class="fas fa-check text-success me-2"></i>Team Management</li>
+                                    <li><i class="fas fa-check text-success me-2"></i>Security & Permissions</li>
+                                    <li><i class="fas fa-check text-success me-2"></i>API & Integrations</li>
+                                    <li><i class="fas fa-check text-success me-2"></i>Custom Workflows</li>
+                                </ul>
+                                <div class="mt-3">
+                                    <span class="badge bg-success me-2">8 modules</span>
+                                    <span class="badge bg-info">6-8 hours</span>
+                                </div>
+                            </div>
+                            <div class="card-footer text-center">
+                                <a href="#" class="btn btn-warning">Start Learning</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Featured Courses -->
+            <div class="mb-5">
+                <h2 class="mb-4"><i class="fas fa-star text-warning"></i> Featured Courses</h2>
+                <div class="row">
+                    <div class="col-md-6 col-lg-4 mb-4">
+                        <div class="card border-0 shadow-sm h-100">
+                            <div class="card-body">
+                                <div class="d-flex align-items-center mb-3">
+                                    <i class="fas fa-video fa-2x text-primary me-3"></i>
+                                    <div>
+                                        <h6 class="mb-1">Project Planning Masterclass</h6>
+                                        <small class="text-muted">Advanced Course</small>
+                                    </div>
+                                </div>
+                                <p class="card-text">Learn advanced project planning techniques used by top project managers.</p>
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <span class="badge bg-primary">3 hours</span>
+                                    <a href="#" class="btn btn-outline-primary btn-sm">Enroll Now</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="col-md-6 col-lg-4 mb-4">
+                        <div class="card border-0 shadow-sm h-100">
+                            <div class="card-body">
+                                <div class="d-flex align-items-center mb-3">
+                                    <i class="fas fa-chart-line fa-2x text-success me-3"></i>
+                                    <div>
+                                        <h6 class="mb-1">Analytics & Reporting</h6>
+                                        <small class="text-muted">Intermediate Course</small>
+                                    </div>
+                                </div>
+                                <p class="card-text">Master Inspora's analytics tools to make data-driven decisions.</p>
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <span class="badge bg-success">2.5 hours</span>
+                                    <a href="#" class="btn btn-outline-success btn-sm">Enroll Now</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="col-md-6 col-lg-4 mb-4">
+                        <div class="card border-0 shadow-sm h-100">
+                            <div class="card-body">
+                                <div class="d-flex align-items-center mb-3">
+                                    <i class="fas fa-cogs fa-2x text-info me-3"></i>
+                                    <div>
+                                        <h6 class="mb-1">Workflow Automation</h6>
+                                        <small class="text-muted">Advanced Course</small>
+                                    </div>
+                                </div>
+                                <p class="card-text">Automate repetitive tasks and create efficient workflows.</p>
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <span class="badge bg-info">4 hours</span>
+                                    <a href="#" class="btn btn-outline-info btn-sm">Enroll Now</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Certifications -->
+            <div class="mb-5">
+                <h2 class="mb-4"><i class="fas fa-certificate text-warning"></i> Certifications</h2>
+                <div class="row">
+                    <div class="col-md-6 mb-4">
+                        <div class="card border-0 shadow-sm">
+                            <div class="card-body text-center">
+                                <i class="fas fa-certificate fa-4x text-warning mb-3"></i>
+                                <h5 class="card-title">Inspora Certified User</h5>
+                                <p class="card-text">Complete the beginner learning path to earn this certification.</p>
+                                <div class="progress mb-3">
+                                    <div class="progress-bar" role="progressbar" style="width: 25%">25%</div>
+                                </div>
+                                <a href="#" class="btn btn-warning">Continue Learning</a>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="col-md-6 mb-4">
+                        <div class="card border-0 shadow-sm">
+                            <div class="card-body text-center">
+                                <i class="fas fa-medal fa-4x text-success mb-3"></i>
+                                <h5 class="card-title">Inspora Project Manager</h5>
+                                <p class="card-text">Complete the intermediate learning path to earn this certification.</p>
+                                <div class="progress mb-3">
+                                    <div class="progress-bar bg-success" role="progressbar" style="width: 0%">0%</div>
+                                </div>
+                                <a href="#" class="btn btn-outline-success">Start Learning</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Learning Progress -->
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="mb-0"><i class="fas fa-chart-bar text-primary"></i> Your Learning Progress</h3>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-3 text-center mb-3">
+                            <div class="display-6 text-primary">4</div>
+                            <small class="text-muted">Courses Enrolled</small>
+                        </div>
+                        <div class="col-md-3 text-center mb-3">
+                            <div class="display-6 text-success">2</div>
+                            <small class="text-muted">Courses Completed</small>
+                        </div>
+                        <div class="col-md-3 text-center mb-3">
+                            <div class="display-6 text-info">12</div>
+                            <small class="text-muted">Hours Learned</small>
+                        </div>
+                        <div class="col-md-3 text-center mb-3">
+                            <div class="display-6 text-warning">1</div>
+                            <small class="text-muted">Certificates Earned</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+// Add interactive elements
+document.querySelectorAll('.btn').forEach(button => {
+    button.addEventListener('click', function(e) {
+        if (this.textContent.includes('Start Learning') || this.textContent.includes('Enroll Now')) {
+            e.preventDefault();
+            alert('Course enrollment coming soon! This feature will be available in the next update.');
+        }
+    });
+});
+
+// Simulate progress updates
+setInterval(() => {
+    const progressBars = document.querySelectorAll('.progress-bar');
+    progressBars.forEach(bar => {
+        const currentWidth = parseInt(bar.style.width);
+        if (currentWidth < 100) {
+            bar.style.width = Math.min(currentWidth + Math.random() * 5, 100) + '%';
+            bar.textContent = Math.round(parseInt(bar.style.width)) + '%';
+        }
+    });
+}, 5000);
+</script>
+{% endblock %}

@@ -1,0 +1,320 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Portfolios - Inspora{% endblock %}
+
+{% block content %}
+<div class="row">
+    <!-- Header -->
+    <div class="col-12 mb-4">
+        <div class="d-flex justify-content-between align-items-center">
+            <div>
+                <h1 class="h3 mb-0">Portfolios</h1>
+                <p class="text-muted">Manage and monitor multiple projects and goals</p>
+            </div>
+            <a href="{% url 'portfolios:portfolio_create' %}" class="btn btn-primary">
+                <i class="bi bi-plus-circle"></i> New Portfolio
+            </a>
+        </div>
+    </div>
+
+    <!-- Filters and Search -->
+    <div class="col-12 mb-4">
+        <div class="dashboard-card">
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-4">
+                        <div class="input-group">
+                            <span class="input-group-text"><i class="bi bi-search"></i></span>
+                            <input type="text" class="form-control" id="searchInput" placeholder="Search portfolios...">
+                        </div>
+                    </div>
+                    <div class="col-md-2">
+                        <select class="form-select" id="statusFilter">
+                            <option value="">All Statuses</option>
+                            <option value="active">Active</option>
+                            <option value="planning">Planning</option>
+                            <option value="on_hold">On Hold</option>
+                            <option value="completed">Completed</option>
+                            <option value="cancelled">Cancelled</option>
+                        </select>
+                    </div>
+                    <div class="col-md-2">
+                        <select class="form-select" id="typeFilter">
+                            <option value="">All Types</option>
+                            <option value="strategic">Strategic</option>
+                            <option value="tactical">Tactical</option>
+                            <option value="operational">Operational</option>
+                            <option value="research">Research</option>
+                        </select>
+                    </div>
+                    <div class="col-md-2">
+                        <select class="form-select" id="ownerFilter">
+                            <option value="">All Owners</option>
+                            <option value="me">My Portfolios</option>
+                            <option value="team">Team Portfolios</option>
+                            <option value="company">Company Portfolios</option>
+                        </select>
+                    </div>
+                    <div class="col-md-2">
+                        <button class="btn btn-outline-secondary w-100" id="clearFilters">
+                            Clear
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Portfolio Grid -->
+    <div class="col-12">
+        {% if portfolios %}
+            <div class="row" id="portfolioGrid">
+                {% for portfolio in portfolios %}
+                <div class="col-lg-4 col-md-6 mb-4 portfolio-item" 
+                     data-status="{{ portfolio.status }}" 
+                     data-type="{{ portfolio.portfolio_type }}"
+                     data-owner="{{ portfolio.owner.id|default:'company' }}"
+                     data-name="{{ portfolio.name|lower }}">
+                    <div class="dashboard-card h-100">
+                        <div class="card-body">
+                            <div class="d-flex justify-content-between align-items-start mb-3">
+                                <h5 class="card-title mb-0">
+                                    <a href="{% url 'portfolios:portfolio_detail' portfolio.pk %}" class="text-decoration-none">
+                                        {{ portfolio.name }}
+                                    </a>
+                                </h5>
+                                <div class="dropdown">
+                                    <button class="btn btn-sm btn-outline-secondary" type="button" data-bs-toggle="dropdown">
+                                        <i class="bi bi-three-dots-vertical"></i>
+                                    </button>
+                                    <ul class="dropdown-menu">
+                                        <li><a class="dropdown-item" href="{% url 'portfolios:portfolio_detail' portfolio.pk %}">View</a></li>
+                                        <li><a class="dropdown-item" href="{% url 'portfolios:portfolio_edit' portfolio.pk %}">Edit</a></li>
+                                        <li><a class="dropdown-item" href="{% url 'portfolios:portfolio_report' portfolio.pk %}">Reports</a></li>
+                                        <li><hr class="dropdown-divider"></li>
+                                        <li><a class="dropdown-item text-danger" href="{% url 'portfolios:portfolio_delete' portfolio.pk %}">Delete</a></li>
+                                    </ul>
+                                </div>
+                            </div>
+
+                            <p class="text-muted small mb-3">{{ portfolio.description|truncatewords:15 }}</p>
+
+                            <div class="mb-3">
+                                <span class="badge bg-{{ portfolio.status|default:'secondary' }} me-2">{{ portfolio.get_status_display }}</span>
+                                <span class="badge bg-info">{{ portfolio.get_portfolio_type_display }}</span>
+                            </div>
+
+                            <!-- Portfolio Metrics -->
+                            <div class="row text-center mb-3">
+                                <div class="col-4">
+                                    <div class="border-end">
+                                        <small class="text-muted d-block">Projects</small>
+                                        <strong>{{ portfolio.get_projects_count }}</strong>
+                                    </div>
+                                </div>
+                                <div class="col-4">
+                                    <div class="border-end">
+                                        <small class="text-muted d-block">Goals</small>
+                                        <strong>{{ portfolio.get_goals_count }}</strong>
+                                    </div>
+                                </div>
+                                <div class="col-4">
+                                    <small class="text-muted d-block">Progress</small>
+                                    <strong>{{ portfolio.get_overall_progress }}%</strong>
+                                </div>
+                            </div>
+
+                            <!-- Overall Progress Bar -->
+                            <div class="mb-3">
+                                <div class="progress" style="height: 8px;">
+                                    <div class="progress-bar" style="width: {{ portfolio.get_overall_progress }}%"></div>
+                                </div>
+                            </div>
+
+                            <!-- Budget Information -->
+                            {% if portfolio.budget %}
+                            <div class="mb-3">
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <small class="text-muted">Budget Utilization</small>
+                                    <small class="text-muted">{{ portfolio.get_budget_utilization }}%</small>
+                                </div>
+                                <div class="progress" style="height: 6px;">
+                                    <div class="progress-bar {% if portfolio.get_budget_utilization > 100 %}bg-danger{% elif portfolio.get_budget_utilization > 80 %}bg-warning{% else %}bg-success{% endif %}" 
+                                         style="width: {{ portfolio.get_budget_utilization|default:0 }}%"></div>
+                                </div>
+                                <small class="text-muted">
+                                    ${{ portfolio.get_spent_budget|default:0 }} / ${{ portfolio.budget }}
+                                </small>
+                            </div>
+                            {% endif %}
+
+                            <div class="d-flex justify-content-between align-items-center">
+                                <small class="text-muted">
+                                    <i class="bi bi-calendar"></i>
+                                    {% if portfolio.end_date %}
+                                        Due: {{ portfolio.end_date|date:"M d, Y" }}
+                                    {% else %}
+                                        No end date
+                                    {% endif %}
+                                </small>
+                                <small class="text-muted">
+                                    <i class="bi bi-clock"></i>
+                                    {{ portfolio.updated_at|timesince }} ago
+                                </small>
+                            </div>
+
+                            {% if portfolio.owner %}
+                            <div class="mt-2">
+                                <small class="text-muted">
+                                    <i class="bi bi-person"></i> {{ portfolio.owner.get_full_name_or_username }}
+                                </small>
+                            </div>
+                            {% endif %}
+
+                            {% if portfolio.team %}
+                            <div class="mt-1">
+                                <small class="text-muted">
+                                    <i class="bi bi-people"></i> {{ portfolio.team.name }}
+                                </small>
+                            </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        {% else %}
+            <div class="col-12">
+                <div class="dashboard-card">
+                    <div class="card-body text-center py-5">
+                        <i class="bi bi-collection text-muted" style="font-size: 4rem;"></i>
+                        <h3 class="mt-3">No portfolios yet</h3>
+                        <p class="text-muted">Create your first portfolio to organize and monitor multiple projects and goals.</p>
+                        <a href="{% url 'portfolios:portfolio_create' %}" class="btn btn-primary btn-lg">
+                            <i class="bi bi-plus-circle"></i> Create Your First Portfolio
+                        </a>
+                    </div>
+                </div>
+            </div>
+        {% endif %}
+    </div>
+
+    <!-- Portfolio Summary -->
+    {% if portfolios %}
+    <div class="col-12 mt-4">
+        <div class="dashboard-card">
+            <div class="card-body">
+                <h5 class="card-title">
+                    <i class="bi bi-graph-up"></i> Portfolio Summary
+                </h5>
+                
+                <div class="row">
+                    <div class="col-md-3 text-center">
+                        <div class="p-3">
+                            <div class="display-6 text-primary">{{ portfolios|length }}</div>
+                            <small class="text-muted">Total Portfolios</small>
+                        </div>
+                    </div>
+                    <div class="col-md-3 text-center">
+                        <div class="p-3">
+                            <div class="display-6 text-success">{{ active_portfolios_count|default:0 }}</div>
+                            <small class="text-muted">Active Portfolios</small>
+                        </div>
+                    </div>
+                    <div class="col-md-3 text-center">
+                        <div class="p-3">
+                            <div class="display-6 text-warning">{{ total_projects_count|default:0 }}</div>
+                            <small class="text-muted">Total Projects</small>
+                        </div>
+                    </div>
+                    <div class="col-md-3 text-center">
+                        <div class="p-3">
+                            <div class="display-6 text-info">{{ total_goals_count|default:0 }}</div>
+                            <small class="text-muted">Total Goals</small>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="row mt-3">
+                    <div class="col-md-6">
+                        <h6>Portfolio Status Distribution</h6>
+                        <div class="d-flex flex-wrap gap-2">
+                            {% for status, count in status_distribution.items %}
+                            <span class="badge bg-{{ status|default:'secondary' }}">{{ status|title }}: {{ count }}</span>
+                            {% endfor %}
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <h6>Portfolio Type Distribution</h6>
+                        <div class="d-flex flex-wrap gap-2">
+                            {% for type, count in type_distribution.items %}
+                            <span class="badge bg-info">{{ type|title }}: {{ count }}</span>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const searchInput = document.getElementById('searchInput');
+    const statusFilter = document.getElementById('statusFilter');
+    const typeFilter = document.getElementById('typeFilter');
+    const ownerFilter = document.getElementById('ownerFilter');
+    const clearFilters = document.getElementById('clearFilters');
+    const portfolioItems = document.querySelectorAll('.portfolio-item');
+
+    function filterPortfolios() {
+        const searchTerm = searchInput.value.toLowerCase();
+        const statusValue = statusFilter.value;
+        const typeValue = typeFilter.value;
+        const ownerValue = ownerFilter.value;
+
+        portfolioItems.forEach(item => {
+            const name = item.dataset.name;
+            const status = item.dataset.status;
+            const type = item.dataset.type;
+            const owner = item.dataset.owner;
+
+            const matchesSearch = name.includes(searchTerm);
+            const matchesStatus = !statusValue || status === statusValue;
+            const matchesType = !typeValue || type === typeValue;
+            const matchesOwner = !ownerValue || 
+                               (ownerValue === 'me' && owner === '{{ user.id }}') ||
+                               (ownerValue === 'team' && owner !== '{{ user.id }}' && owner !== 'company') ||
+                               (ownerValue === 'company' && owner === 'company');
+
+            if (matchesSearch && matchesStatus && matchesType && matchesOwner) {
+                item.style.display = 'block';
+            } else {
+                item.style.display = 'none';
+            }
+        });
+    }
+
+    // Event listeners
+    searchInput.addEventListener('input', filterPortfolios);
+    statusFilter.addEventListener('change', filterPortfolios);
+    typeFilter.addEventListener('change', filterPortfolios);
+    ownerFilter.addEventListener('change', filterPortfolios);
+    
+    clearFilters.addEventListener('click', function() {
+        searchInput.value = '';
+        statusFilter.value = '';
+        typeFilter.value = '';
+        ownerFilter.value = '';
+        filterPortfolios();
+    });
+
+    // Initialize filters
+    filterPortfolios();
+});
+</script>
+{% endblock %}

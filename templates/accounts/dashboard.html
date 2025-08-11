@@ -1,0 +1,244 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Dashboard - Inspora{% endblock %}
+
+{% block content %}
+<div class="row">
+    <!-- Welcome Section -->
+    <div class="col-12 mb-4">
+        <div class="dashboard-card">
+            <div class="card-body">
+                <h1 class="card-title">Welcome back, {{ user.get_full_name_or_username }}!</h1>
+                <p class="card-text text-muted">Here's what's happening with your projects and tasks today.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Quick Stats -->
+    <div class="col-md-3 mb-4">
+        <div class="dashboard-card">
+            <div class="card-body text-center">
+                <i class="bi bi-folder text-primary" style="font-size: 2rem;"></i>
+                <h3 class="card-title mt-2">{{ active_projects_count|default:"0" }}</h3>
+                <p class="card-text text-muted">Active Projects</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-3 mb-4">
+        <div class="dashboard-card">
+            <div class="card-body text-center">
+                <i class="bi bi-list-task text-success" style="font-size: 2rem;"></i>
+                <h3 class="card-title mt-2">{{ my_tasks_count|default:"0" }}</h3>
+                <p class="card-text text-muted">My Tasks</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-3 mb-4">
+        <div class="dashboard-card">
+            <div class="card-body text-center">
+                <i class="bi bi-target text-warning" style="font-size: 2rem;"></i>
+                <h3 class="card-title mt-2">{{ active_goals_count|default:"0" }}</h3>
+                <p class="card-text text-muted">Active Goals</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-3 mb-4">
+        <div class="dashboard-card">
+            <div class="card-body text-center">
+                <i class="bi bi-exclamation-triangle text-danger" style="font-size: 2rem;"></i>
+                <h3 class="card-title mt-2">{{ overdue_tasks_count|default:"0" }}</h3>
+                <p class="card-text text-muted">Overdue Tasks</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Recent Projects -->
+    <div class="col-md-8 mb-4">
+        <div class="dashboard-card">
+            <div class="card-body">
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <h5 class="card-title">Recent Projects</h5>
+                    <a href="{% url 'projects:project_list' %}" class="btn btn-outline-primary btn-sm">View All</a>
+                </div>
+                
+                {% if recent_projects %}
+                    <div class="row">
+                        {% for project in recent_projects %}
+                        <div class="col-md-6 mb-3">
+                            <div class="project-card p-3">
+                                <div class="d-flex justify-content-between align-items-start mb-2">
+                                    <h6 class="mb-0">{{ project.name }}</h6>
+                                    <span class="project-status {{ project.status }}">{{ project.get_status_display }}</span>
+                                </div>
+                                <p class="text-muted small mb-2">{{ project.description|truncatewords:15 }}</p>
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <small class="text-muted">Progress</small>
+                                    <div class="progress" style="width: 60%;">
+                                        <div class="progress-bar" style="width: {{ project.get_progress_percentage }}%"></div>
+                                    </div>
+                                    <small class="text-muted">{{ project.get_progress_percentage }}%</small>
+                                </div>
+                                <div class="mt-2">
+                                    <small class="text-muted">
+                                        <i class="bi bi-calendar"></i> Due: {{ project.due_date|date:"M d"|default:"No due date" }}
+                                    </small>
+                                </div>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                {% else %}
+                    <div class="text-center py-4">
+                        <i class="bi bi-folder text-muted" style="font-size: 3rem;"></i>
+                        <p class="text-muted mt-2">No projects yet. Create your first project to get started!</p>
+                        <a href="{% url 'projects:project_create' %}" class="btn btn-primary">Create Project</a>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+    <!-- Quick Actions -->
+    <div class="col-md-4 mb-4">
+        <div class="dashboard-card">
+            <div class="card-body">
+                <h5 class="card-title">Quick Actions</h5>
+                <div class="d-grid gap-2">
+                    <a href="{% url 'projects:project_create' %}" class="btn btn-primary">
+                        <i class="bi bi-plus-circle"></i> New Project
+                    </a>
+                    <a href="{% url 'tasks:task_create' %}" class="btn btn-outline-primary">
+                        <i class="bi bi-list-plus"></i> New Task
+                    </a>
+                    <a href="{% url 'goals:goal_create' %}" class="btn btn-outline-success">
+                        <i class="bi bi-target"></i> New Goal
+                    </a>
+                    <a href="{% url 'accounts:team_create' %}" class="btn btn-outline-secondary">
+                        <i class="bi bi-people"></i> New Team
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Recent Activity -->
+        <div class="dashboard-card mt-4">
+            <div class="card-body">
+                <h5 class="card-title">Recent Activity</h5>
+                {% if recent_activity %}
+                    <div class="list-group list-group-flush">
+                        {% for activity in recent_activity %}
+                        <div class="list-group-item border-0 px-0 py-2">
+                            <div class="d-flex align-items-center">
+                                <div class="flex-shrink-0">
+                                    <i class="bi bi-circle-fill text-primary" style="font-size: 0.5rem;"></i>
+                                </div>
+                                <div class="flex-grow-1 ms-3">
+                                    <small class="text-muted">{{ activity.description }}</small>
+                                    <br>
+                                    <small class="text-muted">{{ activity.timestamp|timesince }} ago</small>
+                                </div>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                {% else %}
+                    <p class="text-muted small">No recent activity</p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+    <!-- My Tasks -->
+    <div class="col-12 mb-4">
+        <div class="dashboard-card">
+            <div class="card-body">
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <h5 class="card-title">My Tasks</h5>
+                    <a href="{% url 'tasks:my_tasks' %}" class="btn btn-outline-primary btn-sm">View All</a>
+                </div>
+                
+                {% if my_tasks %}
+                    <div class="table-responsive">
+                        <table class="table table-hover">
+                            <thead>
+                                <tr>
+                                    <th>Task</th>
+                                    <th>Project</th>
+                                    <th>Status</th>
+                                    <th>Priority</th>
+                                    <th>Due Date</th>
+                                    <th>Progress</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for task in my_tasks %}
+                                <tr>
+                                    <td>
+                                        <a href="{% url 'tasks:task_detail' task.pk %}" class="text-decoration-none">
+                                            {{ task.title }}
+                                        </a>
+                                    </td>
+                                    <td>
+                                        <a href="{% url 'projects:project_detail' task.project.pk %}" class="text-decoration-none">
+                                            {{ task.project.name }}
+                                        </a>
+                                    </td>
+                                    <td>
+                                        <span class="badge bg-{{ task.status|default:'secondary' }}">
+                                            {{ task.get_status_display }}
+                                        </span>
+                                    </td>
+                                    <td>
+                                        <span class="task-priority {{ task.priority }}">
+                                            {{ task.get_priority_display }}
+                                        </span>
+                                    </td>
+                                    <td>
+                                        {% if task.due_date %}
+                                            <span class="{% if task.is_overdue %}text-danger{% endif %}">
+                                                {{ task.due_date|date:"M d, Y" }}
+                                            </span>
+                                        {% else %}
+                                            <span class="text-muted">No due date</span>
+                                        {% endif %}
+                                    </td>
+                                    <td>
+                                        <div class="progress" style="width: 100px;">
+                                            <div class="progress-bar" style="width: {{ task.progress }}%"></div>
+                                        </div>
+                                        <small class="text-muted">{{ task.progress }}%</small>
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                {% else %}
+                    <div class="text-center py-4">
+                        <i class="bi bi-list-task text-muted" style="font-size: 3rem;"></i>
+                        <p class="text-muted mt-2">No tasks assigned to you yet.</p>
+                        <a href="{% url 'tasks:task_create' %}" class="btn btn-primary">Create Task</a>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    // Dashboard-specific JavaScript
+    document.addEventListener('DOMContentLoaded', function() {
+        // Auto-refresh dashboard data every 30 seconds
+        setInterval(function() {
+            // You can implement AJAX calls here to refresh dashboard data
+            console.log('Refreshing dashboard data...');
+        }, 30000);
+    });
+</script>
+{% endblock %}

@@ -1,0 +1,281 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Help Center - Inspora{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-12">
+            <!-- Hero Section -->
+            <div class="text-center mb-5">
+                <h1 class="display-4 fw-bold mb-4">
+                    <i class="fas fa-question-circle text-primary"></i> Help Center
+                </h1>
+                <p class="lead text-muted mb-4">
+                    Find answers to your questions and learn how to use Inspora effectively.
+                </p>
+                
+                <!-- Search Bar -->
+                <div class="row justify-content-center">
+                    <div class="col-md-8 col-lg-6">
+                        <div class="input-group input-group-lg">
+                            <input type="text" class="form-control" id="helpSearch" placeholder="Search for help articles, tutorials, and guides...">
+                            <button class="btn btn-primary" type="button" onclick="searchHelp()">
+                                <i class="fas fa-search"></i> Search
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Help Categories -->
+            <div class="row mb-5">
+                <div class="col-md-6 col-lg-3 mb-4">
+                    <div class="card h-100 border-0 shadow-sm text-center">
+                        <div class="card-body p-4">
+                            <div class="mb-3">
+                                <i class="fas fa-rocket fa-3x text-primary"></i>
+                            </div>
+                            <h5 class="card-title">Getting Started</h5>
+                            <p class="card-text text-muted">New to Inspora? Start here with the basics.</p>
+                            <a href="#getting-started" class="btn btn-outline-primary btn-sm">View Articles</a>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="col-md-6 col-lg-3 mb-4">
+                    <div class="card h-100 border-0 shadow-sm text-center">
+                        <div class="card-body p-4">
+                            <div class="mb-3">
+                                <i class="fas fa-project-diagram fa-3x text-success"></i>
+                            </div>
+                            <h5 class="card-title">Projects & Tasks</h5>
+                            <p class="card-text text-muted">Learn project management and task organization.</p>
+                            <a href="#projects-tasks" class="btn btn-outline-success btn-sm">View Articles</a>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="col-md-6 col-lg-3 mb-4">
+                    <div class="card h-100 border-0 shadow-sm text-center">
+                        <div class="card-body p-4">
+                            <div class="mb-3">
+                                <i class="fas fa-users fa-3x text-info"></i>
+                            </div>
+                            <h5 class="card-title">Team Collaboration</h5>
+                            <p class="card-text text-muted">Work together effectively with your team.</p>
+                            <a href="#team-collaboration" class="btn btn-outline-info btn-sm">View Articles</a>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="col-md-6 col-lg-3 mb-4">
+                    <div class="card h-100 border-0 shadow-sm text-center">
+                        <div class="card-body p-4">
+                            <div class="mb-3">
+                                <i class="fas fa-cog fa-3x text-warning"></i>
+                            </div>
+                            <h5 class="card-title">Settings & Admin</h5>
+                            <p class="card-text text-muted">Configure Inspora for your organization.</p>
+                            <a href="#settings-admin" class="btn btn-outline-warning btn-sm">View Articles</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Getting Started Section -->
+            <div id="getting-started" class="mb-5">
+                <h2 class="mb-4"><i class="fas fa-rocket text-primary"></i> Getting Started</h2>
+                <div class="row">
+                    <div class="col-md-6 mb-4">
+                        <div class="card border-0 shadow-sm h-100">
+                            <div class="card-body">
+                                <h5 class="card-title">
+                                    <i class="fas fa-play-circle text-primary me-2"></i>
+                                    Welcome to Inspora
+                                </h5>
+                                <p class="card-text">Your complete guide to getting started with Inspora. Learn the basics and set up your first project.</p>
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <small class="text-muted">5 min read</small>
+                                    <a href="#" class="btn btn-outline-primary btn-sm">Read More</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="col-md-6 mb-4">
+                        <div class="card border-0 shadow-sm h-100">
+                            <div class="card-body">
+                                <h5 class="card-title">
+                                    <i class="fas fa-video text-success me-2"></i>
+                                    First Project Setup
+                                </h5>
+                                <p class="card-text">Step-by-step video tutorial on creating your first project in Inspora.</p>
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <small class="text-muted">8 min video</small>
+                                    <a href="#" class="btn btn-outline-success btn-sm">Watch Video</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Projects & Tasks Section -->
+            <div id="projects-tasks" class="mb-5">
+                <h2 class="mb-4"><i class="fas fa-project-diagram text-success"></i> Projects & Tasks</h2>
+                <div class="row">
+                    <div class="col-md-6 mb-4">
+                        <div class="card border-0 shadow-sm h-100">
+                            <div class="card-body">
+                                <h5 class="card-title">
+                                    <i class="fas fa-tasks text-success me-2"></i>
+                                    Task Management Basics
+                                </h5>
+                                <p class="card-text">Learn how to create, organize, and track tasks effectively in Inspora.</p>
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <small class="text-muted">7 min read</small>
+                                    <a href="#" class="btn btn-outline-success btn-sm">Read More</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="col-md-6 mb-4">
+                        <div class="card border-0 shadow-sm h-100">
+                            <div class="card-body">
+                                <h5 class="card-title">
+                                    <i class="fas fa-calendar-alt text-info me-2"></i>
+                                    Project Timeline Management
+                                </h5>
+                                <p class="card-text">Master project scheduling and timeline management with Inspora's powerful tools.</p>
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <small class="text-muted">10 min read</small>
+                                    <a href="#" class="btn btn-outline-info btn-sm">Read More</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Team Collaboration Section -->
+            <div id="team-collaboration" class="mb-5">
+                <h2 class="mb-4"><i class="fas fa-users text-info"></i> Team Collaboration</h2>
+                <div class="row">
+                    <div class="col-md-6 mb-4">
+                        <div class="card border-0 shadow-sm h-100">
+                            <div class="card-body">
+                                <h5 class="card-title">
+                                    <i class="fas fa-comments text-info me-2"></i>
+                                    Team Communication
+                                </h5>
+                                <p class="card-text">Learn how to communicate effectively with your team using Inspora's built-in tools.</p>
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <small class="text-muted">6 min read</small>
+                                    <a href="#" class="btn btn-outline-info btn-sm">Read More</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="col-md-6 mb-4">
+                        <div class="card border-0 shadow-sm h-100">
+                            <div class="card-body">
+                                <h5 class="card-title">
+                                    <i class="fas fa-share-alt text-warning me-2"></i>
+                                    File Sharing & Permissions
+                                </h5>
+                                <p class="card-text">Understand how to share files and manage permissions within your team.</p>
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <small class="text-muted">8 min read</small>
+                                    <a href="#" class="btn btn-outline-warning btn-sm">Read More</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Settings & Admin Section -->
+            <div id="settings-admin" class="mb-5">
+                <h2 class="mb-4"><i class="fas fa-cog text-warning"></i> Settings & Admin</h2>
+                <div class="row">
+                    <div class="col-md-6 mb-4">
+                        <div class="card border-0 shadow-sm h-100">
+                            <div class="card-body">
+                                <h5 class="card-title">
+                                    <i class="fas fa-user-cog text-warning me-2"></i>
+                                    User Management
+                                </h5>
+                                <p class="card-text">Learn how to manage users, roles, and permissions in your Inspora workspace.</p>
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <small class="text-muted">9 min read</small>
+                                    <a href="#" class="btn btn-outline-warning btn-sm">Read More</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="col-md-6 mb-4">
+                        <div class="card border-0 shadow-sm h-100">
+                            <div class="card-body">
+                                <h5 class="card-title">
+                                    <i class="fas fa-shield-alt text-danger me-2"></i>
+                                    Security & Privacy
+                                </h5>
+                                <p class="card-text">Understand Inspora's security features and how to protect your data.</p>
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <small class="text-muted">7 min read</small>
+                                    <a href="#" class="btn btn-outline-danger btn-sm">Read More</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Contact Support -->
+            <div class="card mt-5">
+                <div class="card-body text-center">
+                    <h3 class="mb-3">Still Need Help?</h3>
+                    <p class="text-muted mb-4">Can't find what you're looking for? Our support team is here to help.</p>
+                    <div class="d-flex justify-content-center gap-3">
+                        <a href="{% url 'accounts:support' %}" class="btn btn-primary">
+                            <i class="fas fa-headset me-2"></i>Contact Support
+                        </a>
+                        <a href="{% url 'accounts:forums' %}" class="btn btn-outline-primary">
+                            <i class="fas fa-comments me-2"></i>Ask Community
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+function searchHelp() {
+    const searchTerm = document.getElementById('helpSearch').value;
+    if (searchTerm.trim()) {
+        // Implement search functionality
+        alert('Search functionality coming soon! Searching for: ' + searchTerm);
+    }
+}
+
+// Add smooth scrolling for anchor links
+document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+    anchor.addEventListener('click', function (e) {
+        e.preventDefault();
+        const target = document.querySelector(this.getAttribute('href'));
+        if (target) {
+            target.scrollIntoView({
+                behavior: 'smooth',
+                block: 'start'
+            });
+        }
+    });
+});
+</script>
+{% endblock %}

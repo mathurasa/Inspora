@@ -1,0 +1,120 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load crispy_forms_tags %}
+
+{% block title %}
+    {% if form.instance.pk %}Edit Team{% else %}New Team{% endif %} - Inspora
+{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-lg-8">
+        <div class="card">
+            <div class="card-body">
+                <div class="d-flex justify-content-between align-items-center mb-4">
+                    <div>
+                        <h1 class="h3 mb-0">
+                            {% if form.instance.pk %}
+                                <i class="fas fa-edit text-primary"></i> Edit Team
+                            {% else %}
+                                <i class="fas fa-plus-circle text-primary"></i> New Team
+                            {% endif %}
+                        </h1>
+                        <p class="text-muted">
+                            {% if form.instance.pk %}
+                                Update your team details and settings
+                            {% else %}
+                                Create a new team to collaborate with others
+                            {% endif %}
+                        </p>
+                    </div>
+                    <a href="{% url 'accounts:team_list' %}" class="btn btn-outline-secondary">
+                        <i class="fas fa-arrow-left"></i> Back to Teams
+                    </a>
+                </div>
+
+                <form method="post" class="needs-validation" novalidate>
+                    {% csrf_token %}
+                    
+                    <div class="row">
+                        <!-- Basic Information -->
+                        <div class="col-md-8">
+                            <div class="mb-4">
+                                <h5 class="text-primary mb-3">
+                                    <i class="fas fa-info-circle"></i> Basic Information
+                                </h5>
+                                
+                                <div class="row">
+                                    <div class="col-12 mb-3">
+                                        {{ form.name|as_crispy_field }}
+                                    </div>
+                                    <div class="col-12 mb-3">
+                                        {{ form.description|as_crispy_field }}
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Team Settings -->
+                            <div class="mb-4">
+                                <h5 class="text-primary mb-3">
+                                    <i class="fas fa-gear"></i> Team Settings
+                                </h5>
+                                
+                                <div class="row">
+                                    <div class="col-md-6 mb-3">
+                                        {{ form.is_public|as_crispy_field }}
+                                    </div>
+                                    <div class="col-md-6 mb-3">
+                                        {{ form.max_members|as_crispy_field }}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Help and Tips -->
+                        <div class="col-md-4">
+                            <div class="card bg-light border-0">
+                                <div class="card-body">
+                                    <h6 class="card-title text-primary">
+                                        <i class="fas fa-lightbulb"></i> Tips
+                                    </h6>
+                                    <ul class="list-unstyled small text-muted mb-0">
+                                        <li class="mb-1">• Choose a clear, descriptive team name</li>
+                                        <li class="mb-1">• Set appropriate member limits</li>
+                                        <li class="mb-1">• Consider privacy settings</li>
+                                        <li class="mb-1">• Add helpful descriptions</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Form Actions -->
+                    <div class="border-top pt-4 mt-4">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div>
+                                {% if form.instance.pk %}
+                                    <a href="{% url 'accounts:team_detail' form.instance.pk %}" 
+                                       class="btn btn-outline-danger"
+                                       onclick="return confirm('Are you sure you want to delete this team?')">
+                                        <i class="fas fa-trash"></i> Delete Team
+                                    </a>
+                                {% endif %}
+                            </div>
+                            <div>
+                                <a href="{% url 'accounts:team_list' %}" class="btn btn-secondary me-2">
+                                    <i class="fas fa-times"></i> Cancel
+                                </a>
+                                <button type="submit" class="btn btn-primary">
+                                    <i class="fas fa-save"></i>
+                                    {% if form.instance.pk %}Update Team{% else %}Create Team{% endif %}
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

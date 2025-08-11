@@ -1,0 +1,575 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}{{ project.name }} - Board View - Inspora{% endblock %}
+
+{% block extra_css %}
+<style>
+    .kanban-board {
+        overflow-x: auto;
+        padding: 1rem 0;
+    }
+    
+    .kanban-column {
+        min-width: 300px;
+        max-width: 350px;
+        margin-right: 1rem;
+    }
+    
+    .kanban-task {
+        cursor: grab;
+        transition: all 0.2s ease;
+    }
+    
+    .kanban-task:active {
+        cursor: grabbing;
+    }
+    
+    .kanban-task.dragging {
+        opacity: 0.5;
+        transform: rotate(5deg);
+    }
+    
+    .kanban-column.drag-over {
+        background-color: rgba(13, 110, 253, 0.1);
+        border: 2px dashed var(--primary-color);
+    }
+    
+    .task-count {
+        background-color: var(--light-color);
+        border-radius: 12px;
+        padding: 0.25rem 0.75rem;
+        font-size: 0.875rem;
+        font-weight: 500;
+    }
+    
+    .add-task-btn {
+        width: 100%;
+        border: 2px dashed #dee2e6;
+        background: transparent;
+        color: #6c757d;
+        transition: all 0.2s ease;
+    }
+    
+    .add-task-btn:hover {
+        border-color: var(--primary-color);
+        color: var(--primary-color);
+        background-color: rgba(13, 110, 253, 0.05);
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="row">
+    <!-- Board Header -->
+    <div class="col-12 mb-4">
+        <div class="d-flex justify-content-between align-items-center">
+            <div>
+                <nav aria-label="breadcrumb">
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item"><a href="{% url 'projects:project_list' %}">Projects</a></li>
+                        <li class="breadcrumb-item"><a href="{% url 'projects:project_detail' project.pk %}">{{ project.name }}</a></li>
+                        <li class="breadcrumb-item active">Board View</li>
+                    </ol>
+                </nav>
+                <h1 class="h3 mb-0">Board View</h1>
+                <p class="text-muted">Drag and drop tasks to organize your workflow</p>
+            </div>
+            <div class="btn-group" role="group">
+                <a href="{% url 'tasks:task_create' %}?project={{ project.pk }}" class="btn btn-primary">
+                    <i class="bi bi-plus-circle"></i> New Task
+                </a>
+                <div class="btn-group" role="group">
+                    <button type="button" class="btn btn-outline-primary dropdown-toggle dropdown-toggle-split" data-bs-toggle="dropdown">
+                        <span class="visually-hidden">Toggle Dropdown</span>
+                    </button>
+                    <ul class="dropdown-menu">
+                        <li><a class="dropdown-item" href="{% url 'projects:project_detail' project.pk %}">Detail View</a></li>
+                        <li><a class="dropdown-item" href="{% url 'projects:project_list_view' project.pk %}">List View</a></li>
+                        <li><a class="dropdown-item" href="{% url 'projects:project_calendar' project.pk %}">Calendar View</a></li>
+                        <li><a class="dropdown-item" href="{% url 'projects:project_timeline' project.pk %}">Timeline View</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Kanban Board -->
+    <div class="col-12">
+        <div class="kanban-board">
+            <div class="d-flex">
+                <!-- Backlog Column -->
+                <div class="kanban-column" data-status="backlog">
+                    <div class="kanban-column-header">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <h5 class="kanban-column-title">Backlog</h5>
+                            <span class="task-count">{{ backlog_tasks.count }}</span>
+                        </div>
+                    </div>
+                    
+                    <div class="kanban-tasks" id="backlog-tasks">
+                        {% for task in backlog_tasks %}
+                        <div class="kanban-task mb-3" data-task-id="{{ task.pk }}" draggable="true">
+                            <div class="dashboard-card">
+                                <div class="card-body p-3">
+                                    <div class="d-flex justify-content-between align-items-start mb-2">
+                                        <h6 class="card-title mb-0">{{ task.title }}</h6>
+                                        <span class="task-priority {{ task.priority }}">{{ task.get_priority_display }}</span>
+                                    </div>
+                                    
+                                    {% if task.description %}
+                                        <p class="text-muted small mb-2">{{ task.description|truncatewords:15 }}</p>
+                                    {% endif %}
+                                    
+                                    <div class="d-flex justify-content-between align-items-center mb-2">
+                                        {% if task.assignee %}
+                                            <div class="avatar-sm">
+                                                {% if task.assignee.avatar %}
+                                                    <img src="{{ task.assignee.avatar.url }}" class="rounded-circle" width="20" height="20">
+                                                {% else %}
+                                                    <div class="bg-primary text-white rounded-circle d-flex align-items-center justify-content-center" style="width: 20px; height: 20px; font-size: 10px;">
+                                                        {{ task.assignee.first_name|first|upper }}{{ task.assignee.last_name|first|upper }}
+                                                    </div>
+                                                {% endif %}
+                                            </div>
+                                        {% else %}
+                                            <span class="text-muted small">Unassigned</span>
+                                        {% endif %}
+                                        
+                                        {% if task.due_date %}
+                                            <small class="text-muted {% if task.is_overdue %}text-danger{% endif %}">
+                                                {{ task.due_date|date:"M d" }}
+                                            </small>
+                                        {% endif %}
+                                    </div>
+                                    
+                                    <div class="progress mb-2" style="height: 4px;">
+                                        <div class="progress-bar" style="width: {{ task.progress }}%"></div>
+                                    </div>
+                                    
+                                    <div class="d-flex justify-content-between align-items-center">
+                                        <small class="text-muted">{{ task.progress }}%</small>
+                                        <div class="btn-group btn-group-sm">
+                                            <a href="{% url 'tasks:task_detail' task.pk %}" class="btn btn-outline-primary btn-sm">
+                                                <i class="bi bi-eye"></i>
+                                            </a>
+                                            <a href="{% url 'tasks:task_edit' task.pk %}" class="btn btn-outline-secondary btn-sm">
+                                                <i class="bi bi-pencil"></i>
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        {% endfor %}
+                        
+                        <button class="btn add-task-btn mb-3" onclick="addTask('backlog')">
+                            <i class="bi bi-plus-circle"></i> Add Task
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Planning Column -->
+                <div class="kanban-column" data-status="planning">
+                    <div class="kanban-column-header">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <h5 class="kanban-column-title">Planning</h5>
+                            <span class="task-count">{{ planning_tasks.count }}</span>
+                        </div>
+                    </div>
+                    
+                    <div class="kanban-tasks" id="planning-tasks">
+                        {% for task in planning_tasks %}
+                        <div class="kanban-task mb-3" data-task-id="{{ task.pk }}" draggable="true">
+                            <div class="dashboard-card">
+                                <div class="card-body p-3">
+                                    <div class="d-flex justify-content-between align-items-start mb-2">
+                                        <h6 class="card-title mb-0">{{ task.title }}</h6>
+                                        <span class="task-priority {{ task.priority }}">{{ task.get_priority_display }}</span>
+                                    </div>
+                                    
+                                    {% if task.description %}
+                                        <p class="text-muted small mb-2">{{ task.description|truncatewords:15 }}</p>
+                                    {% endif %}
+                                    
+                                    <div class="d-flex justify-content-between align-items-center mb-2">
+                                        {% if task.assignee %}
+                                            <div class="avatar-sm">
+                                                {% if task.assignee.avatar %}
+                                                    <img src="{{ task.assignee.avatar.url }}" class="rounded-circle" width="20" height="20">
+                                                {% else %}
+                                                    <div class="bg-primary text-white rounded-circle d-flex align-items-center justify-content-center" style="width: 20px; height: 20px; font-size: 10px;">
+                                                        {{ task.assignee.first_name|first|upper }}{{ task.assignee.last_name|first|upper }}
+                                                    </div>
+                                                {% endif %}
+                                            </div>
+                                        {% else %}
+                                            <span class="text-muted small">Unassigned</span>
+                                        {% endif %}
+                                        
+                                        {% if task.due_date %}
+                                            <small class="text-muted {% if task.is_overdue %}text-danger{% endif %}">
+                                                {{ task.due_date|date:"M d" }}
+                                            </small>
+                                        {% endif %}
+                                    </div>
+                                    
+                                    <div class="progress mb-2" style="height: 4px;">
+                                        <div class="progress-bar" style="width: {{ task.progress }}%"></div>
+                                    </div>
+                                    
+                                    <div class="d-flex justify-content-between align-items-center">
+                                        <small class="text-muted">{{ task.progress }}%</small>
+                                        <div class="btn-group btn-group-sm">
+                                            <a href="{% url 'tasks:task_detail' task.pk %}" class="btn btn-outline-primary btn-sm">
+                                                <i class="bi bi-eye"></i>
+                                            </a>
+                                            <a href="{% url 'tasks:task_edit' task.pk %}" class="btn btn-outline-secondary btn-sm">
+                                                <i class="bi bi-pencil"></i>
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        {% endfor %}
+                        
+                        <button class="btn add-task-btn mb-3" onclick="addTask('planning')">
+                            <i class="bi bi-plus-circle"></i> Add Task
+                        </button>
+                    </div>
+                </div>
+
+                <!-- In Progress Column -->
+                <div class="kanban-column" data-status="in_progress">
+                    <div class="kanban-column-header">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <h5 class="kanban-column-title">In Progress</h5>
+                            <span class="task-count">{{ in_progress_tasks.count }}</span>
+                        </div>
+                    </div>
+                    
+                    <div class="kanban-tasks" id="in-progress-tasks">
+                        {% for task in in_progress_tasks %}
+                        <div class="kanban-task mb-3" data-task-id="{{ task.pk }}" draggable="true">
+                            <div class="dashboard-card">
+                                <div class="card-body p-3">
+                                    <div class="d-flex justify-content-between align-items-start mb-2">
+                                        <h6 class="card-title mb-0">{{ task.title }}</h6>
+                                        <span class="task-priority {{ task.priority }}">{{ task.get_priority_display }}</span>
+                                    </div>
+                                    
+                                    {% if task.description %}
+                                        <p class="text-muted small mb-2">{{ task.description|truncatewords:15 }}</p>
+                                    {% endif %}
+                                    
+                                    <div class="d-flex justify-content-between align-items-center mb-2">
+                                        {% if task.assignee %}
+                                            <div class="avatar-sm">
+                                                {% if task.assignee.avatar %}
+                                                    <img src="{{ task.assignee.avatar.url }}" class="rounded-circle" width="20" height="20">
+                                                {% else %}
+                                                    <div class="bg-primary text-white rounded-circle d-flex align-items-center justify-content-center" style="width: 20px; height: 20px; font-size: 10px;">
+                                                        {{ task.assignee.first_name|first|upper }}{{ task.assignee.last_name|first|upper }}
+                                                    </div>
+                                                {% endif %}
+                                            </div>
+                                        {% else %}
+                                            <span class="text-muted small">Unassigned</span>
+                                        {% endif %}
+                                        
+                                        {% if task.due_date %}
+                                            <small class="text-muted {% if task.is_overdue %}text-danger{% endif %}">
+                                                {{ task.due_date|date:"M d" }}
+                                            </small>
+                                        {% endif %}
+                                    </div>
+                                    
+                                    <div class="progress mb-2" style="height: 4px;">
+                                        <div class="progress-bar" style="width: {{ task.progress }}%"></div>
+                                    </div>
+                                    
+                                    <div class="d-flex justify-content-between align-items-center">
+                                        <small class="text-muted">{{ task.progress }}%</small>
+                                        <div class="btn-group btn-group-sm">
+                                            <a href="{% url 'tasks:task_detail' task.pk %}" class="btn btn-outline-primary btn-sm">
+                                                <i class="bi bi-eye"></i>
+                                            </a>
+                                            <a href="{% url 'tasks:task_edit' task.pk %}" class="btn btn-outline-secondary btn-sm">
+                                                <i class="bi bi-pencil"></i>
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        {% endfor %}
+                        
+                        <button class="btn add-task-btn mb-3" onclick="addTask('in_progress')">
+                            <i class="bi bi-plus-circle"></i> Add Task
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Review Column -->
+                <div class="kanban-column" data-status="review">
+                    <div class="kanban-column-header">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <h5 class="kanban-column-title">Review</h5>
+                            <span class="task-count">{{ review_tasks.count }}</span>
+                        </div>
+                    </div>
+                    
+                    <div class="kanban-tasks" id="review-tasks">
+                        {% for task in review_tasks %}
+                        <div class="kanban-task mb-3" data-task-id="{{ task.pk }}" draggable="true">
+                            <div class="dashboard-card">
+                                <div class="card-body p-3">
+                                    <div class="d-flex justify-content-between align-items-start mb-2">
+                                        <h6 class="card-title mb-0">{{ task.title }}</h6>
+                                        <span class="task-priority {{ task.priority }}">{{ task.get_priority_display }}</span>
+                                    </div>
+                                    
+                                    {% if task.description %}
+                                        <p class="text-muted small mb-2">{{ task.description|truncatewords:15 }}</p>
+                                    {% endif %}
+                                    
+                                    <div class="d-flex justify-content-between align-items-center mb-2">
+                                        {% if task.assignee %}
+                                            <div class="avatar-sm">
+                                                {% if task.assignee.avatar %}
+                                                    <img src="{{ task.assignee.avatar.url }}" class="rounded-circle" width="20" height="20">
+                                                {% else %}
+                                                    <div class="bg-primary text-white rounded-circle d-flex align-items-center justify-content-center" style="width: 20px; height: 20px; font-size: 10px;">
+                                                        {{ task.assignee.first_name|first|upper }}{{ task.assignee.last_name|first|upper }}
+                                                    </div>
+                                                {% endif %}
+                                            </div>
+                                        {% else %}
+                                            <span class="text-muted small">Unassigned</span>
+                                        {% endif %}
+                                        
+                                        {% if task.due_date %}
+                                            <small class="text-muted {% if task.is_overdue %}text-danger{% endif %}">
+                                                {{ task.due_date|date:"M d" }}
+                                            </small>
+                                        {% endif %}
+                                    </div>
+                                    
+                                    <div class="progress mb-2" style="height: 4px;">
+                                        <div class="progress-bar" style="width: {{ task.progress }}%"></div>
+                                    </div>
+                                    
+                                    <div class="d-flex justify-content-between align-items-center">
+                                        <small class="text-muted">{{ task.progress }}%</small>
+                                        <div class="btn-group btn-group-sm">
+                                            <a href="{% url 'tasks:task_detail' task.pk %}" class="btn btn-outline-primary btn-sm">
+                                                <i class="bi bi-eye"></i>
+                                            </a>
+                                            <a href="{% url 'tasks:task_edit' task.pk %}" class="btn btn-outline-secondary btn-sm">
+                                                <i class="bi bi-pencil"></i>
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        {% endfor %}
+                        
+                        <button class="btn add-task-btn mb-3" onclick="addTask('review')">
+                            <i class="bi bi-plus-circle"></i> Add Task
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Completed Column -->
+                <div class="kanban-column" data-status="completed">
+                    <div class="kanban-column-header">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <h5 class="kanban-column-title">Completed</h5>
+                            <span class="task-count">{{ completed_tasks.count }}</span>
+                        </div>
+                    </div>
+                    
+                    <div class="kanban-tasks" id="completed-tasks">
+                        {% for task in completed_tasks %}
+                        <div class="kanban-task mb-3" data-task-id="{{ task.pk }}" draggable="true">
+                            <div class="dashboard-card">
+                                <div class="card-body p-3">
+                                    <div class="d-flex justify-content-between align-items-start mb-2">
+                                        <h6 class="card-title mb-0">{{ task.title }}</h6>
+                                        <span class="task-priority {{ task.priority }}">{{ task.get_priority_display }}</span>
+                                    </div>
+                                    
+                                    {% if task.description %}
+                                        <p class="text-muted small mb-2">{{ task.description|truncatewords:15 }}</p>
+                                    {% endif %}
+                                    
+                                    <div class="d-flex justify-content-between align-items-center mb-2">
+                                        {% if task.assignee %}
+                                            <div class="avatar-sm">
+                                                {% if task.assignee.avatar %}
+                                                    <img src="{{ task.assignee.avatar.url }}" class="rounded-circle" width="20" height="20">
+                                                {% else %}
+                                                    <div class="bg-primary text-white rounded-circle d-flex align-items-center justify-content-center" style="width: 20px; height: 20px; font-size: 10px;">
+                                                        {{ task.assignee.first_name|first|upper }}{{ task.assignee.last_name|first|upper }}
+                                                    </div>
+                                                {% endif %}
+                                            </div>
+                                        {% else %}
+                                            <span class="text-muted small">Unassigned</span>
+                                        {% endif %}
+                                        
+                                        {% if task.completion_date %}
+                                            <small class="text-muted">
+                                                {{ task.completion_date|date:"M d" }}
+                                            </small>
+                                        {% endif %}
+                                    </div>
+                                    
+                                    <div class="progress mb-2" style="height: 4px;">
+                                        <div class="progress-bar bg-success" style="width: 100%"></div>
+                                    </div>
+                                    
+                                    <div class="d-flex justify-content-between align-items-center">
+                                        <small class="text-success">100%</small>
+                                        <div class="btn-group btn-group-sm">
+                                            <a href="{% url 'tasks:task_detail' task.pk %}" class="btn btn-outline-primary btn-sm">
+                                                <i class="bi bi-eye"></i>
+                                            </a>
+                                            <a href="{% url 'tasks:task_edit' task.pk %}" class="btn btn-outline-secondary btn-sm">
+                                                <i class="bi bi-pencil"></i>
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        {% endfor %}
+                        
+                        <button class="btn add-task-btn mb-3" onclick="addTask('completed')">
+                            <i class="bi bi-plus-circle"></i> Add Task
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    initializeKanban();
+});
+
+function initializeKanban() {
+    const tasks = document.querySelectorAll('.kanban-task');
+    const columns = document.querySelectorAll('.kanban-column');
+    
+    // Add drag event listeners to tasks
+    tasks.forEach(task => {
+        task.addEventListener('dragstart', handleDragStart);
+        task.addEventListener('dragend', handleDragEnd);
+    });
+    
+    // Add drop event listeners to columns
+    columns.forEach(column => {
+        column.addEventListener('dragover', handleDragOver);
+        column.addEventListener('drop', handleDrop);
+        column.addEventListener('dragenter', handleDragEnter);
+        column.addEventListener('dragleave', handleDragLeave);
+    });
+}
+
+function handleDragStart(e) {
+    e.target.classList.add('dragging');
+    e.dataTransfer.setData('text/plain', e.target.dataset.taskId);
+}
+
+function handleDragEnd(e) {
+    e.target.classList.remove('dragging');
+}
+
+function handleDragOver(e) {
+    e.preventDefault();
+}
+
+function handleDragEnter(e) {
+    e.preventDefault();
+    e.currentTarget.classList.add('drag-over');
+}
+
+function handleDragLeave(e) {
+    e.currentTarget.classList.remove('drag-over');
+}
+
+function handleDrop(e) {
+    e.preventDefault();
+    e.currentTarget.classList.remove('drag-over');
+    
+    const taskId = e.dataTransfer.getData('text/plain');
+    const task = document.querySelector(`[data-task-id="${taskId}"]`);
+    const newStatus = e.currentTarget.dataset.status;
+    
+    if (task && newStatus) {
+        // Move task to new column
+        const targetColumn = e.currentTarget.querySelector('.kanban-tasks');
+        targetColumn.insertBefore(task, targetColumn.lastElementChild);
+        
+        // Update task count
+        updateTaskCounts();
+        
+        // Send AJAX request to update task status
+        updateTaskStatus(taskId, newStatus);
+    }
+}
+
+function updateTaskCounts() {
+    const columns = document.querySelectorAll('.kanban-column');
+    columns.forEach(column => {
+        const status = column.dataset.status;
+        const taskCount = column.querySelectorAll('.kanban-task').length;
+        const countElement = column.querySelector('.task-count');
+        if (countElement) {
+            countElement.textContent = taskCount;
+        }
+    });
+}
+
+function updateTaskStatus(taskId, newStatus) {
+    // Send AJAX request to update task status
+    fetch(`/api/tasks/${taskId}/`, {
+        method: 'PATCH',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRFToken': getCSRFToken()
+        },
+        body: JSON.stringify({
+            status: newStatus
+        })
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            console.log(`Task ${taskId} status updated to ${newStatus}`);
+        }
+    })
+    .catch(error => {
+        console.error('Error updating task status:', error);
+    });
+}
+
+function addTask(status) {
+    // Redirect to task creation with pre-filled status
+    window.location.href = `{% url 'tasks:task_create' %}?project={{ project.pk }}&status=${status}`;
+}
+
+function getCSRFToken() {
+    const token = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content') ||
+                 document.cookie.split('; ').find(row => row.startsWith('csrftoken='))?.split('=')[1];
+    return token;
+}
+</script>
+{% endblock %}

@@ -1,0 +1,587 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}{{ task.title }} - Inspora{% endblock %}
+
+{% block content %}
+<div class="row">
+    <!-- Task Header -->
+    <div class="col-12 mb-4">
+        <div class="dashboard-card">
+            <div class="card-body">
+                <div class="d-flex justify-content-between align-items-start">
+                    <div class="flex-grow-1">
+                        <nav aria-label="breadcrumb" class="mb-3">
+                            <ol class="breadcrumb">
+                                <li class="breadcrumb-item"><a href="{% url 'tasks:task_list' %}">Tasks</a></li>
+                                {% if task.project %}
+                                    <li class="breadcrumb-item"><a href="{% url 'projects:project_detail' task.project.pk %}">{{ task.project.name }}</a></li>
+                                {% endif %}
+                                <li class="breadcrumb-item active">{{ task.title }}</li>
+                            </ol>
+                        </nav>
+                        
+                        <div class="d-flex align-items-center mb-3">
+                            <h1 class="h2 mb-0 me-3">{{ task.title }}</h1>
+                            <span class="badge bg-{{ task.status|default:'secondary' }} me-2">{{ task.get_status_display }}</span>
+                            <span class="task-priority {{ task.priority }}">{{ task.get_priority_display }}</span>
+                        </div>
+                        
+                        {% if task.description %}
+                            <p class="text-muted mb-3">{{ task.description }}</p>
+                        {% endif %}
+                        
+                        <div class="row">
+                            <div class="col-md-3">
+                                <small class="text-muted d-block">Start Date</small>
+                                <strong>{{ task.start_date|date:"M d, Y"|default:"Not set" }}</strong>
+                            </div>
+                            <div class="col-md-3">
+                                <small class="text-muted d-block">Due Date</small>
+                                <strong class="{% if task.is_overdue %}text-danger{% endif %}">
+                                    {{ task.due_date|date:"M d, Y"|default:"Not set" }}
+                                </strong>
+                            </div>
+                            <div class="col-md-3">
+                                <small class="text-muted d-block">Progress</small>
+                                <strong>{{ task.progress }}%</strong>
+                            </div>
+                            <div class="col-md-3">
+                                <small class="text-muted d-block">Estimated Hours</small>
+                                <strong>{{ task.estimated_hours|default:"Not set" }}</strong>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="btn-group" role="group">
+                        <a href="{% url 'tasks:task_edit' task.pk %}" class="btn btn-outline-primary">
+                            <i class="bi bi-pencil"></i> Edit
+                        </a>
+                        <div class="btn-group" role="group">
+                            <button type="button" class="btn btn-outline-primary dropdown-toggle dropdown-toggle-split" data-bs-toggle="dropdown">
+                                <span class="visually-hidden">Toggle Dropdown</span>
+                            </button>
+                            <ul class="dropdown-menu">
+                                <li><a class="dropdown-item" href="{% url 'tasks:task_start' task.pk %}">Start Task</a></li>
+                                <li><a class="dropdown-item" href="{% url 'tasks:task_complete' task.pk %}">Complete Task</a></li>
+                                <li><hr class="dropdown-divider"></li>
+                                <li><a class="dropdown-item" href="{% url 'tasks:subtask_create' task.pk %}">Add Subtask</a></li>
+                                <li><a class="dropdown-item" href="{% url 'tasks:attachment_upload' task.pk %}">Add Attachment</a></li>
+                                <li><hr class="dropdown-divider"></li>
+                                <li><a class="dropdown-item text-danger" href="{% url 'tasks:task_delete' task.pk %}">Delete Task</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Progress Bar -->
+                <div class="mt-4">
+                    <div class="d-flex justify-content-between align-items-center mb-2">
+                        <small class="text-muted">Task Progress</small>
+                        <small class="text-muted">{{ task.progress }}%</small>
+                    </div>
+                    <div class="progress" style="height: 10px;">
+                        <div class="progress-bar" style="width: {{ task.progress }}%"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Task Content -->
+    <div class="col-lg-8">
+        <!-- Task Details -->
+        <div class="dashboard-card mb-4">
+            <div class="card-body">
+                <h5 class="card-title">
+                    <i class="bi bi-info-circle"></i> Task Details
+                </h5>
+                
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="mb-3">
+                            <small class="text-muted d-block">Project</small>
+                            {% if task.project %}
+                                <strong><a href="{% url 'projects:project_detail' task.project.pk %}">{{ task.project.name }}</a></strong>
+                            {% else %}
+                                <span class="text-muted">No project assigned</span>
+                            {% endif %}
+                        </div>
+                        
+                        <div class="mb-3">
+                            <small class="text-muted d-block">Section</small>
+                            {% if task.section %}
+                                <strong>{{ task.section.name }}</strong>
+                            {% else %}
+                                <span class="text-muted">No section assigned</span>
+                            {% endif %}
+                        </div>
+                        
+                        <div class="mb-3">
+                            <small class="text-muted d-block">Task Type</small>
+                            <strong>{{ task.get_task_type_display|default:"Not specified" }}</strong>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <small class="text-muted d-block">Is Subtask</small>
+                            <strong>{{ task.is_subtask|yesno:"Yes,No" }}</strong>
+                        </div>
+                    </div>
+                    
+                    <div class="col-md-6">
+                        <div class="mb-3">
+                            <small class="text-muted d-block">Assignee</small>
+                            {% if task.assignee %}
+                                <div class="d-flex align-items-center">
+                                    <div class="avatar-sm me-2">
+                                        {% if task.assignee.avatar %}
+                                            <img src="{{ task.assignee.avatar.url }}" class="rounded-circle" width="24" height="24">
+                                        {% else %}
+                                            <div class="bg-primary text-white rounded-circle d-flex align-items-center justify-content-center" style="width: 24px; height: 24px; font-size: 12px;">
+                                                {{ task.assignee.first_name|first|upper }}{{ task.assignee.last_name|first|upper }}
+                                            </div>
+                                        {% endif %}
+                                    </div>
+                                    <span>{{ task.assignee.get_full_name_or_username }}</span>
+                                </div>
+                            {% else %}
+                                <span class="text-muted">Unassigned</span>
+                            {% endif %}
+                        </div>
+                        
+                        <div class="mb-3">
+                            <small class="text-muted d-block">Created By</small>
+                            <strong>{{ task.created_by.get_full_name_or_username }}</strong>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <small class="text-muted d-block">Created</small>
+                            <strong>{{ task.created_at|date:"M d, Y" }}</strong>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <small class="text-muted d-block">Last Updated</small>
+                            <strong>{{ task.updated_at|date:"M d, Y" }}</strong>
+                        </div>
+                    </div>
+                </div>
+                
+                {% if task.tags %}
+                <div class="mt-3">
+                    <small class="text-muted d-block">Tags</small>
+                    <div>
+                        {% for tag in task.tags %}
+                            <span class="badge bg-secondary me-1">{{ tag }}</span>
+                        {% endfor %}
+                    </div>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+
+        <!-- Subtasks -->
+        {% if task.subtasks.all %}
+        <div class="dashboard-card mb-4">
+            <div class="card-body">
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <h5 class="card-title">
+                        <i class="bi bi-list-nested"></i> Subtasks
+                    </h5>
+                    <a href="{% url 'tasks:subtask_create' task.pk %}" class="btn btn-primary btn-sm">
+                        <i class="bi bi-plus-circle"></i> Add Subtask
+                    </a>
+                </div>
+                
+                <div class="list-group list-group-flush">
+                    {% for subtask in task.subtasks.all %}
+                    <div class="list-group-item border-0 px-0 py-2">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div class="d-flex align-items-center">
+                                <div class="form-check me-3">
+                                    <input class="form-check-input" type="checkbox" 
+                                           {% if subtask.status == 'completed' %}checked{% endif %}
+                                           onchange="updateSubtaskStatus({{ subtask.pk }}, this.checked)">
+                                </div>
+                                <div>
+                                    <a href="{% url 'tasks:task_detail' subtask.pk %}" class="text-decoration-none">
+                                        {{ subtask.title }}
+                                    </a>
+                                    {% if subtask.description %}
+                                        <br>
+                                        <small class="text-muted">{{ subtask.description|truncatewords:15 }}</small>
+                                    {% endif %}
+                                </div>
+                            </div>
+                            <div class="d-flex align-items-center">
+                                <span class="badge bg-{{ subtask.status|default:'secondary' }} me-2">
+                                    {{ subtask.get_status_display }}
+                                </span>
+                                <span class="task-priority {{ subtask.priority }} me-2">
+                                    {{ subtask.get_priority_display }}
+                                </span>
+                                <div class="btn-group btn-group-sm">
+                                    <a href="{% url 'tasks:task_edit' subtask.pk %}" class="btn btn-outline-secondary btn-sm">
+                                        <i class="bi bi-pencil"></i>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+        {% endif %}
+
+        <!-- Comments -->
+        <div class="dashboard-card mb-4">
+            <div class="card-body">
+                <h5 class="card-title">
+                    <i class="bi bi-chat-dots"></i> Comments
+                </h5>
+                
+                {% if task.comments.all %}
+                    <div class="comments-section mb-4">
+                        {% for comment in task.comments.all %}
+                        <div class="comment mb-3 p-3 border rounded">
+                            <div class="d-flex justify-content-between align-items-start mb-2">
+                                <div class="d-flex align-items-center">
+                                    <div class="avatar-sm me-2">
+                                        {% if comment.user.avatar %}
+                                            <img src="{{ comment.user.avatar.url }}" class="rounded-circle" width="32" height="32">
+                                        {% else %}
+                                            <div class="bg-primary text-white rounded-circle d-flex align-items-center justify-content-center" style="width: 32px; height: 32px; font-size: 14px;">
+                                                {{ comment.user.first_name|first|upper }}{{ comment.user.last_name|first|upper }}
+                                            </div>
+                                        {% endif %}
+                                    </div>
+                                    <div>
+                                        <strong>{{ comment.user.get_full_name_or_username }}</strong>
+                                        <small class="text-muted ms-2">{{ comment.created_at|timesince }} ago</small>
+                                    </div>
+                                </div>
+                                <div class="btn-group btn-group-sm">
+                                    <a href="{% url 'tasks:comment_edit' comment.pk %}" class="btn btn-outline-secondary btn-sm">
+                                        <i class="bi bi-pencil"></i>
+                                    </a>
+                                    <a href="{% url 'tasks:comment_delete' comment.pk %}" class="btn btn-outline-danger btn-sm">
+                                        <i class="bi bi-trash"></i>
+                                    </a>
+                                </div>
+                            </div>
+                            <div class="comment-content">
+                                {{ comment.content|linebreaks }}
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                {% endif %}
+                
+                <!-- Add Comment Form -->
+                <form method="post" action="{% url 'tasks:comment_add' task.pk %}" class="comment-form">
+                    {% csrf_token %}
+                    <div class="mb-3">
+                        <label for="comment_content" class="form-label">Add a comment</label>
+                        <textarea class="form-control" id="comment_content" name="content" rows="3" placeholder="Write your comment here..." required></textarea>
+                    </div>
+                    <button type="submit" class="btn btn-primary">
+                        <i class="bi bi-send"></i> Post Comment
+                    </button>
+                </form>
+            </div>
+        </div>
+
+        <!-- Attachments -->
+        {% if task.attachments.all %}
+        <div class="dashboard-card mb-4">
+            <div class="card-body">
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <h5 class="card-title">
+                        <i class="bi bi-paperclip"></i> Attachments
+                    </h5>
+                    <a href="{% url 'tasks:attachment_upload' task.pk %}" class="btn btn-primary btn-sm">
+                        <i class="bi bi-plus-circle"></i> Add Attachment
+                    </a>
+                </div>
+                
+                <div class="row">
+                    {% for attachment in task.attachments.all %}
+                    <div class="col-md-6 mb-3">
+                        <div class="border rounded p-3">
+                            <div class="d-flex align-items-center">
+                                <div class="me-3">
+                                    <i class="bi bi-file-earmark text-primary" style="font-size: 2rem;"></i>
+                                </div>
+                                <div class="flex-grow-1">
+                                    <h6 class="mb-1">{{ attachment.filename }}</h6>
+                                    <small class="text-muted">
+                                        {{ attachment.file_size|filesizeformat }} • 
+                                        {{ attachment.uploaded_at|timesince }} ago
+                                    </small>
+                                </div>
+                                <div class="btn-group btn-group-sm">
+                                    <a href="{% url 'tasks:attachment_download' attachment.pk %}" class="btn btn-outline-primary btn-sm">
+                                        <i class="bi bi-download"></i>
+                                    </a>
+                                    <a href="{% url 'tasks:attachment_delete' attachment.pk %}" class="btn btn-outline-danger btn-sm">
+                                        <i class="bi bi-trash"></i>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+        {% endif %}
+    </div>
+
+    <!-- Task Sidebar -->
+    <div class="col-lg-4">
+        <!-- Time Tracking -->
+        <div class="dashboard-card mb-4">
+            <div class="card-body">
+                <h5 class="card-title">
+                    <i class="bi bi-clock"></i> Time Tracking
+                </h5>
+                
+                <div class="text-center mb-3">
+                    <div class="display-6 text-primary" id="timeDisplay">00:00:00</div>
+                    <small class="text-muted">Total Time Spent</small>
+                </div>
+                
+                <div class="d-grid gap-2 mb-3">
+                    <button type="button" class="btn btn-success" id="startTimer" onclick="startTimer()">
+                        <i class="bi bi-play-circle"></i> Start Timer
+                    </button>
+                    <button type="button" class="btn btn-danger" id="stopTimer" onclick="stopTimer()" style="display: none;">
+                        <i class="bi bi-stop-circle"></i> Stop Timer
+                    </button>
+                </div>
+                
+                <div class="mb-3">
+                    <label for="timeEntry" class="form-label">Manual Time Entry</label>
+                    <div class="input-group">
+                        <input type="number" class="form-control" id="timeEntry" placeholder="0.5" min="0" step="0.25">
+                        <span class="input-group-text">hours</span>
+                        <button class="btn btn-outline-primary" type="button" onclick="addManualTime()">Add</button>
+                    </div>
+                </div>
+                
+                <div class="text-center">
+                    <small class="text-muted">
+                        Estimated: {{ task.estimated_hours|default:"Not set" }} hours
+                    </small>
+                </div>
+            </div>
+        </div>
+
+        <!-- Dependencies -->
+        {% if task.dependencies.all or task.dependents.all %}
+        <div class="dashboard-card mb-4">
+            <div class="card-body">
+                <h5 class="card-title">
+                    <i class="bi bi-diagram-3"></i> Dependencies
+                </h5>
+                
+                {% if task.dependencies.all %}
+                <div class="mb-3">
+                    <small class="text-muted d-block">Depends On</small>
+                    {% for dependency in task.dependencies.all %}
+                    <div class="d-flex align-items-center mb-2">
+                        <div class="form-check me-2">
+                            <input class="form-check-input" type="checkbox" 
+                                   {% if dependency.dependency.status == 'completed' %}checked disabled{% endif %}>
+                        </div>
+                        <a href="{% url 'tasks:task_detail' dependency.dependency.pk %}" class="text-decoration-none">
+                            {{ dependency.dependency.title }}
+                        </a>
+                    </div>
+                    {% endfor %}
+                </div>
+                {% endif %}
+                
+                {% if task.dependents.all %}
+                <div class="mb-3">
+                    <small class="text-muted d-block">Required By</small>
+                    {% for dependent in task.dependents.all %}
+                    <div class="mb-2">
+                        <a href="{% url 'tasks:task_detail' dependent.task.pk %}" class="text-decoration-none">
+                            {{ dependent.task.title }}
+                        </a>
+                    </div>
+                    {% endfor %}
+                </div>
+                {% endif %}
+                
+                <a href="{% url 'tasks:dependency_add' task.pk %}" class="btn btn-outline-primary btn-sm">
+                    <i class="bi bi-plus-circle"></i> Add Dependency
+                </a>
+            </div>
+        </div>
+        {% endif %}
+
+        <!-- Activity Log -->
+        <div class="dashboard-card">
+            <div class="card-body">
+                <h5 class="card-title">
+                    <i class="bi bi-activity"></i> Recent Activity
+                </h5>
+                
+                {% if task.history.all %}
+                    <div class="list-group list-group-flush">
+                        {% for record in task.history.all|slice:":5" %}
+                        <div class="list-group-item border-0 px-0 py-2">
+                            <div class="d-flex align-items-center">
+                                <div class="flex-shrink-0">
+                                    <i class="bi bi-circle-fill text-primary" style="font-size: 0.5rem;"></i>
+                                </div>
+                                <div class="flex-grow-1 ms-3">
+                                    <small class="text-muted">{{ record.history_change_reason|default:"Updated" }}</small>
+                                    <br>
+                                    <small class="text-muted">{{ record.history_date|timesince }} ago</small>
+                                </div>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                {% else %}
+                    <p class="text-muted small">No recent activity</p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+let timer = null;
+let startTime = null;
+let totalTime = 0;
+
+document.addEventListener('DOMContentLoaded', function() {
+    // Initialize time display
+    updateTimeDisplay();
+    
+    // Check if timer is already running
+    const savedStartTime = localStorage.getItem(`taskTimer_${taskId}`);
+    if (savedStartTime) {
+        startTime = new Date(parseInt(savedStartTime));
+        startTimer();
+    }
+});
+
+function startTimer() {
+    if (!startTime) {
+        startTime = new Date();
+        localStorage.setItem(`taskTimer_${taskId}`, startTime.getTime());
+    }
+    
+    timer = setInterval(updateTimeDisplay, 1000);
+    document.getElementById('startTimer').style.display = 'none';
+    document.getElementById('stopTimer').style.display = 'block';
+}
+
+function stopTimer() {
+    if (timer) {
+        clearInterval(timer);
+        timer = null;
+    }
+    
+    if (startTime) {
+        const endTime = new Date();
+        const timeSpent = (endTime - startTime) / 1000; // in seconds
+        totalTime += timeSpent;
+        
+        // Save total time
+        localStorage.setItem(`taskTotalTime_${taskId}`, totalTime);
+        
+        startTime = null;
+        localStorage.removeItem(`taskTimer_${taskId}`);
+    }
+    
+    document.getElementById('startTimer').style.display = 'block';
+    document.getElementById('stopTimer').style.display = 'none';
+    updateTimeDisplay();
+}
+
+function updateTimeDisplay() {
+    let currentTotal = totalTime;
+    
+    if (startTime) {
+        const currentTime = new Date();
+        const currentSession = (currentTime - startTime) / 1000;
+        currentTotal += currentSession;
+    }
+    
+    const hours = Math.floor(currentTotal / 3600);
+    const minutes = Math.floor((currentTotal % 3600) / 60);
+    const seconds = Math.floor(currentTotal % 60);
+    
+    document.getElementById('timeDisplay').textContent = 
+        `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+}
+
+function addManualTime() {
+    const timeInput = document.getElementById('timeEntry');
+    const hours = parseFloat(timeInput.value);
+    
+    if (hours && hours > 0) {
+        totalTime += hours * 3600; // Convert hours to seconds
+        localStorage.setItem(`taskTotalTime_${taskId}`, totalTime);
+        timeInput.value = '';
+        updateTimeDisplay();
+        
+        // Show success message
+        showToast(`Added ${hours} hours to time tracking`, 'success');
+    }
+}
+
+function updateSubtaskStatus(subtaskId, completed) {
+    const status = completed ? 'completed' : 'pending';
+    
+    fetch(`/api/tasks/${subtaskId}/`, {
+        method: 'PATCH',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRFToken': getCSRFToken()
+        },
+        body: JSON.stringify({
+            status: status
+        })
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            showToast(`Subtask ${completed ? 'completed' : 'reopened'}`, 'success');
+        }
+    })
+    .catch(error => {
+        console.error('Error updating subtask status:', error);
+        showToast('Error updating subtask status', 'error');
+    });
+}
+
+function showToast(message, type = 'info') {
+    // Implementation of toast notification
+    console.log(`${type}: ${message}`);
+}
+
+function getCSRFToken() {
+    const token = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content') ||
+                 document.cookie.split('; ').find(row => row.startsWith('csrftoken='))?.split('=')[1];
+    return token;
+}
+
+// Get task ID from URL or data attribute
+const taskId = {{ task.pk }};
+
+// Load saved total time
+const savedTotalTime = localStorage.getItem(`taskTotalTime_${taskId}`);
+if (savedTotalTime) {
+    totalTime = parseInt(savedTotalTime);
+}
+</script>
+{% endblock %}

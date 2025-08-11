@@ -1,0 +1,353 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}AI Smart Suggestions - Inspora{% endblock %}
+
+{% block extra_css %}
+<style>
+    .suggestion-card {
+        border-left: 4px solid transparent;
+        transition: all 0.3s ease;
+        cursor: pointer;
+    }
+    
+    .suggestion-card:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+    }
+    
+    .suggestion-card.priority-1 { border-left-color: #6c757d; }
+    .suggestion-card.priority-2 { border-left-color: #17a2b8; }
+    .suggestion-card.priority-3 { border-left-color: #ffc107; }
+    .suggestion-card.priority-4 { border-left-color: #fd7e14; }
+    .suggestion-card.priority-5 { border-left-color: #dc3545; }
+    
+    .suggestion-type-badge {
+        font-size: 0.75rem;
+        padding: 0.25rem 0.5rem;
+        border-radius: 12px;
+        font-weight: 600;
+    }
+    
+    .suggestion-type-task_optimization { background: rgba(220, 53, 69, 0.1); color: #dc3545; }
+    .suggestion-type-workflow_improvement { background: rgba(255, 193, 7, 0.1); color: #ffc107; }
+    .suggestion-type-project_management { background: rgba(23, 162, 184, 0.1); color: #17a2b8; }
+    .suggestion-type-team_collaboration { background: rgba(40, 167, 69, 0.1); color: #28a745; }
+    .suggestion-type-productivity_tip { background: rgba(102, 16, 242, 0.1); color: #6610f2; }
+    .suggestion-type-feature_recommendation { background: rgba(240, 106, 111, 0.1); color: #f06a6f; }
+    
+    .suggestion-actions {
+        opacity: 0;
+        transition: opacity 0.3s ease;
+    }
+    
+    .suggestion-card:hover .suggestion-actions {
+        opacity: 1;
+    }
+    
+    .suggestion-status {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+    
+    .status-indicator {
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        background: #6c757d;
+    }
+    
+    .status-indicator.read { background: #17a2b8; }
+    .status-indicator.applied { background: #28a745; }
+    
+    .empty-state {
+        text-align: center;
+        padding: 3rem;
+        color: #6c757d;
+    }
+    
+    .empty-state i {
+        font-size: 4rem;
+        margin-bottom: 1rem;
+        opacity: 0.5;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center mb-4">
+                        <div>
+                            <h1 class="h3 mb-0">
+                                <i class="fas fa-lightbulb text-warning"></i> AI Smart Suggestions
+                            </h1>
+                            <p class="text-muted">Personalized recommendations to improve your productivity and workflow</p>
+                        </div>
+                        <div class="btn-group" role="group">
+                            <button class="btn btn-primary" onclick="generateAISuggestions()">
+                                <i class="fas fa-magic me-2"></i>Generate New Suggestions
+                            </button>
+                            <a href="{% url 'accounts:ai_chat' %}" class="btn btn-outline-primary">
+                                <i class="fas fa-comments me-2"></i>Chat with AI
+                            </a>
+                            <a href="{% url 'accounts:ai_workflow' %}" class="btn btn-outline-success">
+                                <i class="fas fa-cogs me-2"></i>Workflow Analysis
+                            </a>
+                        </div>
+                    </div>
+
+                    <!-- Filter and Sort Options -->
+                    <div class="row mb-4">
+                        <div class="col-md-6">
+                            <div class="input-group">
+                                <span class="input-group-text"><i class="fas fa-filter"></i></span>
+                                <select class="form-select" id="type-filter">
+                                    <option value="">All Types</option>
+                                    <option value="task_optimization">Task Optimization</option>
+                                    <option value="workflow_improvement">Workflow Improvement</option>
+                                    <option value="project_management">Project Management</option>
+                                    <option value="team_collaboration">Team Collaboration</option>
+                                    <option value="productivity_tip">Productivity Tips</option>
+                                    <option value="feature_recommendation">Feature Recommendations</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="input-group">
+                                <span class="input-group-text"><i class="fas fa-sort"></i></span>
+                                <select class="form-select" id="sort-options">
+                                    <option value="priority-desc">Priority (High to Low)</option>
+                                    <option value="priority-asc">Priority (Low to High)</option>
+                                    <option value="date-desc">Date (Newest First)</option>
+                                    <option value="date-asc">Date (Oldest First)</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Suggestions Grid -->
+                    {% if suggestions %}
+                        <div class="row" id="suggestions-grid">
+                            {% for suggestion in suggestions %}
+                            <div class="col-lg-6 col-xl-4 mb-4 suggestion-item" 
+                                 data-type="{{ suggestion.suggestion_type }}" 
+                                 data-priority="{{ suggestion.priority }}">
+                                <div class="card suggestion-card priority-{{ suggestion.priority }} h-100">
+                                    <div class="card-body">
+                                        <div class="d-flex justify-content-between align-items-start mb-3">
+                                            <span class="suggestion-type-badge suggestion-type-{{ suggestion.suggestion_type }}">
+                                                {{ suggestion.get_suggestion_type_display }}
+                                            </span>
+                                            <div class="suggestion-status">
+                                                {% if suggestion.is_read %}
+                                                    <div class="status-indicator read" title="Read"></div>
+                                                {% endif %}
+                                                {% if suggestion.is_applied %}
+                                                    <div class="status-indicator applied" title="Applied"></div>
+                                                {% endif %}
+                                                <span class="badge bg-secondary">P{{ suggestion.priority }}</span>
+                                            </div>
+                                        </div>
+                                        
+                                        <h5 class="card-title">{{ suggestion.title }}</h5>
+                                        <p class="card-text text-muted">{{ suggestion.description }}</p>
+                                        
+                                        <div class="suggestion-actions mt-3">
+                                            {% if suggestion.action_url and suggestion.action_text %}
+                                                <a href="{{ suggestion.action_url }}" class="btn btn-primary btn-sm me-2">
+                                                    <i class="fas fa-external-link-alt me-1"></i>{{ suggestion.action_text }}
+                                                </a>
+                                            {% endif %}
+                                            
+                                            {% if not suggestion.is_read %}
+                                                <button class="btn btn-outline-secondary btn-sm me-2" 
+                                                        onclick="markAsRead({{ suggestion.id }})">
+                                                    <i class="fas fa-check me-1"></i>Mark as Read
+                                                </button>
+                                            {% endif %}
+                                            
+                                            {% if not suggestion.is_applied %}
+                                                <button class="btn btn-outline-success btn-sm me-2" 
+                                                        onclick="markAsApplied({{ suggestion.id }})">
+                                                    <i class="fas fa-check-double me-1"></i>Mark as Applied
+                                                </button>
+                                            {% endif %}
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="card-footer text-muted">
+                                        <small>
+                                            <i class="fas fa-clock me-1"></i>
+                                            {{ suggestion.created_at|timesince }} ago
+                                        </small>
+                                    </div>
+                                </div>
+                            </div>
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        <div class="empty-state">
+                            <i class="fas fa-lightbulb"></i>
+                            <h4>No suggestions yet</h4>
+                            <p class="mb-4">Let AI analyze your workflow and generate personalized suggestions to improve your productivity.</p>
+                            <button class="btn btn-primary btn-lg" onclick="generateAISuggestions()">
+                                <i class="fas fa-magic me-2"></i>Generate Your First Suggestions
+                            </button>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+// Filter suggestions by type
+document.getElementById('type-filter').addEventListener('change', function() {
+    const filterValue = this.value;
+    const suggestions = document.querySelectorAll('.suggestion-item');
+    
+    suggestions.forEach(suggestion => {
+        if (!filterValue || suggestion.dataset.type === filterValue) {
+            suggestion.style.display = 'block';
+        } else {
+            suggestion.style.display = 'none';
+        }
+    });
+});
+
+// Sort suggestions
+document.getElementById('sort-options').addEventListener('change', function() {
+    const sortValue = this.value;
+    const suggestionsGrid = document.getElementById('suggestions-grid');
+    const suggestions = Array.from(document.querySelectorAll('.suggestion-item'));
+    
+    suggestions.sort((a, b) => {
+        if (sortValue === 'priority-desc') {
+            return parseInt(b.dataset.priority) - parseInt(a.dataset.priority);
+        } else if (sortValue === 'priority-asc') {
+            return parseInt(a.dataset.priority) - parseInt(b.dataset.priority);
+        } else if (sortValue === 'date-desc') {
+            return new Date(b.querySelector('.card-footer small').textContent) - new Date(a.querySelector('.card-footer small').textContent);
+        } else if (sortValue === 'date-asc') {
+            return new Date(a.querySelector('.card-footer small').textContent) - new Date(b.querySelector('.card-footer small').textContent);
+        }
+        return 0;
+    });
+    
+    // Reorder DOM elements
+    suggestions.forEach(suggestion => {
+        suggestionsGrid.appendChild(suggestion);
+    });
+});
+
+// Mark suggestion as read
+function markAsRead(suggestionId) {
+    fetch(`/api/ai/suggestions/${suggestionId}/read/`, {
+        method: 'POST',
+        headers: {
+            'X-CSRFToken': getCookie('csrftoken'),
+            'Content-Type': 'application/json',
+        }
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            // Update UI to show as read
+            const suggestionCard = document.querySelector(`[data-suggestion-id="${suggestionId}"]`);
+            if (suggestionCard) {
+                const statusIndicator = suggestionCard.querySelector('.status-indicator');
+                if (statusIndicator) {
+                    statusIndicator.classList.add('read');
+                    statusIndicator.title = 'Read';
+                }
+            }
+            showNotification('Suggestion marked as read', 'success');
+        } else {
+            showNotification('Error marking suggestion as read', 'error');
+        }
+    })
+    .catch(error => {
+        showNotification('Error marking suggestion as read', 'error');
+        console.error('Error:', error);
+    });
+}
+
+// Mark suggestion as applied
+function markAsApplied(suggestionId) {
+    fetch(`/api/ai/suggestions/${suggestionId}/applied/`, {
+        method: 'POST',
+        headers: {
+            'X-CSRFToken': getCookie('csrftoken'),
+            'Content-Type': 'application/json',
+        }
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            // Update UI to show as applied
+            const suggestionCard = document.querySelector(`[data-suggestion-id="${suggestionId}"]`);
+            if (suggestionCard) {
+                const statusIndicator = suggestionCard.querySelector('.status-indicator');
+                if (statusIndicator) {
+                    statusIndicator.classList.add('applied');
+                    statusIndicator.title = 'Applied';
+                }
+            }
+            showNotification('Suggestion marked as applied', 'success');
+        } else {
+            showNotification('Error marking suggestion as applied', 'error');
+        }
+    })
+    .catch(error => {
+        showNotification('Error marking suggestion as applied', 'error');
+        console.error('Error:', error);
+    });
+}
+
+// Generate new AI suggestions
+function generateAISuggestions() {
+    const button = event.target;
+    const originalText = button.innerHTML;
+    
+    // Show loading state
+    button.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i>Generating...';
+    button.disabled = true;
+    
+    fetch('{% url "accounts:ai_generate_suggestions" %}', {
+        method: 'POST',
+        headers: {
+            'X-CSRFToken': getCookie('csrftoken'),
+            'Content-Type': 'application/json',
+        }
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            showNotification(`Generated ${data.count} new suggestions!`, 'success');
+            // Reload page to show new suggestions
+            setTimeout(() => {
+                location.reload();
+            }, 1500);
+        } else {
+            showNotification('Error generating suggestions: ' + data.error, 'error');
+        }
+    })
+    .catch(error => {
+        showNotification('Error generating suggestions: ' + error.message, 'error');
+    })
+    .finally(() => {
+        // Restore button state
+        button.innerHTML = originalText;
+        button.disabled = false;
+    });
+}
+</script>
+{% endblock %}

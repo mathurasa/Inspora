@@ -1,0 +1,370 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Templates - Inspora{% endblock %}
+
+{% block content %}
+<div class="row">
+    <!-- Header -->
+    <div class="col-12 mb-4">
+        <div class="d-flex justify-content-between align-items-center">
+            <div>
+                <h1 class="h3 mb-0">Templates</h1>
+                <p class="text-muted">Reusable project and task templates</p>
+            </div>
+            <div class="btn-group" role="group">
+                <a href="{% url 'templates:template_create' %}" class="btn btn-primary">
+                    <i class="bi bi-plus-circle"></i> New Template
+                </a>
+                <button type="button" class="btn btn-outline-primary dropdown-toggle dropdown-toggle-split" data-bs-toggle="dropdown">
+                    <span class="visually-hidden">Toggle Dropdown</span>
+                </button>
+                <ul class="dropdown-menu">
+                    <li><a class="dropdown-item" href="{% url 'templates:template_create' %}?type=project">Project Template</a></li>
+                    <li><a class="dropdown-item" href="{% url 'templates:template_create' %}?type=task">Task Template</a></li>
+                    <li><a class="dropdown-item" href="{% url 'templates:template_create' %}?type=goal">Goal Template</a></li>
+                    <li><a class="dropdown-item" href="{% url 'templates:template_create' %}?type=form">Form Template</a></li>
+                    <li><hr class="dropdown-divider"></li>
+                    <li><a class="dropdown-item" href="{% url 'templates:template_create' %}?type=workflow">Workflow Template</a></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <!-- Filters and Search -->
+    <div class="col-12 mb-4">
+        <div class="dashboard-card">
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-3">
+                        <div class="input-group">
+                            <span class="input-group-text"><i class="bi bi-search"></i></span>
+                            <input type="text" class="form-control" id="searchInput" placeholder="Search templates...">
+                        </div>
+                    </div>
+                    <div class="col-md-2">
+                        <select class="form-select" id="typeFilter">
+                            <option value="">All Types</option>
+                            <option value="project">Project</option>
+                            <option value="task">Task</option>
+                            <option value="goal">Goal</option>
+                            <option value="form">Form</option>
+                            <option value="workflow">Workflow</option>
+                        </select>
+                    </div>
+                    <div class="col-md-2">
+                        <select class="form-select" id="categoryFilter">
+                            <option value="">All Categories</option>
+                            {% for category in categories %}
+                            <option value="{{ category.id }}">{{ category.name }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="col-md-2">
+                        <select class="form-select" id="visibilityFilter">
+                            <option value="">All Visibility</option>
+                            <option value="public">Public</option>
+                            <option value="private">Private</option>
+                            <option value="team">Team</option>
+                        </select>
+                    </div>
+                    <div class="col-md-2">
+                        <select class="form-select" id="featuredFilter">
+                            <option value="">All Templates</option>
+                            <option value="featured">Featured Only</option>
+                        </select>
+                    </div>
+                    <div class="col-md-1">
+                        <button class="btn btn-outline-secondary w-100" id="clearFilters">
+                            <i class="bi bi-x-lg"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Template Grid -->
+    <div class="col-12">
+        {% if templates %}
+            <div class="row" id="templateGrid">
+                {% for template in templates %}
+                <div class="col-lg-4 col-md-6 mb-4 template-item" 
+                     data-type="{{ template.template_type }}" 
+                     data-category="{{ template.category.id|default:'' }}"
+                     data-visibility="{{ template.visibility }}"
+                     data-featured="{{ template.is_featured|yesno:'featured,not_featured' }}"
+                     data-name="{{ template.name|lower }}">
+                    <div class="dashboard-card h-100">
+                        <div class="card-body">
+                            <div class="d-flex justify-content-between align-items-start mb-3">
+                                <h5 class="card-title mb-0">
+                                    <a href="{% url 'templates:template_detail' template.pk %}" class="text-decoration-none">
+                                        {{ template.name }}
+                                    </a>
+                                </h5>
+                                <div class="dropdown">
+                                    <button class="btn btn-sm btn-outline-secondary" type="button" data-bs-toggle="dropdown">
+                                        <i class="bi bi-three-dots-vertical"></i>
+                                    </button>
+                                    <ul class="dropdown-menu">
+                                        <li><a class="dropdown-item" href="{% url 'templates:template_detail' template.pk %}">View</a></li>
+                                        <li><a class="dropdown-item" href="{% url 'templates:template_edit' template.pk %}">Edit</a></li>
+                                        <li><a class="dropdown-item" href="{% url 'templates:template_use' template.pk %}">Use Template</a></li>
+                                        <li><hr class="dropdown-divider"></li>
+                                        <li><a class="dropdown-item text-danger" href="{% url 'templates:template_delete' template.pk %}">Delete</a></li>
+                                    </ul>
+                                </div>
+                            </div>
+
+                            <p class="text-muted small mb-3">{{ template.description|truncatewords:20 }}</p>
+
+                            <div class="mb-3">
+                                <span class="badge bg-primary me-2">{{ template.get_template_type_display }}</span>
+                                {% if template.is_featured %}
+                                    <span class="badge bg-warning">Featured</span>
+                                {% endif %}
+                                {% if template.is_public %}
+                                    <span class="badge bg-success">Public</span>
+                                {% else %}
+                                    <span class="badge bg-secondary">Private</span>
+                                {% endif %}
+                            </div>
+
+                            <!-- Template Stats -->
+                            <div class="row text-center mb-3">
+                                <div class="col-4">
+                                    <div class="border-end">
+                                        <small class="text-muted d-block">Usage</small>
+                                        <strong>{{ template.usage_count }}</strong>
+                                    </div>
+                                </div>
+                                <div class="col-4">
+                                    <div class="border-end">
+                                        <small class="text-muted d-block">Version</small>
+                                        <strong>{{ template.version }}</strong>
+                                    </div>
+                                </div>
+                                <div class="col-4">
+                                    <small class="text-muted d-block">Rating</small>
+                                    <div class="d-flex align-items-center justify-content-center">
+                                        <i class="bi bi-star-fill text-warning me-1"></i>
+                                        <strong>{{ template.rating|default:"N/A" }}</strong>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Template Preview -->
+                            {% if template.preview_image %}
+                            <div class="mb-3">
+                                <img src="{{ template.preview_image.url }}" class="img-fluid rounded" alt="Template Preview">
+                            </div>
+                            {% endif %}
+
+                            <div class="d-flex justify-content-between align-items-center">
+                                <small class="text-muted">
+                                    <i class="bi bi-person"></i>
+                                    {% if template.created_by %}
+                                        {{ template.created_by.get_full_name_or_username }}
+                                    {% else %}
+                                        System
+                                    {% endif %}
+                                </small>
+                                <small class="text-muted">
+                                    <i class="bi bi-clock"></i>
+                                    {{ template.updated_at|timesince }} ago
+                                </small>
+                            </div>
+
+                            {% if template.category %}
+                            <div class="mt-2">
+                                <small class="text-muted">
+                                    <i class="bi bi-tag"></i> {{ template.category.name }}
+                                </small>
+                            </div>
+                            {% endif %}
+
+                            {% if template.team %}
+                            <div class="mt-1">
+                                <small class="text-muted">
+                                    <i class="bi bi-people"></i> {{ template.team.name }}
+                                </small>
+                            </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        {% else %}
+            <div class="col-12">
+                <div class="dashboard-card">
+                    <div class="card-body text-center py-5">
+                        <i class="bi bi-file-earmark-text text-muted" style="font-size: 4rem;"></i>
+                        <h3 class="mt-3">No templates yet</h3>
+                        <p class="text-muted">Create your first template to streamline your workflow.</p>
+                        <a href="{% url 'templates:template_create' %}" class="btn btn-primary btn-lg">
+                            <i class="bi bi-plus-circle"></i> Create Your First Template
+                        </a>
+                    </div>
+                </div>
+            </div>
+        {% endif %}
+    </div>
+
+    <!-- Template Categories -->
+    {% if categories %}
+    <div class="col-12 mt-4">
+        <div class="dashboard-card">
+            <div class="card-body">
+                <h5 class="card-title">
+                    <i class="bi bi-collection"></i> Template Categories
+                </h5>
+                
+                <div class="row">
+                    {% for category in categories %}
+                    <div class="col-md-3 mb-3">
+                        <div class="border rounded p-3 text-center">
+                            <div class="mb-2">
+                                <i class="bi bi-folder text-primary" style="font-size: 2rem;"></i>
+                            </div>
+                            <h6 class="mb-1">{{ category.name }}</h6>
+                            <small class="text-muted">{{ category.templates.count }} templates</small>
+                            {% if category.description %}
+                                <p class="text-muted small mt-2">{{ category.description|truncatewords:10 }}</p>
+                            {% endif %}
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+
+    <!-- Template Summary -->
+    {% if templates %}
+    <div class="col-12 mt-4">
+        <div class="dashboard-card">
+            <div class="card-body">
+                <h5 class="card-title">
+                    <i class="bi bi-graph-up"></i> Template Summary
+                </h5>
+                
+                <div class="row">
+                    <div class="col-md-3 text-center">
+                        <div class="p-3">
+                            <div class="display-6 text-primary">{{ templates|length }}</div>
+                            <small class="text-muted">Total Templates</small>
+                        </div>
+                    </div>
+                    <div class="col-md-3 text-center">
+                        <div class="p-3">
+                            <div class="display-6 text-success">{{ featured_templates_count|default:0 }}</div>
+                            <small class="text-muted">Featured Templates</small>
+                        </div>
+                    </div>
+                    <div class="col-md-3 text-center">
+                        <div class="p-3">
+                            <div class="display-6 text-warning">{{ public_templates_count|default:0 }}</div>
+                            <small class="text-muted">Public Templates</small>
+                        </div>
+                    </div>
+                    <div class="col-md-3 text-center">
+                        <div class="p-3">
+                            <div class="display-6 text-info">{{ total_usage_count|default:0 }}</div>
+                            <small class="text-muted">Total Usage</small>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="row mt-3">
+                    <div class="col-md-6">
+                        <h6>Template Type Distribution</h6>
+                        <div class="d-flex flex-wrap gap-2">
+                            {% for type, count in type_distribution.items %}
+                            <span class="badge bg-primary">{{ type|title }}: {{ count }}</span>
+                            {% endfor %}
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <h6>Most Used Templates</h6>
+                        <div class="list-group list-group-flush">
+                            {% for template in most_used_templates|slice:":3" %}
+                            <div class="list-group-item border-0 px-0 py-2">
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <span>{{ template.name }}</span>
+                                    <span class="badge bg-primary">{{ template.usage_count }} uses</span>
+                                </div>
+                            </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const searchInput = document.getElementById('searchInput');
+    const typeFilter = document.getElementById('typeFilter');
+    const categoryFilter = document.getElementById('categoryFilter');
+    const visibilityFilter = document.getElementById('visibilityFilter');
+    const featuredFilter = document.getElementById('featuredFilter');
+    const clearFilters = document.getElementById('clearFilters');
+    const templateItems = document.querySelectorAll('.template-item');
+
+    function filterTemplates() {
+        const searchTerm = searchInput.value.toLowerCase();
+        const typeValue = typeFilter.value;
+        const categoryValue = categoryFilter.value;
+        const visibilityValue = visibilityFilter.value;
+        const featuredValue = featuredFilter.value;
+
+        templateItems.forEach(item => {
+            const name = item.dataset.name;
+            const type = item.dataset.type;
+            const category = item.dataset.category;
+            const visibility = item.dataset.visibility;
+            const featured = item.dataset.featured;
+
+            const matchesSearch = name.includes(searchTerm);
+            const matchesType = !typeValue || type === typeValue;
+            const matchesCategory = !categoryValue || category === categoryValue;
+            const matchesVisibility = !visibilityValue || visibility === visibilityValue;
+            const matchesFeatured = !featuredValue || featured === featuredValue;
+
+            if (matchesSearch && matchesType && matchesCategory && matchesVisibility && matchesFeatured) {
+                item.style.display = 'block';
+            } else {
+                item.style.display = 'none';
+            }
+        });
+    }
+
+    // Event listeners
+    searchInput.addEventListener('input', filterTemplates);
+    typeFilter.addEventListener('change', filterTemplates);
+    categoryFilter.addEventListener('change', filterTemplates);
+    visibilityFilter.addEventListener('change', filterTemplates);
+    featuredFilter.addEventListener('change', filterTemplates);
+    
+    clearFilters.addEventListener('click', function() {
+        searchInput.value = '';
+        typeFilter.value = '';
+        categoryFilter.value = '';
+        visibilityFilter.value = '';
+        featuredFilter.value = '';
+        filterTemplates();
+    });
+
+    // Initialize filters
+    filterTemplates();
+});
+</script>
+{% endblock %}

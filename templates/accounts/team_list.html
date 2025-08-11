@@ -1,0 +1,123 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Teams - Inspora{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center mb-4">
+                        <div>
+                            <h1 class="h3 mb-0">
+                                <i class="fas fa-users text-primary"></i> Teams
+                            </h1>
+                            <p class="text-muted">Manage your teams and team members</p>
+                        </div>
+                        <a href="{% url 'accounts:team_create' %}" class="btn btn-primary">
+                            <i class="fas fa-plus"></i> Create Team
+                        </a>
+                    </div>
+
+                    {% if teams %}
+                        <div class="row">
+                            {% for team in teams %}
+                            <div class="col-md-6 col-lg-4 mb-4">
+                                <div class="card h-100">
+                                    <div class="card-body">
+                                        <div class="d-flex justify-content-between align-items-start mb-3">
+                                            <h5 class="card-title mb-0">
+                                                <i class="fas fa-users text-primary"></i>
+                                                {{ team.name }}
+                                            </h5>
+                                            <span class="badge bg-{% if team.is_public %}success{% else %}warning{% endif %}">
+                                                {% if team.is_public %}Public{% else %}Private{% endif %}
+                                            </span>
+                                        </div>
+                                        
+                                        {% if team.description %}
+                                            <p class="card-text text-muted">{{ team.description|truncatewords:20 }}</p>
+                                        {% endif %}
+                                        
+                                        <div class="row text-center mb-3">
+                                            <div class="col-6">
+                                                <small class="text-muted">Members</small>
+                                                <div class="fw-bold">{{ team.members.count }}</div>
+                                            </div>
+                                            <div class="col-6">
+                                                <small class="text-muted">Projects</small>
+                                                <div class="fw-bold">{{ team.projects.count }}</div>
+                                            </div>
+                                        </div>
+                                        
+                                        <div class="d-flex justify-content-between align-items-center">
+                                            <small class="text-muted">
+                                                Created {{ team.created_at|date:"M d, Y" }}
+                                            </small>
+                                            <div class="btn-group" role="group">
+                                                <a href="{% url 'accounts:team_detail' team.pk %}" 
+                                                   class="btn btn-sm btn-outline-primary">
+                                                    <i class="fas fa-eye"></i> View
+                                                </a>
+                                                <a href="{% url 'accounts:team_edit' team.pk %}" 
+                                                   class="btn btn-sm btn-outline-secondary">
+                                                    <i class="fas fa-edit"></i> Edit
+                                                </a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            {% endfor %}
+                        </div>
+                        
+                        <!-- Pagination -->
+                        {% if is_paginated %}
+                        <nav aria-label="Teams pagination" class="mt-4">
+                            <ul class="pagination justify-content-center">
+                                {% if page_obj.has_previous %}
+                                    <li class="page-item">
+                                        <a class="page-link" href="?page=1">&laquo; First</a>
+                                    </li>
+                                    <li class="page-item">
+                                        <a class="page-link" href="?page={{ page_obj.previous_page_number }}">Previous</a>
+                                    </li>
+                                {% endif %}
+                                
+                                <li class="page-item active">
+                                    <span class="page-link">
+                                        Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}
+                                    </span>
+                                </li>
+                                
+                                {% if page_obj.has_next %}
+                                    <li class="page-item">
+                                        <a class="page-link" href="?page={{ page_obj.next_page_number }}">Next</a>
+                                    </li>
+                                    <li class="page-item">
+                                        <a class="page-link" href="?page={{ page_obj.paginator.num_pages }}">Last &raquo;</a>
+                                    </li>
+                                {% endif %}
+                            </ul>
+                        </nav>
+                        {% endif %}
+                    {% else %}
+                        <div class="text-center py-5">
+                            <div class="mb-4">
+                                <i class="fas fa-users fa-4x text-muted"></i>
+                            </div>
+                            <h4 class="text-muted">No teams yet</h4>
+                            <p class="text-muted mb-4">Create your first team to start collaborating with others</p>
+                            <a href="{% url 'accounts:team_create' %}" class="btn btn-primary btn-lg">
+                                <i class="fas fa-plus"></i> Create Your First Team
+                            </a>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

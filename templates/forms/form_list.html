@@ -1,0 +1,387 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Forms - Inspora{% endblock %}
+
+{% block content %}
+<div class="row">
+    <!-- Header -->
+    <div class="col-12 mb-4">
+        <div class="d-flex justify-content-between align-items-center">
+            <div>
+                <h1 class="h3 mb-0">Forms</h1>
+                <p class="text-muted">Dynamic forms and data collection</p>
+            </div>
+            <div class="btn-group" role="group">
+                <a href="{% url 'forms:form_create' %}" class="btn btn-primary">
+                    <i class="bi bi-plus-circle"></i> New Form
+                </a>
+                <button type="button" class="btn btn-outline-primary dropdown-toggle dropdown-toggle-split" data-bs-toggle="dropdown">
+                    <span class="visually-hidden">Toggle Dropdown</span>
+                </button>
+                <ul class="dropdown-menu">
+                    <li><a class="dropdown-item" href="{% url 'forms:form_create' %}?type=survey">Survey Form</a></li>
+                    <li><a class="dropdown-item" href="{% url 'forms:form_create' %}?type=feedback">Feedback Form</a></li>
+                    <li><a class="dropdown-item" href="{% url 'forms:form_create' %}?type=request">Request Form</a></li>
+                    <li><a class="dropdown-item" href="{% url 'forms:form_create' %}?type=approval">Approval Form</a></li>
+                    <li><hr class="dropdown-divider"></li>
+                    <li><a class="dropdown-item" href="{% url 'forms:form_create' %}?type=custom">Custom Form</a></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <!-- Filters and Search -->
+    <div class="col-12 mb-4">
+        <div class="dashboard-card">
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-3">
+                        <div class="input-group">
+                            <span class="input-group-text"><i class="bi bi-search"></i></span>
+                            <input type="text" class="form-control" id="searchInput" placeholder="Search forms...">
+                        </div>
+                    </div>
+                    <div class="col-md-2">
+                        <select class="form-select" id="typeFilter">
+                            <option value="">All Types</option>
+                            <option value="survey">Survey</option>
+                            <option value="feedback">Feedback</option>
+                            <option value="request">Request</option>
+                            <option value="approval">Approval</option>
+                            <option value="custom">Custom</option>
+                        </select>
+                    </div>
+                    <div class="col-md-2">
+                        <select class="form-select" id="statusFilter">
+                            <option value="">All Statuses</option>
+                            <option value="draft">Draft</option>
+                            <option value="active">Active</option>
+                            <option value="inactive">Inactive</option>
+                            <option value="archived">Archived</option>
+                        </select>
+                    </div>
+                    <div class="col-md-2">
+                        <select class="form-select" id="visibilityFilter">
+                            <option value="">All Visibility</option>
+                            <option value="public">Public</option>
+                            <option value="private">Private</option>
+                            <option value="team">Team</option>
+                        </select>
+                    </div>
+                    <div class="col-md-2">
+                        <select class="form-select" id="templateFilter">
+                            <option value="">All Forms</option>
+                            <option value="templated">Templated</option>
+                            <option value="custom">Custom</option>
+                        </select>
+                    </div>
+                    <div class="col-md-1">
+                        <button class="btn btn-outline-secondary w-100" id="clearFilters">
+                            <i class="bi bi-x-lg"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Form Grid -->
+    <div class="col-12">
+        {% if forms %}
+            <div class="row" id="formGrid">
+                {% for form in forms %}
+                <div class="col-lg-4 col-md-6 mb-4 form-item" 
+                     data-type="{{ form.form_type }}" 
+                     data-status="{{ form.status }}"
+                     data-visibility="{{ form.visibility }}"
+                     data-template="{{ form.template|yesno:'templated,custom' }}"
+                     data-name="{{ form.name|lower }}">
+                    <div class="dashboard-card h-100">
+                        <div class="card-body">
+                            <div class="d-flex justify-content-between align-items-start mb-3">
+                                <h5 class="card-title mb-0">
+                                    <a href="{% url 'forms:form_detail' form.pk %}" class="text-decoration-none">
+                                        {{ form.name }}
+                                    </a>
+                                </h5>
+                                <div class="dropdown">
+                                    <button class="btn btn-sm btn-outline-secondary" type="button" data-bs-toggle="dropdown">
+                                        <i class="bi bi-three-dots-vertical"></i>
+                                    </button>
+                                    <ul class="dropdown-menu">
+                                        <li><a class="dropdown-item" href="{% url 'forms:form_detail' form.pk %}">View</a></li>
+                                        <li><a class="dropdown-item" href="{% url 'forms:form_edit' form.pk %}">Edit</a></li>
+                                        <li><a class="dropdown-item" href="{% url 'forms:form_submit' form.pk %}">Submit</a></li>
+                                        <li><a class="dropdown-item" href="{% url 'forms:form_responses' form.pk %}">Responses</a></li>
+                                        <li><hr class="dropdown-divider"></li>
+                                        <li><a class="dropdown-item text-danger" href="{% url 'forms:form_delete' form.pk %}">Delete</a></li>
+                                    </ul>
+                                </div>
+                            </div>
+
+                            <p class="text-muted small mb-3">{{ form.description|truncatewords:20 }}</p>
+
+                            <div class="mb-3">
+                                <span class="badge bg-primary me-2">{{ form.get_form_type_display }}</span>
+                                <span class="badge bg-{{ form.status|default:'secondary' }}">{{ form.get_status_display }}</span>
+                                {% if form.is_public %}
+                                    <span class="badge bg-success">Public</span>
+                                {% else %}
+                                    <span class="badge bg-secondary">Private</span>
+                                {% endif %}
+                                {% if form.allow_anonymous %}
+                                    <span class="badge bg-info">Anonymous</span>
+                                {% endif %}
+                            </div>
+
+                            <!-- Form Stats -->
+                            <div class="row text-center mb-3">
+                                <div class="col-4">
+                                    <div class="border-end">
+                                        <small class="text-muted d-block">Fields</small>
+                                        <strong>{{ form.get_field_count }}</strong>
+                                    </div>
+                                </div>
+                                <div class="col-4">
+                                    <div class="border-end">
+                                        <small class="text-muted d-block">Submissions</small>
+                                        <strong>{{ form.get_submission_count }}</strong>
+                                    </div>
+                                </div>
+                                <div class="col-4">
+                                    <small class="text-muted d-block">Usage</small>
+                                    <strong>{{ form.usage_count }}</strong>
+                                </div>
+                            </div>
+
+                            <!-- Form Preview -->
+                            {% if form.preview_image %}
+                            <div class="mb-3">
+                                <img src="{{ form.preview_image.url }}" class="img-fluid rounded" alt="Form Preview">
+                            </div>
+                            {% endif %}
+
+                            <!-- Form Fields Preview -->
+                            <div class="mb-3">
+                                <small class="text-muted d-block">Form Fields:</small>
+                                <div class="d-flex flex-wrap gap-1">
+                                    {% for field in form.fields.all|slice:":5" %}
+                                    <span class="badge bg-light text-dark">{{ field.field_type }}</span>
+                                    {% endfor %}
+                                    {% if form.fields.count > 5 %}
+                                    <span class="badge bg-light text-dark">+{{ form.fields.count|add:"-5" }} more</span>
+                                    {% endif %}
+                                </div>
+                            </div>
+
+                            <div class="d-flex justify-content-between align-items-center">
+                                <small class="text-muted">
+                                    <i class="bi bi-person"></i>
+                                    {% if form.created_by %}
+                                        {{ form.created_by.get_full_name_or_username }}
+                                    {% else %}
+                                        System
+                                    {% endif %}
+                                </small>
+                                <small class="text-muted">
+                                    <i class="bi bi-clock"></i>
+                                    {{ form.updated_at|timesince }} ago
+                                </small>
+                            </div>
+
+                            {% if form.team %}
+                            <div class="mt-2">
+                                <small class="text-muted">
+                                    <i class="bi bi-people"></i> {{ form.team.name }}
+                                </small>
+                            </div>
+                            {% endif %}
+
+                            {% if form.template %}
+                            <div class="mt-1">
+                                <small class="text-muted">
+                                    <i class="bi bi-file-earmark-text"></i> Based on {{ form.template.name }}
+                                </small>
+                            </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        {% else %}
+            <div class="col-12">
+                <div class="dashboard-card">
+                    <div class="card-body text-center py-5">
+                        <i class="bi bi-file-earmark-text text-muted" style="font-size: 4rem;"></i>
+                        <h3 class="mt-3">No forms yet</h3>
+                        <p class="text-muted">Create your first form to collect data and feedback.</p>
+                        <a href="{% url 'forms:form_create' %}" class="btn btn-primary btn-lg">
+                            <i class="bi bi-plus-circle"></i> Create Your First Form
+                        </a>
+                    </div>
+                </div>
+            </div>
+        {% endif %}
+    </div>
+
+    <!-- Form Templates -->
+    {% if form_templates %}
+    <div class="col-12 mt-4">
+        <div class="dashboard-card">
+            <div class="card-body">
+                <h5 class="card-title">
+                    <i class="bi bi-collection"></i> Form Templates
+                </h5>
+                
+                <div class="row">
+                    {% for template in form_templates %}
+                    <div class="col-md-3 mb-3">
+                        <div class="border rounded p-3 text-center">
+                            <div class="mb-2">
+                                <i class="bi bi-file-earmark-text text-primary" style="font-size: 2rem;"></i>
+                            </div>
+                            <h6 class="mb-1">{{ template.name }}</h6>
+                            <small class="text-muted">{{ template.forms.count }} forms</small>
+                            {% if template.description %}
+                                <p class="text-muted small mt-2">{{ template.description|truncatewords:10 }}</p>
+                            {% endif %}
+                            <a href="{% url 'forms:form_create' %}?template={{ template.pk }}" class="btn btn-outline-primary btn-sm mt-2">
+                                Use Template
+                            </a>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+
+    <!-- Form Summary -->
+    {% if forms %}
+    <div class="col-12 mt-4">
+        <div class="dashboard-card">
+            <div class="card-body">
+                <h5 class="card-title">
+                    <i class="bi bi-graph-up"></i> Form Summary
+                </h5>
+                
+                <div class="row">
+                    <div class="col-md-3 text-center">
+                        <div class="p-3">
+                            <div class="display-6 text-primary">{{ forms|length }}</div>
+                            <small class="text-muted">Total Forms</small>
+                        </div>
+                    </div>
+                    <div class="col-md-3 text-center">
+                        <div class="p-3">
+                            <div class="display-6 text-success">{{ active_forms_count|default:0 }}</div>
+                            <small class="text-muted">Active Forms</small>
+                        </div>
+                    </div>
+                    <div class="col-md-3 text-center">
+                        <div class="p-3">
+                            <div class="display-6 text-warning">{{ total_submissions_count|default:0 }}</div>
+                            <small class="text-muted">Total Submissions</small>
+                        </div>
+                    </div>
+                    <div class="col-md-3 text-center">
+                        <div class="p-3">
+                            <div class="display-6 text-info">{{ public_forms_count|default:0 }}</div>
+                            <small class="text-muted">Public Forms</small>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="row mt-3">
+                    <div class="col-md-6">
+                        <h6>Form Type Distribution</h6>
+                        <div class="d-flex flex-wrap gap-2">
+                            {% for type, count in type_distribution.items %}
+                            <span class="badge bg-primary">{{ type|title }}: {{ count }}</span>
+                            {% endfor %}
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <h6>Most Used Forms</h6>
+                        <div class="list-group list-group-flush">
+                            {% for form in most_used_forms|slice:":3" %}
+                            <div class="list-group-item border-0 px-0 py-2">
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <span>{{ form.name }}</span>
+                                    <span class="badge bg-primary">{{ form.usage_count }} uses</span>
+                                </div>
+                            </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const searchInput = document.getElementById('searchInput');
+    const typeFilter = document.getElementById('typeFilter');
+    const statusFilter = document.getElementById('statusFilter');
+    const visibilityFilter = document.getElementById('visibilityFilter');
+    const templateFilter = document.getElementById('templateFilter');
+    const clearFilters = document.getElementById('clearFilters');
+    const formItems = document.querySelectorAll('.form-item');
+
+    function filterForms() {
+        const searchTerm = searchInput.value.toLowerCase();
+        const typeValue = typeFilter.value;
+        const statusValue = statusFilter.value;
+        const visibilityValue = visibilityFilter.value;
+        const templateValue = templateFilter.value;
+
+        formItems.forEach(item => {
+            const name = item.dataset.name;
+            const type = item.dataset.type;
+            const status = item.dataset.status;
+            const visibility = item.dataset.visibility;
+            const template = item.dataset.template;
+
+            const matchesSearch = name.includes(searchTerm);
+            const matchesType = !typeValue || type === typeValue;
+            const matchesStatus = !statusValue || status === statusValue;
+            const matchesVisibility = !visibilityValue || visibility === visibilityValue;
+            const matchesTemplate = !templateValue || template === templateValue;
+
+            if (matchesSearch && matchesType && matchesStatus && matchesVisibility && matchesTemplate) {
+                item.style.display = 'block';
+            } else {
+                item.style.display = 'none';
+            }
+        });
+    }
+
+    // Event listeners
+    searchInput.addEventListener('input', filterForms);
+    typeFilter.addEventListener('change', filterForms);
+    statusFilter.addEventListener('change', filterForms);
+    visibilityFilter.addEventListener('change', filterForms);
+    templateFilter.addEventListener('change', filterForms);
+    
+    clearFilters.addEventListener('click', function() {
+        searchInput.value = '';
+        typeFilter.value = '';
+        statusFilter.value = '';
+        visibilityFilter.value = '';
+        templateFilter.value = '';
+        filterForms();
+    });
+
+    // Initialize filters
+    filterForms();
+});
+</script>
+{% endblock %}

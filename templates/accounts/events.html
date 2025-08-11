@@ -1,0 +1,325 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Events & Webinars - Inspora{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-12">
+            <!-- Hero Section -->
+            <div class="text-center mb-5">
+                <h1 class="display-4 fw-bold mb-4">
+                    <i class="fas fa-calendar-alt text-primary"></i> Events & Webinars
+                </h1>
+                <p class="lead text-muted mb-4">
+                    Join our live events, webinars, and workshops to learn from experts and connect with the Inspora community.
+                </p>
+            </div>
+
+            <!-- Featured Event -->
+            <div class="card border-0 shadow-sm mb-5">
+                <div class="card-body p-5">
+                    <div class="row">
+                        <div class="col-lg-8">
+                            <span class="badge bg-danger mb-3">Featured Event</span>
+                            <h2 class="mb-4">Inspora Summit 2024: The Future of Work</h2>
+                            <p class="lead text-muted mb-4">
+                                Join us for our biggest event of the year! Learn about the latest features, hear from industry leaders, and network with fellow Inspora users.
+                            </p>
+                            <div class="row mb-4">
+                                <div class="col-md-6">
+                                    <div class="d-flex align-items-center mb-3">
+                                        <i class="fas fa-calendar text-primary me-3"></i>
+                                        <div>
+                                            <strong>Date:</strong><br>
+                                            <span class="text-muted">March 15-17, 2024</span>
+                                        </div>
+                                    </div>
+                                    <div class="d-flex align-items-center mb-3">
+                                        <i class="fas fa-clock text-success me-3"></i>
+                                        <div>
+                                            <strong>Time:</strong><br>
+                                            <span class="text-muted">9:00 AM - 6:00 PM EST</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="d-flex align-items-center mb-3">
+                                        <i class="fas fa-map-marker-alt text-danger me-3"></i>
+                                        <div>
+                                            <strong>Location:</strong><br>
+                                            <span class="text-muted">Virtual + San Francisco, CA</span>
+                                        </div>
+                                    </div>
+                                    <div class="d-flex align-items-center mb-3">
+                                        <i class="fas fa-users text-info me-3"></i>
+                                        <div>
+                                            <strong>Capacity:</strong><br>
+                                            <span class="text-muted">500+ Attendees</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="d-flex gap-3">
+                                <button class="btn btn-primary btn-lg" onclick="registerForEvent('Inspora Summit 2024')">
+                                    <i class="fas fa-ticket-alt me-2"></i>Register Now
+                                </button>
+                                <button class="btn btn-outline-primary btn-lg" onclick="addToCalendar('Inspora Summit 2024')">
+                                    <i class="fas fa-calendar-plus me-2"></i>Add to Calendar
+                                </button>
+                            </div>
+                        </div>
+                        <div class="col-lg-4 text-center">
+                            <img src="https://via.placeholder.com/300x200" class="img-fluid rounded mb-3" alt="Summit">
+                            <div class="alert alert-info">
+                                <i class="fas fa-info-circle me-2"></i>
+                                <strong>Early Bird Pricing</strong><br>
+                                Save 20% until Feb 15th
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Upcoming Events -->
+            <div class="mb-5">
+                <h2 class="mb-4"><i class="fas fa-clock text-primary"></i> Upcoming Events</h2>
+                <div class="row">
+                    <div class="col-md-6 col-lg-4 mb-4">
+                        <div class="card border-0 shadow-sm h-100">
+                            <div class="card-body">
+                                <div class="d-flex justify-content-between align-items-start mb-3">
+                                    <span class="badge bg-success">Free</span>
+                                    <small class="text-muted">Jan 25, 2024</small>
+                                </div>
+                                <h5 class="card-title">AI-Powered Project Management</h5>
+                                <p class="card-text">Learn how to leverage Inspora's AI features to automate workflows and boost productivity.</p>
+                                <div class="mb-3">
+                                    <small class="text-muted">
+                                        <i class="fas fa-clock me-1"></i>1 hour
+                                        <i class="fas fa-users ms-3 me-1"></i>150 spots
+                                    </small>
+                                </div>
+                                <button class="btn btn-outline-primary btn-sm" onclick="registerForEvent('AI-Powered Project Management')">
+                                    Register
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="col-md-6 col-lg-4 mb-4">
+                        <div class="card border-0 shadow-sm h-100">
+                            <div class="card-body">
+                                <div class="d-flex justify-content-between align-items-start mb-3">
+                                    <span class="badge bg-warning">$49</span>
+                                    <small class="text-muted">Feb 8, 2024</small>
+                                </div>
+                                <h5 class="card-title">Advanced Team Collaboration</h5>
+                                <p class="card-text">Master team communication, file sharing, and permission management in Inspora.</p>
+                                <div class="mb-3">
+                                    <small class="text-muted">
+                                        <i class="fas fa-clock me-1"></i>2 hours
+                                        <i class="fas fa-users ms-3 me-1"></i>75 spots
+                                    </small>
+                                </div>
+                                <button class="btn btn-outline-primary btn-sm" onclick="registerForEvent('Advanced Team Collaboration')">
+                                    Register
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="col-md-6 col-lg-4 mb-4">
+                        <div class="card border-0 shadow-sm h-100">
+                            <div class="card-body">
+                                <div class="d-flex justify-content-between align-items-start mb-3">
+                                    <span class="badge bg-success">Free</span>
+                                    <small class="text-muted">Feb 22, 2024</small>
+                                </div>
+                                <h5 class="card-title">Getting Started with Inspora</h5>
+                                <p class="card-text">Perfect for new users! Learn the basics and get your first project up and running.</p>
+                                <div class="mb-3">
+                                    <small class="text-muted">
+                                        <i class="fas fa-clock me-1"></i>45 min
+                                        <i class="fas fa-users ms-3 me-1"></i>200 spots
+                                    </small>
+                                </div>
+                                <button class="btn btn-outline-primary btn-sm" onclick="registerForEvent('Getting Started with Inspora')">
+                                    Register
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Event Categories -->
+            <div class="mb-5">
+                <h2 class="mb-4"><i class="fas fa-tags text-success"></i> Event Categories</h2>
+                <div class="row">
+                    <div class="col-md-6 col-lg-3 mb-4">
+                        <div class="card border-0 shadow-sm text-center h-100">
+                            <div class="card-body">
+                                <i class="fas fa-graduation-cap fa-3x text-primary mb-3"></i>
+                                <h6 class="card-title">Training & Workshops</h6>
+                                <p class="card-text text-muted">Hands-on learning sessions to master Inspora features.</p>
+                                <span class="badge bg-primary">12 Events</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="col-md-6 col-lg-3 mb-4">
+                        <div class="card border-0 shadow-sm text-center h-100">
+                            <div class="card-body">
+                                <i class="fas fa-lightbulb fa-3x text-warning mb-3"></i>
+                                <h6 class="card-title">Product Updates</h6>
+                                <p class="card-text text-muted">Learn about new features and upcoming improvements.</p>
+                                <span class="badge bg-warning">8 Events</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="col-md-6 col-lg-3 mb-4">
+                        <div class="card border-0 shadow-sm text-center h-100">
+                            <div class="card-body">
+                                <i class="fas fa-users fa-3x text-success mb-3"></i>
+                                <h6 class="card-title">Community Meetups</h6>
+                                <p class="card-text text-muted">Connect with other Inspora users in your area.</p>
+                                <span class="badge bg-success">15 Events</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="col-md-6 col-lg-3 mb-4">
+                        <div class="card border-0 shadow-sm text-center h-100">
+                            <div class="card-body">
+                                <i class="fas fa-trophy fa-3x text-info mb-3"></i>
+                                <h6 class="card-title">Conferences</h6>
+                                <p class="card-text text-muted">Major industry events and annual gatherings.</p>
+                                <span class="badge bg-info">3 Events</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Past Events -->
+            <div class="mb-5">
+                <h2 class="mb-4"><i class="fas fa-history text-muted"></i> Past Events</h2>
+                <div class="row">
+                    <div class="col-md-6 mb-4">
+                        <div class="card border-0 shadow-sm">
+                            <div class="card-body">
+                                <div class="d-flex justify-content-between align-items-start mb-3">
+                                    <span class="badge bg-secondary">Completed</span>
+                                    <small class="text-muted">Dec 15, 2023</small>
+                                </div>
+                                <h5 class="card-title">Year-End Productivity Review</h5>
+                                <p class="card-text">Reflected on the year's achievements and learned productivity strategies for 2024.</p>
+                                <div class="d-flex gap-2">
+                                    <a href="#" class="btn btn-outline-secondary btn-sm">View Recording</a>
+                                    <a href="#" class="btn btn-outline-primary btn-sm">Download Slides</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="col-md-6 mb-4">
+                        <div class="card border-0 shadow-sm">
+                            <div class="card-body">
+                                <div class="d-flex justify-content-between align-items-start mb-3">
+                                    <span class="badge bg-secondary">Completed</span>
+                                    <small class="text-muted">Nov 30, 2023</small>
+                                </div>
+                                <h5 class="card-title">AI Features Deep Dive</h5>
+                                <p class="card-text">Explored Inspora's AI capabilities and how they can transform your workflow.</p>
+                                <div class="d-flex gap-2">
+                                    <a href="#" class="btn btn-outline-secondary btn-sm">View Recording</a>
+                                    <a href="#" class="btn btn-outline-primary btn-sm">Download Slides</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Event Calendar -->
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="mb-0"><i class="fas fa-calendar-week text-primary"></i> Event Calendar</h3>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-lg-8">
+                            <div class="calendar-placeholder bg-light rounded p-4 text-center">
+                                <i class="fas fa-calendar-alt fa-3x text-muted mb-3"></i>
+                                <p class="text-muted">Interactive event calendar coming soon!</p>
+                                <p class="text-muted">Browse events by date, filter by category, and sync with your personal calendar.</p>
+                            </div>
+                        </div>
+                        <div class="col-lg-4">
+                            <h6 class="text-primary mb-3">Quick Actions</h6>
+                            <div class="d-grid gap-2">
+                                <button class="btn btn-outline-primary" onclick="subscribeToNewsletter()">
+                                    <i class="fas fa-envelope me-2"></i>Subscribe to Updates
+                                </button>
+                                <button class="btn btn-outline-success" onclick="suggestEvent()">
+                                    <i class="fas fa-lightbulb me-2"></i>Suggest an Event
+                                </button>
+                                <button class="btn btn-outline-info" onclick="downloadCalendar()">
+                                    <i class="fas fa-download me-2"></i>Download Calendar
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+function registerForEvent(eventName) {
+    alert('Event registration coming soon! You\'ll be able to register for "' + eventName + '" in the next update.');
+}
+
+function addToCalendar(eventName) {
+    alert('Calendar integration coming soon! "' + eventName + '" will be added to your calendar in the next update.');
+}
+
+function subscribeToNewsletter() {
+    alert('Newsletter subscription coming soon! You\'ll receive updates about upcoming events and Inspora news.');
+}
+
+function suggestEvent() {
+    alert('Event suggestion feature coming soon! You can suggest topics, speakers, or event formats in the next update.');
+}
+
+function downloadCalendar() {
+    alert('Calendar download coming soon! You\'ll be able to download events in iCal format for your personal calendar.');
+}
+
+// Add interactive elements
+document.querySelectorAll('.btn').forEach(button => {
+    button.addEventListener('click', function(e) {
+        if (this.textContent.includes('View Recording') || this.textContent.includes('Download Slides')) {
+            e.preventDefault();
+            alert('Content access coming soon! You can view recordings and download materials in the next update.');
+        }
+    });
+});
+
+// Add hover effects
+document.querySelectorAll('.card').forEach(card => {
+    card.addEventListener('mouseenter', function() {
+        this.style.transform = 'translateY(-3px)';
+        this.style.transition = 'transform 0.3s ease';
+    });
+    
+    card.addEventListener('mouseleave', function() {
+        this.style.transform = 'translateY(0)';
+    });
+});
+</script>
+{% endblock %}

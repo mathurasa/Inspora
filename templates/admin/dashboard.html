@@ -1,0 +1,603 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Admin Dashboard - Inspora{% endblock %}
+
+{% block extra_css %}
+<style>
+    .metric-card {
+        transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+    .metric-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    }
+    .metric-icon {
+        font-size: 2.5rem;
+        opacity: 0.8;
+    }
+    .metric-value {
+        font-size: 2rem;
+        font-weight: bold;
+    }
+    .metric-label {
+        font-size: 0.875rem;
+        color: #6c757d;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+    .status-indicator {
+        width: 12px;
+        height: 12px;
+        border-radius: 50%;
+        display: inline-block;
+        margin-right: 8px;
+    }
+    .status-online { background-color: #28a745; }
+    .status-warning { background-color: #ffc107; }
+    .status-offline { background-color: #dc3545; }
+    .activity-item {
+        border-left: 3px solid #dee2e6;
+        padding-left: 1rem;
+        margin-bottom: 1rem;
+    }
+    .activity-item.recent { border-left-color: #007bff; }
+    .activity-item.warning { border-left-color: #ffc107; }
+    .activity-item.error { border-left-color: #dc3545; }
+    .chart-container {
+        position: relative;
+        height: 300px;
+    }
+    .quick-action-btn {
+        transition: all 0.2s ease;
+    }
+    .quick-action-btn:hover {
+        transform: scale(1.05);
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <!-- Header -->
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h1 class="h3 mb-0">Admin Dashboard</h1>
+            <p class="text-muted">System overview and administration</p>
+        </div>
+        <div class="btn-group" role="group">
+            <button type="button" class="btn btn-outline-primary" id="refreshDashboard">
+                <i class="bi bi-arrow-clockwise"></i> Refresh
+            </button>
+            <button type="button" class="btn btn-outline-secondary" id="exportReport">
+                <i class="bi bi-download"></i> Export Report
+            </button>
+        </div>
+    </div>
+
+    <!-- Key Metrics -->
+    <div class="row mb-4">
+        <div class="col-xl-3 col-md-6 mb-4">
+            <div class="card metric-card border-left-primary h-100 py-2">
+                <div class="card-body">
+                    <div class="row no-gutters align-items-center">
+                        <div class="col mr-2">
+                            <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
+                                Total Users
+                            </div>
+                            <div class="h5 mb-0 font-weight-bold text-gray-800" id="totalUsers">0</div>
+                        </div>
+                        <div class="col-auto">
+                            <i class="bi bi-people metric-icon text-primary"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-xl-3 col-md-6 mb-4">
+            <div class="card metric-card border-left-success h-100 py-2">
+                <div class="card-body">
+                    <div class="row no-gutters align-items-center">
+                        <div class="col mr-2">
+                            <div class="text-xs font-weight-bold text-success text-uppercase mb-1">
+                                Active Projects
+                            </div>
+                            <div class="h5 mb-0 font-weight-bold text-gray-800" id="activeProjects">0</div>
+                        </div>
+                        <div class="col-auto">
+                            <i class="bi bi-kanban metric-icon text-success"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-xl-3 col-md-6 mb-4">
+            <div class="card metric-card border-left-info h-100 py-2">
+                <div class="card-body">
+                    <div class="row no-gutters align-items-center">
+                        <div class="col mr-2">
+                            <div class="text-xs font-weight-bold text-info text-uppercase mb-1">
+                                Tasks Completed
+                            </div>
+                            <div class="h5 mb-0 font-weight-bold text-gray-800" id="completedTasks">0</div>
+                        </div>
+                        <div class="col-auto">
+                            <i class="bi bi-check-circle metric-icon text-info"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-xl-3 col-md-6 mb-4">
+            <div class="card metric-card border-left-warning h-100 py-2">
+                <div class="card-body">
+                    <div class="row no-gutters align-items-center">
+                        <div class="col mr-2">
+                            <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">
+                                System Health
+                            </div>
+                            <div class="h5 mb-0 font-weight-bold text-gray-800" id="systemHealth">Good</div>
+                        </div>
+                        <div class="col-auto">
+                            <i class="bi bi-heart-pulse metric-icon text-warning"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- System Status and Quick Actions -->
+    <div class="row mb-4">
+        <!-- System Status -->
+        <div class="col-lg-8">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="card-title mb-0">
+                        <i class="bi bi-activity"></i> System Status
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <h6>Services</h6>
+                            <div class="mb-3">
+                                <span class="status-indicator status-online"></span>
+                                <span>Web Server</span>
+                                <span class="badge bg-success ms-2">Online</span>
+                            </div>
+                            <div class="mb-3">
+                                <span class="status-indicator status-online"></span>
+                                <span>Database</span>
+                                <span class="badge bg-success ms-2">Online</span>
+                            </div>
+                            <div class="mb-3">
+                                <span class="status-indicator status-online"></span>
+                                <span>Redis</span>
+                                <span class="badge bg-success ms-2">Online</span>
+                            </div>
+                            <div class="mb-3">
+                                <span class="status-indicator status-warning"></span>
+                                <span>File Storage</span>
+                                <span class="badge bg-warning ms-2">Warning</span>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <h6>Performance</h6>
+                            <div class="mb-3">
+                                <label class="form-label">CPU Usage</label>
+                                <div class="progress">
+                                    <div class="progress-bar" role="progressbar" style="width: 45%" id="cpuUsage">45%</div>
+                                </div>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">Memory Usage</label>
+                                <div class="progress">
+                                    <div class="progress-bar bg-info" role="progressbar" style="width: 62%" id="memoryUsage">62%</div>
+                                </div>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">Disk Usage</label>
+                                <div class="progress">
+                                    <div class="progress-bar bg-warning" role="progressbar" style="width: 78%" id="diskUsage">78%</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Quick Actions -->
+        <div class="col-lg-4">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="card-title mb-0">
+                        <i class="bi bi-lightning"></i> Quick Actions
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <div class="d-grid gap-2">
+                        <button class="btn btn-primary quick-action-btn" onclick="location.href='/admin/'">
+                            <i class="bi bi-gear"></i> Django Admin
+                        </button>
+                        <button class="btn btn-success quick-action-btn" onclick="location.href='/admin/accounts/user/'">
+                            <i class="bi bi-person-plus"></i> Manage Users
+                        </button>
+                        <button class="btn btn-info quick-action-btn" onclick="location.href='/admin/projects/project/'">
+                            <i class="bi bi-kanban"></i> Manage Projects
+                        </button>
+                        <button class="btn btn-warning quick-action-btn" onclick="location.href='/admin/audit/auditlog/'">
+                            <i class="bi bi-shield-check"></i> View Audit Logs
+                        </button>
+                        <button class="btn btn-secondary quick-action-btn" onclick="location.href='/admin/notifications_app/notification/'">
+                            <i class="bi bi-bell"></i> Manage Notifications
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Recent Activity and System Info -->
+    <div class="row mb-4">
+        <!-- Recent Activity -->
+        <div class="col-lg-8">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="card-title mb-0">
+                        <i class="bi bi-clock-history"></i> Recent Activity
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <div id="recentActivity">
+                        <!-- Activity items will be loaded here -->
+                        <div class="text-center py-3">
+                            <div class="spinner-border text-primary" role="status">
+                                <span class="visually-hidden">Loading...</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- System Information -->
+        <div class="col-lg-4">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="card-title mb-0">
+                        <i class="bi bi-info-circle"></i> System Information
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <div class="mb-3">
+                        <strong>Version:</strong> 1.0.0
+                    </div>
+                    <div class="mb-3">
+                        <strong>Django:</strong> 4.2.7
+                    </div>
+                    <div class="mb-3">
+                        <strong>Python:</strong> 3.8+
+                    </div>
+                    <div class="mb-3">
+                        <strong>Database:</strong> SQLite/MySQL
+                    </div>
+                    <div class="mb-3">
+                        <strong>Last Updated:</strong> <span id="lastUpdated">Just now</span>
+                    </div>
+                    <div class="mb-3">
+                        <strong>Uptime:</strong> <span id="uptime">0 days</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Charts Row -->
+    <div class="row mb-4">
+        <!-- User Activity Chart -->
+        <div class="col-lg-6">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="card-title mb-0">
+                        <i class="bi bi-graph-up"></i> User Activity (Last 7 Days)
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <div class="chart-container">
+                        <canvas id="userActivityChart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Project Status Chart -->
+        <div class="col-lg-6">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="card-title mb-0">
+                        <i class="bi bi-pie-chart"></i> Project Status Distribution
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <div class="chart-container">
+                        <canvas id="projectStatusChart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Alerts and Notifications -->
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="card-title mb-0">
+                        <i class="bi bi-exclamation-triangle"></i> System Alerts
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <div id="systemAlerts">
+                        <!-- Alerts will be loaded here -->
+                        <div class="alert alert-info" role="alert">
+                            <i class="bi bi-info-circle"></i> System is running normally. No critical alerts at this time.
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    let dashboardData = {};
+    let charts = {};
+
+    // Initialize dashboard
+    loadDashboardData();
+    setupEventListeners();
+    startAutoRefresh();
+
+    function loadDashboardData() {
+        // Simulate loading dashboard data (replace with actual API calls)
+        setTimeout(() => {
+            dashboardData = generateSampleDashboardData();
+            updateMetrics();
+            updateSystemStatus();
+            loadRecentActivity();
+            createCharts();
+            updateSystemInfo();
+        }, 1000);
+    }
+
+    function generateSampleDashboardData() {
+        return {
+            users: {
+                total: 156,
+                active: 142,
+                new: 8
+            },
+            projects: {
+                total: 45,
+                active: 38,
+                completed: 7
+            },
+            tasks: {
+                total: 892,
+                completed: 567,
+                overdue: 23
+            },
+            system: {
+                health: 'Good',
+                cpu: 45,
+                memory: 62,
+                disk: 78,
+                uptime: 15
+            },
+            activity: [
+                { type: 'user_login', user: 'john.doe', time: '2 minutes ago', severity: 'info' },
+                { type: 'project_created', user: 'jane.smith', time: '5 minutes ago', severity: 'info' },
+                { type: 'task_completed', user: 'mike.johnson', time: '8 minutes ago', severity: 'success' },
+                { type: 'system_backup', user: 'system', time: '1 hour ago', severity: 'info' },
+                { type: 'error_log', user: 'system', time: '2 hours ago', severity: 'warning' }
+            ]
+        };
+    }
+
+    function updateMetrics() {
+        document.getElementById('totalUsers').textContent = dashboardData.users.total;
+        document.getElementById('activeProjects').textContent = dashboardData.projects.active;
+        document.getElementById('completedTasks').textContent = dashboardData.tasks.completed;
+        document.getElementById('systemHealth').textContent = dashboardData.system.health;
+    }
+
+    function updateSystemStatus() {
+        document.getElementById('cpuUsage').style.width = dashboardData.system.cpu + '%';
+        document.getElementById('cpuUsage').textContent = dashboardData.system.cpu + '%';
+        document.getElementById('memoryUsage').style.width = dashboardData.system.memory + '%';
+        document.getElementById('memoryUsage').textContent = dashboardData.system.memory + '%';
+        document.getElementById('diskUsage').style.width = dashboardData.system.disk + '%';
+        document.getElementById('diskUsage').textContent = dashboardData.system.disk + '%';
+    }
+
+    function loadRecentActivity() {
+        const container = document.getElementById('recentActivity');
+        
+        if (dashboardData.activity.length === 0) {
+            container.innerHTML = '<p class="text-muted">No recent activity</p>';
+            return;
+        }
+
+        container.innerHTML = dashboardData.activity.map(activity => `
+            <div class="activity-item ${getActivityClass(activity)}">
+                <div class="d-flex justify-content-between align-items-start">
+                    <div>
+                        <strong>${formatActivityType(activity.type)}</strong>
+                        <span class="text-muted">by ${activity.user}</span>
+                        <br>
+                        <small class="text-muted">${activity.time}</small>
+                    </div>
+                    <span class="badge bg-${getSeverityColor(activity.severity)}">${activity.severity}</span>
+                </div>
+            </div>
+        `).join('');
+    }
+
+    function getActivityClass(activity) {
+        if (activity.severity === 'error') return 'error';
+        if (activity.severity === 'warning') return 'warning';
+        if (activity.time.includes('minutes')) return 'recent';
+        return '';
+    }
+
+    function formatActivityType(type) {
+        return type.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
+    }
+
+    function getSeverityColor(severity) {
+        const colors = {
+            'info': 'info',
+            'success': 'success',
+            'warning': 'warning',
+            'error': 'danger'
+        };
+        return colors[severity] || 'secondary';
+    }
+
+    function createCharts() {
+        // User Activity Chart
+        const userCtx = document.getElementById('userActivityChart').getContext('2d');
+        charts.userActivity = new Chart(userCtx, {
+            type: 'line',
+            data: {
+                labels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
+                datasets: [{
+                    label: 'Active Users',
+                    data: [65, 72, 68, 74, 82, 78, 85],
+                    borderColor: 'rgb(75, 192, 192)',
+                    backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                    tension: 0.1
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        display: false
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                }
+            }
+        });
+
+        // Project Status Chart
+        const projectCtx = document.getElementById('projectStatusChart').getContext('2d');
+        charts.projectStatus = new Chart(projectCtx, {
+            type: 'doughnut',
+            data: {
+                labels: ['Active', 'Completed', 'On Hold', 'Cancelled'],
+                datasets: [{
+                    data: [38, 7, 3, 2],
+                    backgroundColor: [
+                        'rgb(75, 192, 192)',
+                        'rgb(54, 162, 235)',
+                        'rgb(255, 205, 86)',
+                        'rgb(255, 99, 132)'
+                    ]
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        position: 'bottom'
+                    }
+                }
+            }
+        });
+    }
+
+    function updateSystemInfo() {
+        document.getElementById('lastUpdated').textContent = 'Just now';
+        document.getElementById('uptime').textContent = dashboardData.system.uptime + ' days';
+    }
+
+    function setupEventListeners() {
+        document.getElementById('refreshDashboard').addEventListener('click', loadDashboardData);
+        document.getElementById('exportReport').addEventListener('click', exportDashboardReport);
+    }
+
+    function exportDashboardReport() {
+        const reportData = {
+            timestamp: new Date().toISOString(),
+            metrics: dashboardData,
+            charts: 'Charts data would be exported here'
+        };
+        
+        const blob = new Blob([JSON.stringify(reportData, null, 2)], { type: 'application/json' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = 'dashboard_report.json';
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url);
+        
+        showToast('Dashboard report exported successfully', 'success');
+    }
+
+    function startAutoRefresh() {
+        setInterval(() => {
+            // Simulate real-time updates
+            if (Math.random() > 0.7) {
+                // Add new activity
+                const newActivity = {
+                    type: 'system_check',
+                    user: 'system',
+                    time: 'Just now',
+                    severity: 'info'
+                };
+                dashboardData.activity.unshift(newActivity);
+                if (dashboardData.activity.length > 10) {
+                    dashboardData.activity.pop();
+                }
+                loadRecentActivity();
+            }
+        }, 30000); // Check every 30 seconds
+    }
+
+    function showToast(message, type = 'info') {
+        const toast = document.createElement('div');
+        toast.className = `alert alert-${type} alert-dismissible fade show position-fixed`;
+        toast.style.cssText = 'top: 20px; right: 20px; z-index: 9999; min-width: 300px;';
+        toast.innerHTML = `
+            ${message}
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        `;
+        document.body.appendChild(toast);
+        
+        setTimeout(() => {
+            if (toast.parentNode) {
+                toast.remove();
+            }
+        }, 3000);
+    }
+});
+</script>
+{% endblock %}

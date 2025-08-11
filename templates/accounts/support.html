@@ -1,0 +1,288 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Support - Inspora{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-12">
+            <!-- Hero Section -->
+            <div class="text-center mb-5">
+                <h1 class="display-4 fw-bold mb-4">
+                    <i class="fas fa-headset text-primary"></i> Support Center
+                </h1>
+                <p class="lead text-muted mb-4">
+                    We're here to help! Get the support you need to succeed with Inspora.
+                </p>
+            </div>
+
+            <!-- Support Options -->
+            <div class="row mb-5">
+                <div class="col-md-6 col-lg-3 mb-4">
+                    <div class="card border-0 shadow-sm text-center h-100">
+                        <div class="card-body">
+                            <i class="fas fa-book fa-3x text-primary mb-3"></i>
+                            <h5 class="card-title">Help Center</h5>
+                            <p class="card-text">Browse our comprehensive knowledge base and tutorials.</p>
+                            <a href="{% url 'accounts:help_center' %}" class="btn btn-outline-primary">Browse Articles</a>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="col-md-6 col-lg-3 mb-4">
+                    <div class="card border-0 shadow-sm text-center h-100">
+                        <div class="card-body">
+                            <i class="fas fa-comments fa-3x text-success mb-3"></i>
+                            <h5 class="card-title">Community Forums</h5>
+                            <p class="card-text">Connect with other users and get community support.</p>
+                            <a href="{% url 'accounts:forums' %}" class="btn btn-outline-success">Join Discussion</a>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="col-md-6 col-lg-3 mb-4">
+                    <div class="card border-0 shadow-sm text-center h-100">
+                        <div class="card-body">
+                            <i class="fas fa-envelope fa-3x text-info mb-3"></i>
+                            <h5 class="card-title">Email Support</h5>
+                            <p class="card-text">Send us a detailed message and we'll respond within 24 hours.</p>
+                            <a href="mailto:support@inspora.com" class="btn btn-outline-info">Send Email</a>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="col-md-6 col-lg-3 mb-4">
+                    <div class="card border-0 shadow-sm text-center h-100">
+                        <div class="card-body">
+                            <i class="fas fa-phone fa-3x text-warning mb-3"></i>
+                            <h5 class="card-title">Phone Support</h5>
+                            <p class="card-text">Speak directly with our support team during business hours.</p>
+                            <a href="tel:+1-800-INSPORA" class="btn btn-outline-warning">Call Now</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Contact Form -->
+            <div class="row mb-5">
+                <div class="col-lg-8">
+                    <div class="card border-0 shadow-sm">
+                        <div class="card-header">
+                            <h3 class="mb-0"><i class="fas fa-paper-plane text-primary"></i> Send Support Request</h3>
+                        </div>
+                        <div class="card-body">
+                            <form>
+                                <div class="row">
+                                    <div class="col-md-6 mb-3">
+                                        <label for="supportName" class="form-label">Full Name *</label>
+                                        <input type="text" class="form-control" id="supportName" required>
+                                    </div>
+                                    <div class="col-md-6 mb-3">
+                                        <label for="supportEmail" class="form-label">Email Address *</label>
+                                        <input type="email" class="form-control" id="supportEmail" required>
+                                    </div>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="supportSubject" class="form-label">Subject *</label>
+                                    <input type="text" class="form-control" id="supportSubject" required>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="supportCategory" class="form-label">Category *</label>
+                                    <select class="form-select" id="supportCategory" required>
+                                        <option value="">Select a category...</option>
+                                        <option value="technical">Technical Issue</option>
+                                        <option value="billing">Billing Question</option>
+                                        <option value="feature">Feature Request</option>
+                                        <option value="general">General Question</option>
+                                        <option value="bug">Bug Report</option>
+                                    </select>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="supportPriority" class="form-label">Priority Level</label>
+                                    <select class="form-select" id="supportPriority">
+                                        <option value="low">Low - General question</option>
+                                        <option value="medium" selected>Medium - Feature request</option>
+                                        <option value="high">High - Workflow blocked</option>
+                                        <option value="urgent">Urgent - System down</option>
+                                    </select>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="supportMessage" class="form-label">Message *</label>
+                                    <textarea class="form-control" id="supportMessage" rows="5" required placeholder="Please describe your issue or question in detail..."></textarea>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="supportAttachments" class="form-label">Attachments (optional)</label>
+                                    <input type="file" class="form-control" id="supportAttachments" multiple>
+                                    <small class="text-muted">You can attach screenshots, logs, or other relevant files (max 10MB total)</small>
+                                </div>
+                                <button type="button" class="btn btn-primary" onclick="submitSupportRequest()">
+                                    <i class="fas fa-paper-plane me-2"></i>Send Support Request
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="col-lg-4">
+                    <div class="card border-0 shadow-sm">
+                        <div class="card-header">
+                            <h4 class="mb-0"><i class="fas fa-info-circle text-info"></i> Support Information</h4>
+                        </div>
+                        <div class="card-body">
+                            <div class="mb-4">
+                                <h6 class="text-primary">Response Times</h6>
+                                <ul class="list-unstyled">
+                                    <li><i class="fas fa-clock text-success me-2"></i>Email: Within 24 hours</li>
+                                    <li><i class="fas fa-clock text-warning me-2"></i>Phone: Immediate (business hours)</li>
+                                    <li><i class="fas fa-clock text-info me-2"></i>Community: Variable</li>
+                                </ul>
+                            </div>
+                            
+                            <div class="mb-4">
+                                <h6 class="text-success">Business Hours</h6>
+                                <p class="mb-1"><strong>Monday - Friday:</strong></p>
+                                <p class="mb-1">9:00 AM - 6:00 PM EST</p>
+                                <p class="mb-1"><strong>Saturday:</strong></p>
+                                <p class="mb-0">10:00 AM - 2:00 PM EST</p>
+                            </div>
+                            
+                            <div class="mb-4">
+                                <h6 class="text-warning">Emergency Support</h6>
+                                <p class="mb-1">For critical system issues outside business hours:</p>
+                                <p class="mb-0"><strong>Emergency Hotline:</strong> +1-800-EMERGENCY</p>
+                            </div>
+                            
+                            <div class="alert alert-info">
+                                <i class="fas fa-lightbulb me-2"></i>
+                                <strong>Pro Tip:</strong> Check our help center first - you might find the answer faster!
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- FAQ Section -->
+            <div class="mb-5">
+                <h2 class="mb-4"><i class="fas fa-question-circle text-primary"></i> Frequently Asked Questions</h2>
+                <div class="accordion" id="faqAccordion">
+                    <div class="accordion-item">
+                        <h2 class="accordion-header" id="faq1">
+                            <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapse1">
+                                How do I reset my password?
+                            </button>
+                        </h2>
+                        <div id="collapse1" class="accordion-collapse collapse show" data-bs-parent="#faqAccordion">
+                            <div class="accordion-body">
+                                You can reset your password by clicking the "Forgot Password" link on the login page. We'll send you an email with a secure link to create a new password.
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="accordion-item">
+                        <h2 class="accordion-header" id="faq2">
+                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse2">
+                                Can I export my project data?
+                            </button>
+                        </h2>
+                        <div id="collapse2" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+                            <div class="accordion-body">
+                                Yes! You can export your project data in various formats including CSV, Excel, and PDF. Go to Project Settings > Export to access this feature.
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="accordion-item">
+                        <h2 class="accordion-header" id="faq3">
+                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse3">
+                                How do I invite team members?
+                            </button>
+                        </h2>
+                        <div id="collapse3" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+                            <div class="accordion-body">
+                                To invite team members, go to Team Management > Invite Members. Enter their email addresses and select their role. They'll receive an invitation email with setup instructions.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Support Status -->
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="mb-0"><i class="fas fa-chart-line text-success"></i> System Status</h3>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-3 text-center mb-3">
+                            <div class="display-6 text-success">🟢</div>
+                            <h6>Core Platform</h6>
+                            <small class="text-success">Operational</small>
+                        </div>
+                        <div class="col-md-3 text-center mb-3">
+                            <div class="display-6 text-success">🟢</div>
+                            <h6>AI Features</h6>
+                            <small class="text-success">Operational</small>
+                        </div>
+                        <div class="col-md-3 text-center mb-3">
+                            <div class="display-6 text-warning">🟡</div>
+                            <h6>File Storage</h6>
+                            <small class="text-warning">Minor Issues</small>
+                        </div>
+                        <div class="col-md-3 text-center mb-3">
+                            <div class="display-6 text-success">🟢</div>
+                            <h6>API Services</h6>
+                            <small class="text-success">Operational</small>
+                        </div>
+                    </div>
+                    <div class="text-center mt-3">
+                        <a href="#" class="btn btn-outline-primary">View Detailed Status</a>
+                        <a href="#" class="btn btn-outline-success">Subscribe to Updates</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+function submitSupportRequest() {
+    const name = document.getElementById('supportName').value;
+    const email = document.getElementById('supportEmail').value;
+    const subject = document.getElementById('supportSubject').value;
+    const category = document.getElementById('supportCategory').value;
+    const message = document.getElementById('supportMessage').value;
+    
+    if (!name.trim() || !email.trim() || !subject.trim() || !category || !message.trim()) {
+        alert('Please fill in all required fields.');
+        return;
+    }
+    
+    // Validate email format
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email)) {
+        alert('Please enter a valid email address.');
+        return;
+    }
+    
+    alert('Support request submitted successfully! We\'ll get back to you within 24 hours.\n\n' +
+          'Subject: ' + subject + '\n' +
+          'Category: ' + category + '\n' +
+          'Priority: ' + document.getElementById('supportPriority').value);
+    
+    // Reset form
+    document.querySelector('form').reset();
+}
+
+// Add interactive elements
+document.querySelectorAll('.accordion-button').forEach(button => {
+    button.addEventListener('click', function() {
+        const icon = this.querySelector('i');
+        if (icon) {
+            icon.classList.toggle('fa-chevron-down');
+            icon.classList.toggle('fa-chevron-up');
+        }
+    });
+});
+</script>
+{% endblock %}

@@ -1,0 +1,246 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Resources - Inspora{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-12">
+            <!-- Hero Section -->
+            <div class="text-center mb-5">
+                <h1 class="display-4 fw-bold mb-4">
+                    <i class="fas fa-book text-primary"></i> Resources & Learning
+                </h1>
+                <p class="lead text-muted mb-4">
+                    Everything you need to succeed with Inspora. Learn, discover, and get support.
+                </p>
+            </div>
+
+            <!-- Resource Categories -->
+            <div class="row">
+                <!-- Learn Section -->
+                <div class="col-md-6 col-lg-3 mb-4">
+                    <div class="card h-100 border-0 shadow-sm">
+                        <div class="card-body text-center p-4">
+                            <div class="mb-4">
+                                <i class="fas fa-graduation-cap fa-3x text-primary"></i>
+                            </div>
+                            <h5 class="card-title text-uppercase fw-bold">LEARN</h5>
+                            <p class="card-text text-muted">Master Inspora with our comprehensive learning resources.</p>
+                            <div class="d-grid gap-2">
+                                <a href="{% url 'accounts:help_center' %}" class="btn btn-outline-primary btn-sm">
+                                    <i class="fas fa-question-circle me-2"></i>Help Center
+                                </a>
+                                <a href="{% url 'accounts:academy' %}" class="btn btn-outline-primary btn-sm">
+                                    <i class="fas fa-graduation-cap me-2"></i>Inspora Academy
+                                </a>
+                                <a href="{% url 'accounts:certifications' %}" class="btn btn-outline-primary btn-sm">
+                                    <i class="fas fa-certificate me-2"></i>Certifications
+                                </a>
+                                <a href="{% url 'accounts:forums' %}" class="btn btn-outline-primary btn-sm">
+                                    <i class="fas fa-comments me-2"></i>Community Forums
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Discover Section -->
+                <div class="col-md-6 col-lg-3 mb-4">
+                    <div class="card h-100 border-0 shadow-sm">
+                        <div class="card-body text-center p-4">
+                            <div class="mb-4">
+                                <i class="fas fa-compass fa-3x text-success"></i>
+                            </div>
+                            <h5 class="card-title text-uppercase fw-bold">DISCOVER</h5>
+                            <p class="card-text text-muted">Explore best practices and success stories.</p>
+                            <div class="d-grid gap-2">
+                                <a href="{% url 'accounts:work_management' %}" class="btn btn-outline-success btn-sm">
+                                    <i class="fas fa-cogs me-2"></i>Work Management Hub
+                                </a>
+                                <a href="{% url 'accounts:customer_stories' %}" class="btn btn-outline-success btn-sm">
+                                    <i class="fas fa-users me-2"></i>Customer Stories
+                                </a>
+                                <a href="{% url 'accounts:events' %}" class="btn btn-outline-success btn-sm">
+                                    <i class="fas fa-calendar-alt me-2"></i>Events & Webinars
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Support Section -->
+                <div class="col-md-6 col-lg-3 mb-4">
+                    <div class="card h-100 border-0 shadow-sm">
+                        <div class="card-body text-center p-4">
+                            <div class="mb-4">
+                                <i class="fas fa-headset fa-3x text-info"></i>
+                            </div>
+                            <h5 class="card-title text-uppercase fw-bold">SUPPORT</h5>
+                            <p class="card-text text-muted">Get help when you need it most.</p>
+                            <div class="d-grid gap-2">
+                                <a href="{% url 'accounts:support' %}" class="btn btn-outline-info btn-sm">
+                                    <i class="fas fa-headset me-2"></i>Get Support
+                                </a>
+                                <a href="{% url 'accounts:developer' %}" class="btn btn-outline-info btn-sm">
+                                    <i class="fas fa-code me-2"></i>Developer Support
+                                </a>
+                                <a href="{% url 'accounts:partners' %}" class="btn btn-outline-info btn-sm">
+                                    <i class="fas fa-handshake me-2"></i>Partners
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Templates Section -->
+                <div class="col-md-6 col-lg-3 mb-4">
+                    <div class="card h-100 border-0 shadow-sm">
+                        <div class="card-body text-center p-4">
+                            <div class="mb-4">
+                                <i class="fas fa-layer-group fa-3x text-warning"></i>
+                            </div>
+                            <h5 class="card-title text-uppercase fw-bold">TEMPLATES</h5>
+                            <p class="card-text text-muted">Ready-to-use templates for common workflows.</p>
+                            <div class="d-grid gap-2">
+                                <a href="{% url 'accounts:templates' %}" class="btn btn-outline-warning btn-sm">
+                                    <i class="fas fa-layer-group me-2"></i>All Templates
+                                </a>
+                                <a href="{% url 'accounts:project_templates' %}" class="btn btn-outline-warning btn-sm">
+                                    <i class="fas fa-project-diagram me-2"></i>Project Plans
+                                </a>
+                                <a href="{% url 'accounts:goal_templates' %}" class="btn btn-outline-warning btn-sm">
+                                    <i class="fas fa-bullseye me-2"></i>Team Goals
+                                </a>
+                                <a href="{% url 'accounts:meeting_templates' %}" class="btn btn-outline-warning btn-sm">
+                                    <i class="fas fa-users me-2"></i>Meeting Agendas
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Featured Resources -->
+            <div class="card mt-5">
+                <div class="card-header">
+                    <h3 class="mb-0"><i class="fas fa-star text-warning"></i> Featured Resources</h3>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-4 mb-4">
+                            <div class="card border-0 shadow-sm h-100">
+                                <div class="card-body">
+                                    <div class="d-flex align-items-center mb-3">
+                                        <i class="fas fa-play-circle fa-2x text-primary me-3"></i>
+                                        <div>
+                                            <h6 class="mb-1">Getting Started Guide</h6>
+                                            <small class="text-muted">5 min read</small>
+                                        </div>
+                                    </div>
+                                    <p class="card-text">Learn the basics of Inspora and get your first project up and running in minutes.</p>
+                                    <a href="#" class="btn btn-outline-primary btn-sm">Read More</a>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="col-md-4 mb-4">
+                            <div class="card border-0 shadow-sm h-100">
+                                <div class="card-body">
+                                    <div class="d-flex align-items-center mb-3">
+                                        <i class="fas fa-video fa-2x text-success me-3"></i>
+                                        <div>
+                                            <h6 class="mb-1">Project Management Best Practices</h6>
+                                            <small class="text-muted">15 min video</small>
+                                        </div>
+                                    </div>
+                                    <p class="card-text">Discover proven strategies for managing projects effectively with Inspora.</p>
+                                    <a href="#" class="btn btn-outline-success btn-sm">Watch Video</a>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="col-md-4 mb-4">
+                            <div class="card border-0 shadow-sm h-100">
+                                <div class="card-body">
+                                    <div class="d-flex align-items-center mb-3">
+                                        <i class="fas fa-download fa-2x text-info me-3"></i>
+                                        <div>
+                                            <h6 class="mb-1">Agile Project Template</h6>
+                                            <small class="text-muted">Free download</small>
+                                        </div>
+                                    </div>
+                                    <p class="card-text">Get started with agile project management using our pre-built template.</p>
+                                    <a href="#" class="btn btn-outline-info btn-sm">Download</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Quick Links -->
+            <div class="card mt-5">
+                <div class="card-header">
+                    <h3 class="mb-0"><i class="fas fa-link text-primary"></i> Quick Links</h3>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <h6 class="text-primary mb-3">Popular Resources</h6>
+                            <ul class="list-unstyled">
+                                <li class="mb-2">
+                                    <a href="#" class="text-decoration-none">
+                                        <i class="fas fa-arrow-right text-primary me-2"></i>API Documentation
+                                    </a>
+                                </li>
+                                <li class="mb-2">
+                                    <a href="#" class="text-decoration-none">
+                                        <i class="fas fa-arrow-right text-primary me-2"></i>Security & Compliance
+                                    </a>
+                                </li>
+                                <li class="mb-2">
+                                    <a href="#" class="text-decoration-none">
+                                        <i class="fas fa-arrow-right text-primary me-2"></i>Performance Tips
+                                    </a>
+                                </li>
+                                <li class="mb-2">
+                                    <a href="#" class="text-decoration-none">
+                                        <i class="fas fa-arrow-right text-primary me-2"></i>Integration Guide
+                                    </a>
+                                </li>
+                            </ul>
+                        </div>
+                        <div class="col-md-6">
+                            <h6 class="text-primary mb-3">Community</h6>
+                            <ul class="list-unstyled">
+                                <li class="mb-2">
+                                    <a href="#" class="text-decoration-none">
+                                        <i class="fas fa-arrow-right text-primary me-2"></i>User Groups
+                                    </a>
+                                </li>
+                                <li class="mb-2">
+                                    <a href="#" class="text-decoration-none">
+                                        <i class="fas fa-arrow-right text-primary me-2"></i>Feature Requests
+                                    </a>
+                                </li>
+                                <li class="mb-2">
+                                    <a href="#" class="text-decoration-none">
+                                        <i class="fas fa-arrow-right text-primary me-2"></i>Bug Reports
+                                    </a>
+                                </li>
+                                <li class="mb-2">
+                                    <a href="#" class="text-decoration-none">
+                                        <i class="fas fa-arrow-right text-primary me-2"></i>Contributor Guidelines
+                                    </a>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
