@@ -5,9 +5,14 @@ from django.contrib import admin
 from django.urls import path, include
 from django.conf import settings
 from django.conf.urls.static import static
+from accounts.views import google_login, google_callback
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+    
+    # Google OAuth2 Authentication (at root level)
+    path('google/login/', google_login, name='google_login'),
+    path('google/callback/', google_callback, name='google_callback'),
     
     # API endpoints (including JWT authentication)
     path('api/', include('inspora.api_urls')),

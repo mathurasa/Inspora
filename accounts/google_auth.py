@@ -6,7 +6,6 @@ import requests
 from django.conf import settings
 from django.contrib.auth import get_user_model
 from django.contrib.auth.backends import BaseBackend
-from django.contrib.auth.models import User
 from django.core.exceptions import ValidationError
 from google.oauth2 import id_token
 from google.auth.transport import requests as google_requests
@@ -27,6 +26,11 @@ class GoogleOAuth2Backend(BaseBackend):
             return None
             
         try:
+            # Check if Google OAuth2 is properly configured
+            if not settings.GOOGLE_OAUTH2_CLIENT_ID:
+                print("Google OAuth2 not configured: Missing CLIENT_ID")
+                return None
+                
             # Verify the Google ID token
             idinfo = id_token.verify_oauth2_token(
                 google_id_token, 
@@ -100,6 +104,11 @@ def get_google_oauth2_url():
     """
     client_id = settings.GOOGLE_OAUTH2_CLIENT_ID
     redirect_uri = settings.GOOGLE_OAUTH2_REDIRECT_URI
+    
+    # Check if Google OAuth2 is properly configured
+    if not client_id:
+        raise ValidationError("Google OAuth2 not configured: Missing CLIENT_ID")
+    
     scope = 'openid email profile'
     
     auth_url = (
@@ -122,6 +131,10 @@ def exchange_code_for_token(authorization_code):
     client_id = settings.GOOGLE_OAUTH2_CLIENT_ID
     client_secret = settings.GOOGLE_OAUTH2_CLIENT_SECRET
     redirect_uri = settings.GOOGLE_OAUTH2_REDIRECT_URI
+    
+    # Check if Google OAuth2 is properly configured
+    if not client_id or not client_secret:
+        raise ValidationError("Google OAuth2 not configured: Missing CLIENT_ID or CLIENT_SECRET")
     
     token_url = "https://oauth2.googleapis.com/token"
     data = {

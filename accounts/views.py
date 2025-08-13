@@ -18,6 +18,8 @@ from .ai_services import AIChatService, AISuggestionService, AIWorkflowService
 from .forms import CustomUserCreationForm
 from .google_auth import get_google_oauth2_url, exchange_code_for_token, get_user_info_from_token
 import json
+from django.core.exceptions import ValidationError
+from django.conf import settings
 
 User = get_user_model()
 
@@ -373,13 +375,25 @@ def ai_knowledge_search(request):
 
 def google_login(request):
     """Redirect user to Google OAuth2 authorization."""
-    auth_url = get_google_oauth2_url()
-    return redirect(auth_url)
+    try:
+        auth_url = get_google_oauth2_url()
+        return redirect(auth_url)
+    except ValidationError as e:
+        messages.error(request, f'Google OAuth2 not configured: {str(e)}')
+        return redirect('accounts:login')
+    except Exception as e:
+        messages.error(request, f'Google OAuth2 error: {str(e)}')
+        return redirect('accounts:login')
 
 
 def google_callback(request):
     """Handle Google OAuth2 callback."""
     try:
+        # Check if Google OAuth2 is properly configured
+        if not settings.GOOGLE_OAUTH2_CLIENT_ID or not settings.GOOGLE_OAUTH2_CLIENT_SECRET:
+            messages.error(request, 'Google OAuth2 not configured. Please contact administrator.')
+            return redirect('accounts:login')
+        
         # Get authorization code from callback
         code = request.GET.get('code')
         if not code:
@@ -409,6 +423,9 @@ def google_callback(request):
             messages.error(request, 'Failed to authenticate with Google.')
             return redirect('accounts:login')
             
+    except ValidationError as e:
+        messages.error(request, f'Google OAuth2 configuration error: {str(e)}')
+        return redirect('accounts:login')
     except Exception as e:
         messages.error(request, f'Google authentication error: {str(e)}')
         return redirect('accounts:login')

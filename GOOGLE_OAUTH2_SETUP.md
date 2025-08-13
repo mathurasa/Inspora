@@ -4,153 +4,168 @@ This guide will help you set up Google OAuth2 authentication for the Inspora pla
 
 ## Prerequisites
 
-- Google Cloud Console account
-- Django project with the accounts app configured
-- Google OAuth2 dependencies installed
+- A Google account
+- Access to Google Cloud Console
+- Inspora project running locally
 
-## Step 1: Create Google Cloud Project
+## Step-by-Step Setup
+
+### 1. Create Google Cloud Project
 
 1. Go to [Google Cloud Console](https://console.cloud.google.com/)
-2. Create a new project or select an existing one
-3. Enable the Google+ API and Google OAuth2 API
+2. Click "Select a project" at the top
+3. Click "New Project"
+4. Enter a project name (e.g., "Inspora OAuth2")
+5. Click "Create"
 
-## Step 2: Configure OAuth2 Credentials
+### 2. Enable Required APIs
 
-1. In the Google Cloud Console, go to **APIs & Services** > **Credentials**
-2. Click **Create Credentials** > **OAuth 2.0 Client IDs**
-3. Choose **Web application** as the application type
-4. Set the following:
-   - **Name**: Inspora OAuth2 Client
-   - **Authorized JavaScript origins**:
-     - `http://localhost:8000`
-     - `http://127.0.0.1:8000`
-     - `http://192.168.8.138:8000` (your local network IP)
-   - **Authorized redirect URIs**:
-     - `http://localhost:8000/accounts/google/callback/`
-     - `http://127.0.0.1:8000/accounts/google/callback/`
-     - `http://192.168.8.138:8000/accounts/google/callback/`
+1. In your project, go to "APIs & Services" > "Library"
+2. Search for and enable these APIs:
+   - **Google+ API** (for user profile information)
+   - **Google OAuth2 API** (for authentication)
 
-5. Click **Create**
-6. Note down your **Client ID** and **Client Secret**
+### 3. Create OAuth2 Credentials
 
-## Step 3: Configure Environment Variables
+1. Go to "APIs & Services" > "Credentials"
+2. Click "Create Credentials" > "OAuth 2.0 Client IDs"
+3. If prompted, configure the OAuth consent screen:
+   - User Type: External
+   - App name: Inspora
+   - User support email: your-email@gmail.com
+   - Developer contact information: your-email@gmail.com
+4. Click "Save and Continue" through the remaining steps
+5. Back to credentials, click "Create Credentials" > "OAuth 2.0 Client IDs"
+6. Application type: **Web application**
+7. Name: Inspora OAuth2
+8. Authorized redirect URIs: `http://localhost:8000/google/callback/`
+9. Click "Create"
 
-1. Copy your `.env.example` file to `.env`:
+### 4. Copy Credentials
+
+After creating the credentials, you'll see:
+- **Client ID** (copy this)
+- **Client Secret** (copy this)
+
+### 5. Configure Environment Variables
+
+1. Copy `.env.example` to `.env`:
    ```bash
    cp env.example .env
    ```
 
-2. Update the `.env` file with your Google OAuth2 credentials:
+2. Edit `.env` and add your Google OAuth2 credentials:
    ```bash
    # Google OAuth2 Configuration
-   GOOGLE_OAUTH2_CLIENT_ID=your-actual-client-id
-   GOOGLE_OAUTH2_CLIENT_SECRET=your-actual-client-secret
-   GOOGLE_OAUTH2_REDIRECT_URI=http://localhost:8000/accounts/google/callback/
+   GOOGLE_OAUTH2_CLIENT_ID=your-actual-client-id-here
+   GOOGLE_OAUTH2_CLIENT_SECRET=your-actual-client-secret-here
+   GOOGLE_OAUTH2_REDIRECT_URI=http://localhost:8000/google/callback/
    ```
 
-## Step 4: Test the Integration
+### 6. Test Configuration
+
+Run the configuration check command:
+```bash
+python3 manage.py check_google_oauth2
+```
+
+You should see:
+```
+Checking Google OAuth2 configuration...
+Client ID: ✓ Set
+Client Secret: ✓ Set
+Redirect URI: ✓ Set
+
+Google OAuth2 is properly configured!
+
+URLs:
+Login: /google/login/
+Callback: /google/callback/
+```
+
+### 7. Test Google Sign-In
 
 1. Start your Django server:
    ```bash
-   export ALLOWED_HOSTS="localhost,127.0.0.1,0.0.0.0,192.168.8.138"
-   source venv/bin/activate
-   python manage.py runserver 0.0.0.0:8000
+   python3 manage.py runserver
    ```
 
-2. Visit the registration or login page
-3. Click the **Google** button
+2. Go to `http://localhost:8000/login/`
+3. Click the "Google" button
 4. You should be redirected to Google's OAuth consent screen
 5. After authorization, you'll be redirected back to Inspora
-
-## Features
-
-### What's Included
-
-✅ **Google Sign-In Button**: On both registration and login pages  
-✅ **OAuth2 Flow**: Complete Google OAuth2 authentication flow  
-✅ **User Creation**: Automatically creates new users from Google accounts  
-✅ **Profile Sync**: Syncs Google profile information (name, email)  
-✅ **Account Linking**: Links existing accounts by email address  
-✅ **Secure Authentication**: Uses Google's secure ID tokens  
-
-### User Experience
-
-- **New Users**: Can sign up directly with Google
-- **Existing Users**: Can link their Google account to existing Inspora account
-- **Profile Information**: Automatically populated from Google profile
-- **Verification**: Google users are automatically verified
-
-## Security Considerations
-
-1. **Client Secret**: Never expose your client secret in client-side code
-2. **HTTPS**: Use HTTPS in production for secure OAuth2 flow
-3. **Token Validation**: All Google ID tokens are validated server-side
-4. **Scope Limitation**: Only requests necessary scopes (openid, email, profile)
 
 ## Troubleshooting
 
 ### Common Issues
 
-1. **"Invalid Client ID" Error**
-   - Check that your client ID is correct in the `.env` file
-   - Verify the client ID in Google Cloud Console
+#### 1. "Google OAuth2 not configured" Error
+- Check that your `.env` file has the correct credentials
+- Ensure the environment variables are loaded
+- Restart your Django server after updating `.env`
 
-2. **"Redirect URI Mismatch" Error**
-   - Ensure your redirect URI exactly matches what's configured in Google Cloud Console
-   - Check for trailing slashes and protocol (http vs https)
+#### 2. "Invalid redirect URI" Error
+- Verify the redirect URI in Google Cloud Console matches exactly: `http://localhost:8000/google/callback/`
+- Check for trailing slashes or typos
 
-3. **"Invalid Scope" Error**
-   - Verify that the Google+ API is enabled in your Google Cloud project
+#### 3. "Client ID not found" Error
+- Ensure the Client ID is copied correctly from Google Cloud Console
+- Check that the `.env` file is in the project root directory
 
-4. **"Access Denied" Error**
-   - Check that your OAuth consent screen is properly configured
-   - Ensure the app is not in testing mode if you want public access
+#### 4. 404 Error on Google Login
+- Verify the URL configuration in `inspora/urls.py`
+- Check that the server is running and accessible
 
-### Debug Mode
+### Debug Commands
 
-To enable debug logging for OAuth2, add this to your Django settings:
-
-```python
-LOGGING = {
-    'version': 1,
-    'disable_existing_loggers': False,
-    'handlers': {
-        'console': {
-            'class': 'logging.StreamHandler',
-        },
-    },
-    'loggers': {
-        'accounts.google_auth': {
-            'handlers': ['console'],
-            'level': 'DEBUG',
-        },
-    },
-}
+Check Google OAuth2 configuration:
+```bash
+python3 manage.py check_google_oauth2
 ```
+
+Check Django URLs:
+```bash
+python3 manage.py show_urls | grep google
+```
+
+Check environment variables:
+```bash
+python3 manage.py shell -c "from django.conf import settings; print('Client ID:', settings.GOOGLE_OAUTH2_CLIENT_ID)"
+```
+
+## Security Notes
+
+- Never commit your `.env` file to version control
+- Keep your Client Secret secure
+- Use HTTPS in production
+- Regularly rotate your OAuth2 credentials
+- Monitor OAuth2 usage in Google Cloud Console
 
 ## Production Deployment
 
-When deploying to production:
+For production deployment:
 
-1. **Update Redirect URIs**: Add your production domain to authorized redirect URIs
-2. **Use HTTPS**: OAuth2 requires HTTPS in production
-3. **Environment Variables**: Set production OAuth2 credentials securely
-4. **Domain Verification**: Verify your domain with Google if needed
+1. Update the redirect URI to your production domain:
+   ```
+   GOOGLE_OAUTH2_REDIRECT_URI=https://yourdomain.com/google/callback/
+   ```
+
+2. Add your production domain to Google Cloud Console authorized redirect URIs
+
+3. Consider using environment-specific configuration files
+
+4. Enable HTTPS and secure cookies
 
 ## Support
 
 If you encounter issues:
 
-1. Check the Django logs for detailed error messages
+1. Check the Django server logs for error messages
 2. Verify your Google Cloud Console configuration
-3. Ensure all environment variables are set correctly
-4. Test with a fresh browser session (clear cookies/cache)
+3. Test with the configuration check command
+4. Check the troubleshooting section above
 
-## Next Steps
-
-After setting up Google OAuth2, you can:
-
-1. **Add More Providers**: Implement Microsoft, GitHub, or other OAuth2 providers
-2. **Enhanced Profile Sync**: Sync additional profile fields from Google
-3. **Team Integration**: Automatically add users to teams based on Google Workspace
-4. **Analytics**: Track OAuth2 usage and user engagement
+For additional help, refer to:
+- [Google OAuth2 Documentation](https://developers.google.com/identity/protocols/oauth2)
+- [Django Authentication Documentation](https://docs.djangoproject.com/en/stable/topics/auth/)
+- [Inspora Project Documentation](README.md)

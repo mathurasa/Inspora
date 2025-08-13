@@ -52,8 +52,4 @@ urlpatterns = [
     path('api/ai/suggestions/generate/', views.ai_generate_suggestions, name='ai_generate_suggestions'),
     path('api/ai/suggestions/<int:suggestion_id>/read/', views.ai_mark_suggestion_read, name='ai_mark_suggestion_read'),
     path('api/ai/suggestions/<int:suggestion_id>/applied/', views.ai_mark_suggestion_applied, name='ai_mark_suggestion_applied'),
-    
-    # Google OAuth2 Authentication
-    path('google/login/', views.google_login, name='google_login'),
-    path('google/callback/', views.google_callback, name='google_callback'),
 ]
