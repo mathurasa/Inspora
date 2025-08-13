@@ -1,0 +1,274 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}{{ title }}{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-12">
+            <!-- Hero Section -->
+            <div class="text-center mb-5">
+                <h1 class="display-4 fw-bold mb-4">
+                    <i class="fas fa-envelope text-primary"></i> Contact Us
+                </h1>
+                <p class="lead text-muted mb-4">
+                    Get in touch with our team. We're here to help you succeed with Inspora.
+                </p>
+            </div>
+
+            <!-- Contact Information -->
+            <div class="row mb-5">
+                <div class="col-md-4 mb-4">
+                    <div class="card border-0 shadow-sm text-center h-100">
+                        <div class="card-body p-4">
+                            <div class="mb-3">
+                                <i class="fas fa-user fa-3x text-primary"></i>
+                            </div>
+                            <h5 class="card-title">Primary Contact</h5>
+                            <p class="card-text text-muted">
+                                <strong>Mathusha.P</strong><br>
+                                Your dedicated contact person for all Inspora inquiries.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-4 mb-4">
+                    <div class="card border-0 shadow-sm text-center h-100">
+                        <div class="card-body p-4">
+                            <div class="mb-3">
+                                <i class="fas fa-envelope fa-3x text-success"></i>
+                            </div>
+                            <h5 class="card-title">Email Address</h5>
+                            <p class="card-text text-muted">
+                                <strong>mathurasa98@gmail.com</strong><br>
+                                Send us an email and we'll respond within 24 hours.
+                            </p>
+                            <a href="mailto:mathurasa98@gmail.com" class="btn btn-outline-success">
+                                <i class="fas fa-paper-plane me-2"></i>Send Email
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-4 mb-4">
+                    <div class="card border-0 shadow-sm text-center h-100">
+                        <div class="card-body p-4">
+                            <div class="mb-3">
+                                <i class="fas fa-clock fa-3x text-info"></i>
+                            </div>
+                            <h5 class="card-title">Response Time</h5>
+                            <p class="card-text text-muted">
+                                <strong>Within 24 Hours</strong><br>
+                                We typically respond to all inquiries within one business day.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Contact Form -->
+            <div class="row mb-5">
+                <div class="col-lg-8">
+                    <div class="card border-0 shadow">
+                        <div class="card-header bg-primary text-white">
+                            <h3 class="mb-0">
+                                <i class="fas fa-paper-plane me-2"></i>Send us a Message
+                            </h3>
+                        </div>
+                        <div class="card-body p-4">
+                            <form>
+                                <div class="row">
+                                    <div class="col-md-6 mb-3">
+                                        <label for="contactName" class="form-label">Full Name *</label>
+                                        <input type="text" class="form-control" id="contactName" required>
+                                    </div>
+                                    <div class="col-md-6 mb-3">
+                                        <label for="contactEmail" class="form-label">Email Address *</label>
+                                        <input type="email" class="form-control" id="contactEmail" required>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-6 mb-3">
+                                        <label for="contactCompany" class="form-label">Company/Organization</label>
+                                        <input type="text" class="form-control" id="contactCompany">
+                                    </div>
+                                    <div class="col-md-6 mb-3">
+                                        <label for="contactPhone" class="form-label">Phone Number</label>
+                                        <input type="tel" class="form-control" id="contactPhone">
+                                    </div>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="contactSubject" class="form-label">Subject *</label>
+                                    <select class="form-select" id="contactSubject" required>
+                                        <option value="">Select a subject...</option>
+                                        <option value="general">General Inquiry</option>
+                                        <option value="sales">Sales & Pricing</option>
+                                        <option value="support">Technical Support</option>
+                                        <option value="partnership">Partnership</option>
+                                        <option value="feature">Feature Request</option>
+                                        <option value="feedback">Feedback</option>
+                                        <option value="other">Other</option>
+                                    </select>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="contactMessage" class="form-label">Message *</label>
+                                    <textarea class="form-control" id="contactMessage" rows="5" required 
+                                              placeholder="Please describe your inquiry in detail..."></textarea>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="contactPriority" class="form-label">Priority Level</label>
+                                    <select class="form-select" id="contactPriority">
+                                        <option value="low">Low - General question</option>
+                                        <option value="medium" selected>Medium - Standard inquiry</option>
+                                        <option value="high">High - Urgent matter</option>
+                                    </select>
+                                </div>
+                                <div class="text-center">
+                                    <button type="button" class="btn btn-primary btn-lg" onclick="submitContactForm()">
+                                        <i class="fas fa-paper-plane me-2"></i>Send Message
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-lg-4">
+                    <div class="card border-0 shadow-sm">
+                        <div class="card-header">
+                            <h4 class="mb-0"><i class="fas fa-info-circle text-info"></i> Contact Information</h4>
+                        </div>
+                        <div class="card-body">
+                            <div class="mb-4">
+                                <h6 class="text-primary">Primary Contact</h6>
+                                <p class="mb-1">
+                                    <i class="fas fa-user me-2"></i><strong>Mathusha.P</strong>
+                                </p>
+                                <p class="mb-1">
+                                    <i class="fas fa-envelope me-2"></i>
+                                    <a href="mailto:mathurasa98@gmail.com">mathurasa98@gmail.com</a>
+                                </p>
+                            </div>
+
+                            <div class="mb-4">
+                                <h6 class="text-success">Response Times</h6>
+                                <ul class="list-unstyled">
+                                    <li><i class="fas fa-clock text-success me-2"></i>Email: Within 24 hours</li>
+                                    <li><i class="fas fa-clock text-info me-2"></i>Business hours: 9 AM - 6 PM EST</li>
+                                </ul>
+                            </div>
+
+                            <div class="mb-4">
+                                <h6 class="text-info">What We Can Help With</h6>
+                                <ul class="list-unstyled">
+                                    <li><i class="fas fa-check text-success me-2"></i>Product information</li>
+                                    <li><i class="fas fa-check text-success me-2"></i>Pricing & plans</li>
+                                    <li><i class="fas fa-check text-success me-2"></i>Technical support</li>
+                                    <li><i class="fas fa-check text-success me-2"></i>Partnership opportunities</li>
+                                    <li><i class="fas fa-check text-success me-2"></i>Feature requests</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Additional Contact Methods -->
+            <div class="row mb-5">
+                <div class="col-12">
+                    <h2 class="text-center mb-4">
+                        <i class="fas fa-phone text-primary me-3"></i>Other Ways to Reach Us
+                    </h2>
+                </div>
+                
+                <div class="col-md-6 mb-4">
+                    <div class="card border-0 shadow-sm h-100">
+                        <div class="card-body p-4">
+                            <h5 class="card-title text-success">
+                                <i class="fas fa-headset me-2"></i>Support Resources
+                            </h5>
+                            <p class="card-text">
+                                Before contacting us directly, you might find answers in our comprehensive support resources.
+                            </p>
+                            <div class="d-grid gap-2">
+                                <a href="/resources/help/" class="btn btn-outline-success btn-sm">
+                                    <i class="fas fa-question-circle me-2"></i>Help Center
+                                </a>
+                                <a href="/resources/support/" class="btn btn-outline-success btn-sm">
+                                    <i class="fas fa-headset me-2"></i>Support Page
+                                </a>
+                                <a href="/ai/chat/" class="btn btn-outline-success btn-sm">
+                                    <i class="fas fa-robot me-2"></i>AI Chat Assistant
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-6 mb-4">
+                    <div class="card border-0 shadow-sm h-100">
+                        <div class="card-body p-4">
+                            <h5 class="card-title text-info">
+                                <i class="fas fa-users me-2"></i>Community & Forums
+                            </h5>
+                            <p class="card-text">
+                                Connect with other Inspora users and get help from our community.
+                            </p>
+                            <div class="d-grid gap-2">
+                                <a href="/resources/forums/" class="btn btn-outline-info btn-sm">
+                                    <i class="fas fa-comments me-2"></i>Community Forums
+                                </a>
+                                <a href="/resources/events/" class="btn btn-outline-info btn-sm">
+                                    <i class="fas fa-calendar-alt me-2"></i>Events & Webinars
+                                </a>
+                                <a href="/resources/academy/" class="btn btn-outline-info btn-sm">
+                                    <i class="fas fa-graduation-cap me-2"></i>Inspora Academy
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+function submitContactForm() {
+    const name = document.getElementById('contactName').value;
+    const email = document.getElementById('contactEmail').value;
+    const company = document.getElementById('contactCompany').value;
+    const phone = document.getElementById('contactPhone').value;
+    const subject = document.getElementById('contactSubject').value;
+    const message = document.getElementById('contactMessage').value;
+    const priority = document.getElementById('contactPriority').value;
+
+    if (!name.trim() || !email.trim() || !subject || !message.trim()) {
+        alert('Please fill in all required fields.');
+        return;
+    }
+
+    // Validate email format
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email)) {
+        alert('Please enter a valid email address.');
+        return;
+    }
+
+    // Here you would typically send the form data to your backend
+    // For now, we'll show a success message
+    alert('Thank you for your message! We will get back to you within 24 hours.');
+    
+    // Clear the form
+    document.getElementById('contactName').value = '';
+    document.getElementById('contactEmail').value = '';
+    document.getElementById('contactCompany').value = '';
+    document.getElementById('contactPhone').value = '';
+    document.getElementById('contactSubject').value = '';
+    document.getElementById('contactMessage').value = '';
+    document.getElementById('contactPriority').value = 'medium';
+}
+</script>
+{% endblock %}

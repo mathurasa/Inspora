@@ -636,13 +636,14 @@
             </div>
 
             <div class="social-register">
-                <button type="button" class="social-button">
+                <a href="{% url 'accounts:google_login' %}" class="social-button">
                     <i class="fab fa-google"></i>
                     Google
-                </button>
-                <button type="button" class="social-button">
+                </a>
+                <button type="button" class="social-button" disabled>
                     <i class="fab fa-microsoft"></i>
                     Microsoft
+                    <small class="d-block">Coming Soon</small>
                 </button>
             </div>
 

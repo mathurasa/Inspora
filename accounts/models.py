@@ -24,7 +24,7 @@ class User(AbstractUser):
     # Professional fields
     job_title = models.CharField(max_length=100, blank=True)
     department = models.CharField(max_length=100, blank=True)
-    employee_id = models.CharField(max_length=50, blank=True, unique=True)
+    employee_id = models.CharField(max_length=50, blank=True, null=True, unique=True)
 
     # Preferences
     timezone = models.CharField(max_length=50, default='UTC')
@@ -53,6 +53,12 @@ class User(AbstractUser):
         if self.first_name and self.last_name:
             return f"{self.first_name} {self.last_name}"
         return self.username
+    
+    def save(self, *args, **kwargs):
+        """Custom save method to handle employee_id uniqueness."""
+        if not self.employee_id:
+            self.employee_id = None
+        super().save(*args, **kwargs)
 
 
 class Team(models.Model):

@@ -1,0 +1,212 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}{{ title }}{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-12">
+            <!-- Hero Section -->
+            <div class="text-center mb-5">
+                <h1 class="display-4 fw-bold mb-4">
+                    <i class="fas fa-puzzle-piece text-primary"></i> Solutions for Every Need
+                </h1>
+                <p class="lead text-muted mb-4">
+                    Discover how Inspora adapts to your organization's unique challenges and requirements.
+                </p>
+            </div>
+
+            <!-- Solutions Grid -->
+            <div class="row">
+                <!-- Company Type Solutions -->
+                <div class="col-md-6 col-lg-3 mb-4">
+                    <div class="card h-100 border-0 shadow-sm">
+                        <div class="card-body text-center p-4">
+                            <div class="mb-4">
+                                <i class="fas fa-building fa-3x text-primary"></i>
+                            </div>
+                            <h5 class="card-title text-uppercase fw-bold">COMPANY TYPE</h5>
+                            <p class="card-text text-muted">Tailored solutions for organizations of all sizes and structures.</p>
+                            <div class="d-grid gap-2">
+                                <a href="{% url 'solutions:enterprise' %}" class="btn btn-outline-primary btn-sm">
+                                    <i class="fas fa-building me-2"></i>Enterprise
+                                </a>
+                                <a href="{% url 'solutions:small_business' %}" class="btn btn-outline-primary btn-sm">
+                                    <i class="fas fa-store me-2"></i>Small Business
+                                </a>
+                                <a href="{% url 'solutions:nonprofit' %}" class="btn btn-outline-primary btn-sm">
+                                    <i class="fas fa-heart me-2"></i>Nonprofit
+                                </a>
+                                <a href="{% url 'solutions:startup' %}" class="btn btn-outline-primary btn-sm">
+                                    <i class="fas fa-rocket me-2"></i>Startup
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Team Solutions -->
+                <div class="col-md-6 col-lg-3 mb-4">
+                    <div class="card h-100 border-0 shadow-sm">
+                        <div class="card-body text-center p-4">
+                            <div class="mb-4">
+                                <i class="fas fa-users fa-3x text-success"></i>
+                            </div>
+                            <h5 class="card-title text-uppercase fw-bold">TEAMS</h5>
+                            <p class="card-text text-muted">Specialized workflows and tools for different team functions.</p>
+                            <div class="d-grid gap-2">
+                                <a href="{% url 'solutions:operations' %}" class="btn btn-outline-success btn-sm">
+                                    <i class="fas fa-cogs me-2"></i>Operations
+                                </a>
+                                <a href="{% url 'solutions:marketing' %}" class="btn btn-outline-success btn-sm">
+                                    <i class="fas fa-bullhorn me-2"></i>Marketing
+                                </a>
+                                <a href="{% url 'solutions:it' %}" class="btn btn-outline-success btn-sm">
+                                    <i class="fas fa-laptop-code me-2"></i>IT
+                                </a>
+                                <a href="{% url 'solutions:leaders' %}" class="btn btn-outline-success btn-sm">
+                                    <i class="fas fa-user-tie me-2"></i>Leaders
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Industry Solutions -->
+                <div class="col-md-6 col-lg-3 mb-4">
+                    <div class="card h-100 border-0 shadow-sm">
+                        <div class="card-body text-center p-4">
+                            <div class="mb-4">
+                                <i class="fas fa-industry fa-3x text-info"></i>
+                            </div>
+                            <h5 class="card-title text-uppercase fw-bold">INDUSTRIES</h5>
+                            <p class="card-text text-muted">Industry-specific solutions and compliance features.</p>
+                            <div class="d-grid gap-2">
+                                <a href="{% url 'solutions:healthcare' %}" class="btn btn-outline-info btn-sm">
+                                    <i class="fas fa-heartbeat me-2"></i>Healthcare
+                                </a>
+                                <a href="{% url 'solutions:retail' %}" class="btn btn-outline-info btn-sm">
+                                    <i class="fas fa-shopping-cart me-2"></i>Retail
+                                </a>
+                                <a href="{% url 'solutions:financial' %}" class="btn btn-outline-info btn-sm">
+                                    <i class="fas fa-university me-2"></i>Financial
+                                </a>
+                                <a href="{% url 'solutions:education' %}" class="btn btn-outline-info btn-sm">
+                                    <i class="fas fa-graduation-cap me-2"></i>Education
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Use Case Solutions -->
+                <div class="col-md-6 col-lg-3 mb-4">
+                    <div class="card h-100 border-0 shadow-sm">
+                        <div class="card-body text-center p-4">
+                            <div class="mb-4">
+                                <i class="fas fa-lightbulb fa-3x text-warning"></i>
+                            </div>
+                            <h5 class="card-title text-uppercase fw-bold">USE CASES</h5>
+                            <p class="card-text text-muted">Specific workflows and processes for common business needs.</p>
+                            <div class="d-grid gap-2">
+                                <a href="{% url 'solutions:goal_management' %}" class="btn btn-outline-warning btn-sm">
+                                    <i class="fas fa-bullseye me-2"></i>Goal Management
+                                </a>
+                                <a href="{% url 'solutions:project_intake' %}" class="btn btn-outline-warning btn-sm">
+                                    <i class="fas fa-inbox me-2"></i>Project Intake
+                                </a>
+                                <a href="{% url 'solutions:resource_planning' %}" class="btn btn-outline-warning btn-sm">
+                                    <i class="fas fa-users-cog me-2"></i>Resource Planning
+                                </a>
+                                <a href="{% url 'solutions:product_launches' %}" class="btn btn-outline-warning btn-sm">
+                                    <i class="fas fa-rocket me-2"></i>Product Launches
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Featured Solutions -->
+            <div class="row mt-5">
+                <div class="col-12">
+                    <h2 class="text-center mb-4">
+                        <i class="fas fa-star text-warning me-3"></i>Featured Solutions
+                    </h2>
+                </div>
+                
+                <div class="col-md-6 mb-4">
+                    <div class="card border-0 shadow-lg h-100">
+                        <div class="card-body p-4">
+                            <h4 class="card-title text-primary">
+                                <i class="fas fa-building me-2"></i>Enterprise Solutions
+                            </h4>
+                            <p class="card-text">
+                                Scale your project management with enterprise-grade features including advanced security, 
+                                compliance tools, and enterprise integrations.
+                            </p>
+                            <ul class="list-unstyled">
+                                <li><i class="fas fa-check text-success me-2"></i>Advanced security & compliance</li>
+                                <li><i class="fas fa-check text-success me-2"></i>Enterprise integrations</li>
+                                <li><i class="fas fa-check text-success me-2"></i>Advanced analytics & reporting</li>
+                                <li><i class="fas fa-check text-success me-2"></i>Dedicated support</li>
+                            </ul>
+                            <a href="{% url 'solutions:enterprise' %}" class="btn btn-primary">
+                                Learn More
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-6 mb-4">
+                    <div class="card border-0 shadow-lg h-100">
+                        <div class="card-body p-4">
+                            <h4 class="card-title text-success">
+                                <i class="fas fa-users me-2"></i>Team Solutions
+                            </h4>
+                            <p class="card-text">
+                                Empower your teams with specialized workflows, templates, and tools designed for their 
+                                specific roles and responsibilities.
+                            </p>
+                            <ul class="list-unstyled">
+                                <li><i class="fas fa-check text-success me-2"></i>Role-based workflows</li>
+                                <li><i class="fas fa-check text-success me-2"></i>Specialized templates</li>
+                                <li><i class="fas fa-check text-success me-2"></i>Team collaboration tools</li>
+                                <li><i class="fas fa-check text-success me-2"></i>Performance tracking</li>
+                            </ul>
+                            <a href="{% url 'solutions:operations' %}" class="btn btn-success">
+                                Explore Teams
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Call to Action -->
+            <div class="row mt-5">
+                <div class="col-12">
+                    <div class="card border-0 bg-primary text-white text-center">
+                        <div class="card-body p-5">
+                            <h3 class="mb-3">
+                                <i class="fas fa-rocket me-3"></i>Ready to Find Your Perfect Solution?
+                            </h3>
+                            <p class="lead mb-4">
+                                Let our experts help you discover the right Inspora solution for your organization.
+                            </p>
+                            <div class="d-flex justify-content-center gap-3">
+                                <a href="/pricing/" class="btn btn-light btn-lg">
+                                    <i class="fas fa-tags me-2"></i>View Pricing
+                                </a>
+                                <a href="/resources/support/" class="btn btn-outline-light btn-lg">
+                                    <i class="fas fa-headset me-2"></i>Contact Sales
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

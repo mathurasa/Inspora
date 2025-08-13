@@ -1,0 +1,1 @@
+# Solutions app for Inspora

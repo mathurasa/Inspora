@@ -16,6 +16,14 @@ urlpatterns = [
     path('', include('accounts.urls')),
     path('projects/', include('projects.urls')),
     path('tasks/', include('tasks.urls')),
+    path('goals/', include('goals.urls')),
+    path('forms/', include('forms.urls')),
+    path('audit/', include('audit.urls')),
+    path('automations/', include('automations.urls')),
+    path('portfolios/', include('portfolios.urls')),
+    path('notifications/', include('notifications_app.urls')),
+    path('templates/', include('templates_app.urls')),
+    path('solutions/', include('solutions_app.urls')),
 ]
 
 # Serve static and media files in development

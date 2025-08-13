@@ -15,7 +15,7 @@ SECRET_KEY = config('SECRET_KEY', default='django-insecure-change-this-in-produc
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = config('DEBUG', default=True, cast=bool)
 
-ALLOWED_HOSTS = config('ALLOWED_HOSTS', default='localhost,127.0.0.1', cast=lambda v: [s.strip() for s in v.split(',')])
+ALLOWED_HOSTS = config('ALLOWED_HOSTS', default='localhost,127.0.0.1,0.0.0.0,192.168.8.138', cast=lambda v: [s.strip() for s in v.split(',')])
 
 # Application definition
 INSTALLED_APPS = [
@@ -39,6 +39,14 @@ INSTALLED_APPS = [
                 'accounts',
                 'projects',
                 'tasks',
+                'goals',
+                'forms',
+                'audit',
+                'automations',
+                'portfolios',
+                'notifications_app',
+                'templates_app',
+                'solutions_app',
 ]
 
 MIDDLEWARE = [
@@ -101,6 +109,12 @@ AUTH_PASSWORD_VALIDATORS = [
     {
         'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
     },
+]
+
+# Authentication backends
+AUTHENTICATION_BACKENDS = [
+    'django.contrib.auth.backends.ModelBackend',
+    'accounts.google_auth.GoogleOAuth2Backend',
 ]
 
 # Internationalization
@@ -217,9 +231,16 @@ CORS_ALLOWED_ORIGINS = [
     "http://127.0.0.1:3000",
     "http://localhost:8000",
     "http://127.0.0.1:8000",
+    "http://192.168.8.138:8000",
+    "http://0.0.0.0:8000",
 ]
 
 CORS_ALLOW_CREDENTIALS = True
+
+# Google OAuth2 Settings
+GOOGLE_OAUTH2_CLIENT_ID = config('GOOGLE_OAUTH2_CLIENT_ID', default='')
+GOOGLE_OAUTH2_CLIENT_SECRET = config('GOOGLE_OAUTH2_CLIENT_SECRET', default='')
+GOOGLE_OAUTH2_REDIRECT_URI = config('GOOGLE_OAUTH2_REDIRECT_URI', default='http://localhost:8000/accounts/google/callback/')
 
 # Logging
 LOGGING = {

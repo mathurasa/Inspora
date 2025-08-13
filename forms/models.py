@@ -54,7 +54,7 @@ class DynamicForm(models.Model):
     # Relationships
     created_by = models.ForeignKey(User, on_delete=models.CASCADE, related_name='created_forms')
     team = models.ForeignKey(Team, on_delete=models.CASCADE, related_name='forms', null=True, blank=True)
-    template = models.ForeignKey('templates.Template', on_delete=models.SET_NULL, related_name='forms', null=True, blank=True)
+    template = models.ForeignKey('templates_app.Template', on_delete=models.SET_NULL, related_name='forms', null=True, blank=True)
     
     # Metadata
     created_at = models.DateTimeField(auto_now_add=True)

@@ -138,6 +138,87 @@
                 
                 <ul class="navbar-nav me-3">
                     <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="solutionsDropdown" role="button" data-bs-toggle="dropdown">
+                            <i class="fas fa-puzzle-piece me-1"></i>Solutions
+                        </a>
+                        <ul class="dropdown-menu dropdown-menu-lg">
+                            <div class="row g-0">
+                                <div class="col-md-3">
+                                    <h6 class="dropdown-header text-uppercase fw-bold">COMPANY TYPE</h6>
+                                    <a class="dropdown-item" href="/solutions/enterprise/">
+                                        <i class="fas fa-building me-2"></i>Enterprise
+                                    </a>
+                                    <a class="dropdown-item" href="/solutions/small-business/">
+                                        <i class="fas fa-store me-2"></i>Small Business
+                                    </a>
+                                    <a class="dropdown-item" href="/solutions/nonprofit/">
+                                        <i class="fas fa-heart me-2"></i>Nonprofit
+                                    </a>
+                                    <a class="dropdown-item" href="/solutions/startup/">
+                                        <i class="fas fa-rocket me-2"></i>Startup
+                                    </a>
+                                </div>
+                                <div class="col-md-3">
+                                    <h6 class="dropdown-header text-uppercase fw-bold">TEAMS</h6>
+                                    <a class="dropdown-item" href="/solutions/operations/">
+                                        <i class="fas fa-cogs me-2"></i>Operations
+                                    </a>
+                                    <a class="dropdown-item" href="/solutions/marketing/">
+                                        <i class="fas fa-bullhorn me-2"></i>Marketing
+                                    </a>
+                                    <a class="dropdown-item" href="/solutions/it/">
+                                        <i class="fas fa-laptop-code me-2"></i>IT
+                                    </a>
+                                    <a class="dropdown-item" href="/solutions/leaders/">
+                                        <i class="fas fa-user-tie me-2"></i>Leaders
+                                    </a>
+                                    <a class="dropdown-item" href="/solutions/sales/">
+                                        <i class="fas fa-chart-line me-2"></i>Sales
+                                    </a>
+                                </div>
+                                <div class="col-md-3">
+                                    <h6 class="dropdown-header text-uppercase fw-bold">INDUSTRIES</h6>
+                                    <a class="dropdown-item" href="/solutions/healthcare/">
+                                        <i class="fas fa-heartbeat me-2"></i>Healthcare
+                                    </a>
+                                    <a class="dropdown-item" href="/solutions/retail/">
+                                        <i class="fas fa-shopping-cart me-2"></i>Retail
+                                    </a>
+                                    <a class="dropdown-item" href="/solutions/financial/">
+                                        <i class="fas fa-university me-2"></i>Financial Services
+                                    </a>
+                                    <a class="dropdown-item" href="/solutions/education/">
+                                        <i class="fas fa-graduation-cap me-2"></i>Education
+                                    </a>
+                                    <a class="dropdown-item" href="/solutions/manufacturing/">
+                                        <i class="fas fa-industry me-2"></i>Manufacturing
+                                    </a>
+                                </div>
+                                <div class="col-md-3">
+                                    <h6 class="dropdown-header text-uppercase fw-bold">USE CASES</h6>
+                                    <a class="dropdown-item" href="/solutions/goal-management/">
+                                        <i class="fas fa-bullseye me-2"></i>Goal Management
+                                    </a>
+                                    <a class="dropdown-item" href="/solutions/organizational-planning/">
+                                        <i class="fas fa-sitemap me-2"></i>Organizational Planning
+                                    </a>
+                                    <a class="dropdown-item" href="/solutions/project-intake/">
+                                        <i class="fas fa-inbox me-2"></i>Project Intake
+                                    </a>
+                                    <a class="dropdown-item" href="/solutions/resource-planning/">
+                                        <i class="fas fa-users-cog me-2"></i>Resource Planning
+                                    </a>
+                                    <a class="dropdown-item" href="/solutions/product-launches/">
+                                        <i class="fas fa-rocket me-2"></i>Product Launches
+                                    </a>
+                                    <a class="dropdown-item" href="/solutions/">
+                                        <i class="fas fa-arrow-right me-2"></i>View all use cases →
+                                    </a>
+                                </div>
+                            </div>
+                        </ul>
+                    </li>
+                    <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle" href="#" id="resourcesDropdown" role="button" data-bs-toggle="dropdown">
                             <i class="fas fa-book me-1"></i>Resources
                         </a>
@@ -221,7 +302,7 @@
                                     <i class="fas fa-cog me-2"></i>Admin
                                 </a></li>
                                 <li><hr class="dropdown-divider"></li>
-                                <li><a class="dropdown-item" href="/logout/">
+                                <li><a class="dropdown-item" href="{% url 'accounts:logout' %}">
                                     <i class="fas fa-sign-out-alt me-2"></i>Logout
                                 </a></li>
                             </ul>
@@ -258,11 +339,46 @@
     <!-- Footer -->
     <footer class="text-center text-white py-4">
         <div class="container">
-            <p class="mb-2">
-                <strong>🚀 Inspora</strong> - Enterprise Work Management Platform
-            </p>
+            <div class="row">
+                <div class="col-md-4">
+                    <h6 class="text-light mb-3">🚀 Inspora</h6>
+                    <p class="mb-2">
+                        <strong>Enterprise Work Management Platform</strong>
+                    </p>
+                    <small class="text-light">
+                        Built with Django, Django REST Framework, and modern web technologies
+                    </small>
+                </div>
+                <div class="col-md-4">
+                    <h6 class="text-light mb-3">Contact Information</h6>
+                    <p class="mb-1">
+                        <i class="fas fa-user me-2"></i><strong>Mathusha.P</strong>
+                    </p>
+                    <p class="mb-1">
+                        <i class="fas fa-envelope me-2"></i>
+                        <a href="mailto:mathurasa98@gmail.com" class="text-light text-decoration-none">
+                            mathurasa98@gmail.com
+                        </a>
+                    </p>
+                </div>
+                <div class="col-md-4">
+                    <h6 class="text-light mb-3">Quick Links</h6>
+                    <div class="d-flex flex-column">
+                        <a href="/solutions/" class="text-light text-decoration-none mb-1">
+                            <i class="fas fa-puzzle-piece me-2"></i>Solutions
+                        </a>
+                        <a href="/pricing/" class="text-light text-decoration-none mb-1">
+                            <i class="fas fa-tags me-2"></i>Pricing
+                        </a>
+                        <a href="/resources/support/" class="text-light text-decoration-none mb-1">
+                            <i class="fas fa-headset me-2"></i>Support
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <hr class="my-3">
             <small class="text-light">
-                Built with Django, Django REST Framework, and modern web technologies
+                © 2024 Inspora. All rights reserved.
             </small>
         </div>
     </footer>

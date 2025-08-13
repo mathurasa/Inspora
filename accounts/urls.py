@@ -21,6 +21,7 @@ urlpatterns = [
     # Authentication (if not using Django's built-in)
     path('login/', views.LoginView.as_view(), name='login'),
     path('logout/', views.logout_view, name='logout'),
+    path('logout/confirm/', views.logout_confirm, name='logout_confirm'),
     path('register/', views.RegisterView.as_view(), name='register'),
     
     # Static pages
@@ -36,6 +37,7 @@ urlpatterns = [
     path('resources/support/', views.support_view, name='support'),
     path('resources/developer/', views.developer_view, name='developer'),
     path('resources/partners/', views.partners_view, name='partners'),
+    path('contact/', views.contact_view, name='contact'),
     path('resources/templates/', views.templates_view, name='templates'),
     path('resources/templates/projects/', views.project_templates_view, name='project_templates'),
     path('resources/templates/goals/', views.goal_templates_view, name='goal_templates'),
@@ -50,4 +52,8 @@ urlpatterns = [
     path('api/ai/suggestions/generate/', views.ai_generate_suggestions, name='ai_generate_suggestions'),
     path('api/ai/suggestions/<int:suggestion_id>/read/', views.ai_mark_suggestion_read, name='ai_mark_suggestion_read'),
     path('api/ai/suggestions/<int:suggestion_id>/applied/', views.ai_mark_suggestion_applied, name='ai_mark_suggestion_applied'),
+    
+    # Google OAuth2 Authentication
+    path('google/login/', views.google_login, name='google_login'),
+    path('google/callback/', views.google_callback, name='google_callback'),
 ]

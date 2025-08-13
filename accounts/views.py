@@ -12,9 +12,14 @@ from django.urls import reverse_lazy
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.http import require_http_methods
-from .models import User, Team, TeamMembership, AIChat, AISuggestion, AIWorkflowAssistant
+from django.contrib.auth import get_user_model
+from .models import Team, TeamMembership, AIChat, AISuggestion, AIWorkflowAssistant
 from .ai_services import AIChatService, AISuggestionService, AIWorkflowService
+from .forms import CustomUserCreationForm
+from .google_auth import get_google_oauth2_url, exchange_code_for_token, get_user_info_from_token
 import json
+
+User = get_user_model()
 
 
 @login_required
@@ -103,13 +108,32 @@ class LoginView(AuthLoginView):
     redirect_authenticated_user = True
 
 
+from django.contrib import messages
+
+def logout_confirm(request):
+    """Show logout confirmation page."""
+    if not request.user.is_authenticated:
+        messages.warning(request, 'You are not logged in.')
+        return redirect('accounts:login')
+    
+    return render(request, 'accounts/logout_confirm.html')
+
+
 def logout_view(request):
-    logout(request)
+    """Handle user logout."""
+    if request.user.is_authenticated:
+        # Log the logout action
+        username = request.user.username
+        logout(request)
+        messages.success(request, f'You have been successfully logged out, {username}.')
+    else:
+        messages.info(request, 'You were not logged in.')
+    
     return redirect('accounts:login')
 
 
 class RegisterView(CreateView):
-    form_class = UserCreationForm
+    form_class = CustomUserCreationForm
     template_name = 'accounts/register.html'
     success_url = reverse_lazy('accounts:login')
 
@@ -173,6 +197,13 @@ def developer_view(request):
 def partners_view(request):
     """Partners page view."""
     return render(request, 'accounts/partners.html')
+
+
+def contact_view(request):
+    """Contact page view."""
+    return render(request, 'accounts/contact.html', {
+        'title': 'Contact Us - Inspora'
+    })
 
 
 def templates_view(request):
@@ -338,3 +369,46 @@ def ai_knowledge_search(request):
         'query': query,
         'results': results
     })
+
+
+def google_login(request):
+    """Redirect user to Google OAuth2 authorization."""
+    auth_url = get_google_oauth2_url()
+    return redirect(auth_url)
+
+
+def google_callback(request):
+    """Handle Google OAuth2 callback."""
+    try:
+        # Get authorization code from callback
+        code = request.GET.get('code')
+        if not code:
+            messages.error(request, 'Authorization code not received from Google.')
+            return redirect('accounts:login')
+        
+        # Exchange code for access token
+        token_data = exchange_code_for_token(code)
+        access_token = token_data.get('access_token')
+        
+        if not access_token:
+            messages.error(request, 'Failed to get access token from Google.')
+            return redirect('accounts:login')
+        
+        # Get user information from Google
+        user_info = get_user_info_from_token(access_token)
+        
+        # Authenticate or create user
+        from django.contrib.auth import authenticate, login
+        user = authenticate(request, google_id_token=user_info.get('id'))
+        
+        if user:
+            login(request, user)
+            messages.success(request, f'Welcome back, {user.get_full_name() or user.username}!')
+            return redirect('accounts:dashboard')
+        else:
+            messages.error(request, 'Failed to authenticate with Google.')
+            return redirect('accounts:login')
+            
+    except Exception as e:
+        messages.error(request, f'Google authentication error: {str(e)}')
+        return redirect('accounts:login')
