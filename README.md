@@ -1,4 +1,4 @@
-# Inspora - Asana-Inspired Work Management Platform
+# Inspora - Inspired Work Management Platform
 
 Inspora is an enterprise-grade work management platform that scales, empowering teams to manage projects, tasks, goals, and workflows intelligently—just like Asana, but fully customizable and self-hosted.
 
