@@ -17,6 +17,12 @@ class GoalCreateView(LoginRequiredMixin, CreateView):
     template_name = 'goals/goal_form.html'
     fields = ['title', 'description', 'target_date', 'priority', 'status']
     success_url = reverse_lazy('goals:goal_list')
+    
+    def form_valid(self, form):
+        """Set the owner and created_by fields to the current user."""
+        form.instance.owner = self.request.user
+        form.instance.created_by = self.request.user
+        return super().form_valid(form)
 
 class GoalDetailView(LoginRequiredMixin, DetailView):
     model = Goal

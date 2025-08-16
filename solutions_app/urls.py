@@ -26,6 +26,7 @@ urlpatterns = [
     path('financial/', views.financial_solution, name='financial'),
     path('education/', views.education_solution, name='education'),
     path('manufacturing/', views.manufacturing_solution, name='manufacturing'),
+    path('development/', views.development_solution, name='development'),
     
     # Use Case Solutions
     path('goal-management/', views.goal_management_solution, name='goal_management'),
@@ -34,3 +35,5 @@ urlpatterns = [
     path('resource-planning/', views.resource_planning_solution, name='resource_planning'),
     path('product-launches/', views.product_launches_solution, name='product_launches'),
 ]
+
+

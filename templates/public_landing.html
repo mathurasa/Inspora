@@ -1,0 +1,191 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Inspora - Project Management & Team Collaboration Platform{% endblock %}
+
+{% block content %}
+<!-- Hero Section -->
+<div class="hero-section text-center py-5" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white;">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-lg-8">
+                <h1 class="display-4 fw-bold mb-4">Transform How Your Team Works</h1>
+                <p class="lead mb-4">Inspora is the all-in-one platform for project management, team collaboration, and AI-powered insights that helps teams achieve more together.</p>
+                <div class="d-flex justify-content-center gap-3 flex-wrap">
+                    <a href="{% url 'accounts:register' %}" class="btn btn-light btn-lg px-4 py-2">
+                        <i class="fas fa-rocket me-2"></i>Get Started Free
+                    </a>
+                    <a href="#features" class="btn btn-outline-light btn-lg px-4 py-2">
+                        <i class="fas fa-play me-2"></i>See How It Works
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Features Section -->
+<section id="features" class="py-5">
+    <div class="container">
+        <div class="text-center mb-5">
+            <h2 class="display-5 fw-bold">Everything Your Team Needs</h2>
+            <p class="lead text-muted">Powerful features designed to streamline your workflow and boost productivity</p>
+        </div>
+        
+        <div class="row g-4">
+            {% for feature in features %}
+            <div class="col-lg-4 col-md-6">
+                <div class="feature-card h-100 p-4 text-center border rounded shadow-sm">
+                    <div class="feature-icon mb-3" style="font-size: 3rem; color: {{ feature.color }};">
+                        <i class="{{ feature.icon }}"></i>
+                    </div>
+                    <h4 class="h5 mb-3">{{ feature.title }}</h4>
+                    <p class="text-muted mb-3">{{ feature.description }}</p>
+                    <a href="{{ feature.url }}" class="btn btn-outline-primary">Learn More</a>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+
+<!-- Solutions Section -->
+<section class="py-5 bg-light">
+    <div class="container">
+        <div class="text-center mb-5">
+            <h2 class="display-5 fw-bold">Solutions for Every Team</h2>
+            <p class="lead text-muted">Tailored solutions to meet the unique needs of different organizations and teams</p>
+        </div>
+        
+        <div class="row g-4">
+            {% for solution in solutions %}
+            <div class="col-lg-3 col-md-6">
+                <div class="solution-card h-100 p-4 bg-white border rounded shadow-sm text-center">
+                    <h5 class="mb-3">{{ solution.title }}</h5>
+                    <p class="text-muted mb-3">{{ solution.description }}</p>
+                    <a href="{{ solution.url }}" class="btn btn-primary btn-sm">Explore Solution</a>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+
+<!-- Testimonials Section -->
+<section class="py-5">
+    <div class="container">
+        <div class="text-center mb-5">
+            <h2 class="display-5 fw-bold">Loved by Teams Worldwide</h2>
+            <p class="lead text-muted">See what our users have to say about Inspora</p>
+        </div>
+        
+        <div class="row g-4">
+            {% for testimonial in testimonials %}
+            <div class="col-lg-4">
+                <div class="testimonial-card h-100 p-4 border rounded shadow-sm">
+                    <div class="d-flex align-items-center mb-3">
+                        <div class="testimonial-avatar me-3" style="font-size: 2rem;">{{ testimonial.avatar }}</div>
+                        <div>
+                            <h6 class="mb-1">{{ testimonial.name }}</h6>
+                            <small class="text-muted">{{ testimonial.role }} at {{ testimonial.company }}</small>
+                        </div>
+                    </div>
+                    <blockquote class="mb-0">
+                        <p class="mb-0"><i class="fas fa-quote-left text-muted me-2"></i>{{ testimonial.quote }}</p>
+                    </blockquote>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+
+<!-- CTA Section -->
+<section class="py-5 bg-primary text-white">
+    <div class="container text-center">
+        <h2 class="display-5 fw-bold mb-4">Ready to Get Started?</h2>
+        <p class="lead mb-4">Join thousands of teams already using Inspora to achieve their goals</p>
+        <div class="d-flex justify-content-center gap-3 flex-wrap">
+            <a href="{% url 'accounts:register' %}" class="btn btn-light btn-lg px-4 py-2">
+                <i class="fas fa-rocket me-2"></i>Start Free Trial
+            </a>
+            <a href="{% url 'accounts:contact' %}" class="btn btn-outline-light btn-lg px-4 py-2">
+                <i class="fas fa-phone me-2"></i>Contact Sales
+            </a>
+        </div>
+    </div>
+</section>
+
+<!-- Stats Section -->
+<section class="py-5">
+    <div class="container">
+        <div class="row text-center">
+            <div class="col-md-3 mb-4">
+                <div class="stat-card">
+                    <h3 class="display-4 fw-bold text-primary">10K+</h3>
+                    <p class="text-muted">Active Teams</p>
+                </div>
+            </div>
+            <div class="col-md-3 mb-4">
+                <div class="stat-card">
+                    <h3 class="display-4 fw-bold text-success">50K+</h3>
+                    <p class="text-muted">Projects Completed</p>
+                </div>
+            </div>
+            <div class="col-md-3 mb-4">
+                <div class="stat-card">
+                    <h3 class="display-4 fw-bold text-warning">99.9%</h3>
+                    <p class="text-muted">Uptime</p>
+                </div>
+            </div>
+            <div class="col-md-3 mb-4">
+                <div class="stat-card">
+                    <h3 class="display-4 fw-bold text-info">24/7</h3>
+                    <p class="text-muted">Support</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}
+
+{% block extra_css %}
+<style>
+.hero-section {
+    min-height: 80vh;
+    display: flex;
+    align-items: center;
+}
+
+.feature-card, .solution-card, .testimonial-card {
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.feature-card:hover, .solution-card:hover, .testimonial-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 25px rgba(0,0,0,0.1) !important;
+}
+
+.feature-icon {
+    transition: transform 0.3s ease;
+}
+
+.feature-card:hover .feature-icon {
+    transform: scale(1.1);
+}
+
+.stat-card h3 {
+    margin-bottom: 0.5rem;
+}
+
+.testimonial-avatar {
+    width: 60px;
+    height: 60px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #f8f9fa;
+    border-radius: 50%;
+}
+</style>
+{% endblock %}

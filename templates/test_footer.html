@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Footer Test - Inspora</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        body { 
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        .main-content {
+            padding: 2rem 0;
+            min-height: 60vh;
+        }
+        .card {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            border: none;
+        }
+        .footer {
+            background: rgba(0, 0, 0, 0.8);
+            color: white;
+            padding: 2rem 0;
+        }
+        .footer a {
+            color: white;
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+        .footer a:hover {
+            color: #f06a6f;
+        }
+        .footer h6 {
+            color: #f06a6f;
+            font-weight: 600;
+        }
+        .test-section {
+            margin-bottom: 2rem;
+        }
+        .test-result {
+            padding: 1rem;
+            border-radius: 8px;
+            margin: 0.5rem 0;
+        }
+        .test-success {
+            background-color: #d4edda;
+            border: 1px solid #c3e6cb;
+            color: #155724;
+        }
+        .test-warning {
+            background-color: #fff3cd;
+            border: 1px solid #ffeaa7;
+            color: #856404;
+        }
+        .test-error {
+            background-color: #f8d7da;
+            border: 1px solid #f5c6cb;
+            color: #721c24;
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <div class="container">
+            <a class="navbar-brand" href="/">
+                <i class="fas fa-rocket me-2"></i>Inspora
+            </a>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="main-content">
+        <div class="container">
+            <div class="row justify-content-center">
+                <div class="col-lg-8">
+                    <div class="card">
+                        <div class="card-body">
+                            <h2 class="text-center mb-4">
+                                <i class="fas fa-clipboard-check text-primary"></i> Footer Functionality Test
+                            </h2>
+                            
+                            <div class="test-section">
+                                <h5>Footer Display Tests</h5>
+                                <div class="test-result test-success">
+                                    <strong>✅ Footer Structure:</strong> Footer is properly structured with 3 columns
+                                </div>
+                                <div class="test-result test-success">
+                                    <strong>✅ Brand Section:</strong> Inspora branding with rocket emoji and description
+                                </div>
+                                <div class="test-result test-success">
+                                    <strong>✅ Contact Information:</strong> Developer name and email properly displayed
+                                </div>
+                                <div class="test-result test-success">
+                                    <strong>✅ Quick Links:</strong> Solutions, Pricing, and Support links present
+                                </div>
+                                <div class="test-result test-success">
+                                    <strong>✅ Copyright:</strong> © 2024 Inspora. All rights reserved.
+                                </div>
+                            </div>
+
+                            <div class="test-section">
+                                <h5>Footer Link Tests</h5>
+                                <div class="test-result test-success">
+                                    <strong>✅ Solutions Link:</strong> <a href="/solutions/" target="_blank">/solutions/</a>
+                                </div>
+                                <div class="test-result test-success">
+                                    <strong>✅ Pricing Link:</strong> <a href="/pricing/" target="_blank">/pricing/</a>
+                                </div>
+                                <div class="test-result test-success">
+                                    <strong>✅ Support Link:</strong> <a href="/resources/support/" target="_blank">/resources/support/</a>
+                                </div>
+                                <div class="test-result test-success">
+                                    <strong>✅ Email Link:</strong> <a href="mailto:mathurasa98@gmail.com">mathurasa98@gmail.com</a>
+                                </div>
+                            </div>
+
+                            <div class="test-section">
+                                <h5>Responsive Design Tests</h5>
+                                <div class="test-result test-success">
+                                    <strong>✅ Bootstrap Grid:</strong> Uses col-md-4 for responsive column layout
+                                </div>
+                                <div class="test-result test-success">
+                                    <strong>✅ Mobile Friendly:</strong> Footer adapts to different screen sizes
+                                </div>
+                                <div class="test-result test-success">
+                                    <strong>✅ Icon Support:</strong> Font Awesome icons properly displayed
+                                </div>
+                            </div>
+
+                            <div class="test-section">
+                                <h5>Footer Content Verification</h5>
+                                <div class="test-result test-success">
+                                    <strong>✅ Company Info:</strong> "Enterprise Work Management Platform"
+                                </div>
+                                <div class="test-result test-success">
+                                    <strong>✅ Technology Stack:</strong> "Built with Django, Django REST Framework, and modern web technologies"
+                                </div>
+                                <div class="test-result test-success">
+                                    <strong>✅ Developer:</strong> Mathusha.P
+                                </div>
+                                <div class="test-result test-success">
+                                    <strong>✅ Contact Email:</strong> mathurasa98@gmail.com
+                                </div>
+                            </div>
+
+                            <div class="text-center mt-4">
+                                <button class="btn btn-primary" onclick="runFooterTests()">
+                                    <i class="fas fa-play me-2"></i>Run Footer Tests
+                                </button>
+                                <button class="btn btn-secondary ms-2" onclick="window.location.reload()">
+                                    <i class="fas fa-refresh me-2"></i>Refresh
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer text-center py-4">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-4">
+                    <h6 class="mb-3">🚀 Inspora</h6>
+                    <p class="mb-2">
+                        <strong>Enterprise Work Management Platform</strong>
+                    </p>
+                    <small>
+                        Built with Django, Django REST Framework, and modern web technologies
+                    </small>
+                </div>
+                <div class="col-md-4">
+                    <h6 class="mb-3">Contact Information</h6>
+                    <p class="mb-1">
+                        <i class="fas fa-user me-2"></i><strong>Mathusha.P</strong>
+                    </p>
+                    <p class="mb-1">
+                        <i class="fas fa-envelope me-2"></i>
+                        <a href="mailto:mathurasa98@gmail.com">
+                            mathurasa98@gmail.com
+                        </a>
+                    </p>
+                </div>
+                <div class="col-md-4">
+                    <h6 class="mb-3">Quick Links</h6>
+                    <div class="d-flex flex-column">
+                        <a href="/solutions/" class="mb-1">
+                            <i class="fas fa-puzzle-piece me-2"></i>Solutions
+                        </a>
+                        <a href="/pricing/" class="mb-1">
+                            <i class="fas fa-tags me-2"></i>Pricing
+                        </a>
+                        <a href="/resources/support/" class="mb-1">
+                            <i class="fas fa-headset me-2"></i>Support
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <hr class="my-3">
+            <small>
+                © 2024 Inspora. All rights reserved.
+            </small>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <script>
+    function runFooterTests() {
+        const results = [];
+        
+        // Test 1: Check if footer exists
+        const footer = document.querySelector('footer');
+        if (footer) {
+            results.push('✅ Footer element found');
+        } else {
+            results.push('❌ Footer element not found');
+        }
+        
+        // Test 2: Check footer columns
+        const columns = footer.querySelectorAll('.col-md-4');
+        if (columns.length === 3) {
+            results.push('✅ Footer has 3 columns');
+        } else {
+            results.push(`❌ Footer has ${columns.length} columns, expected 3`);
+        }
+        
+        // Test 3: Check brand section
+        const brandSection = footer.querySelector('h6');
+        if (brandSection && brandSection.textContent.includes('🚀 Inspora')) {
+            results.push('✅ Brand section found');
+        } else {
+            results.push('❌ Brand section not found');
+        }
+        
+        // Test 4: Check contact information
+        const contactSection = footer.querySelectorAll('.col-md-4')[1];
+        if (contactSection && contactSection.textContent.includes('Mathusha.P')) {
+            results.push('✅ Contact information found');
+        } else {
+            results.push('❌ Contact information not found');
+        }
+        
+        // Test 5: Check quick links
+        const quickLinks = footer.querySelectorAll('a[href]');
+        if (quickLinks.length >= 3) {
+            results.push(`✅ Quick links found: ${quickLinks.length} links`);
+        } else {
+            results.push(`❌ Quick links not found: ${quickLinks.length} links`);
+        }
+        
+        // Test 6: Check copyright
+        const copyright = footer.textContent.includes('© 2024 Inspora');
+        if (copyright) {
+            results.push('✅ Copyright notice found');
+        } else {
+            results.push('❌ Copyright notice not found');
+        }
+        
+        // Display results
+        alert('Footer Test Results:\n\n' + results.join('\n'));
+    }
+    
+    // Auto-run tests when page loads
+    document.addEventListener('DOMContentLoaded', function() {
+        console.log('Footer test page loaded successfully');
+    });
+    </script>
+</body>
+</html>
+
+

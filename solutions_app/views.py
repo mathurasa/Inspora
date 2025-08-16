@@ -109,6 +109,13 @@ def manufacturing_solution(request):
         'active_tab': 'manufacturing'
     })
 
+def development_solution(request):
+    """Development team solution page."""
+    return render(request, 'solutions_app/development.html', {
+        'title': 'Development Solutions - Inspora',
+        'active_tab': 'development'
+    })
+
 # Use Case Solutions
 def goal_management_solution(request):
     """Goal management use case solution page."""
@@ -144,3 +151,5 @@ def product_launches_solution(request):
         'title': 'Product Launches Solutions - Inspora',
         'active_tab': 'product_launches'
     })
+
+

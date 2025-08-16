@@ -14,7 +14,7 @@ User = get_user_model()
 
 class Notification(models.Model):
     """
-    Individual notification model.
+    Individual notification model for simple text-based alerts.
     """
     NOTIFICATION_TYPES = [
         ('task_assigned', 'Task Assigned'),
@@ -80,6 +80,27 @@ class Notification(models.Model):
     def get_absolute_url(self):
         return reverse('notifications_app:notification_detail', kwargs={'pk': self.pk})
     
+    def get_icon_class(self):
+        """Get the appropriate icon class for the notification type."""
+        icon_map = {
+            'task_assigned': 'fa-tasks',
+            'task_completed': 'fa-check-circle',
+            'task_overdue': 'fa-exclamation-triangle',
+            'project_update': 'fa-project-diagram',
+            'goal_update': 'fa-bullseye',
+            'comment_added': 'fa-comment',
+            'mention': 'fa-at',
+            'approval_required': 'fa-hand-paper',
+            'reminder': 'fa-clock',
+            'system': 'fa-cog',
+            'custom': 'fa-bell',
+        }
+        return icon_map.get(self.notification_type, 'fa-bell')
+    
+    def get_priority_display(self):
+        """Get a formatted priority display."""
+        return self.get_priority_display().title()
+    
     def mark_as_read(self):
         """Mark notification as read."""
         from django.utils import timezone
@@ -110,7 +131,7 @@ class Notification(models.Model):
 
 class NotificationTemplate(models.Model):
     """
-    Templates for creating notifications.
+    Templates for creating simple text notifications.
     """
     TEMPLATE_TYPES = [
         ('email', 'Email'),
@@ -175,7 +196,7 @@ class NotificationTemplate(models.Model):
 
 class NotificationChannel(models.Model):
     """
-    Different channels for sending notifications.
+    Different channels for sending simple text notifications.
     """
     CHANNEL_TYPES = [
         ('email', 'Email'),
@@ -221,7 +242,7 @@ class NotificationChannel(models.Model):
         return reverse('notifications_app:channel_detail', kwargs={'pk': self.pk})
     
     def send_notification(self, notification, context_data):
-        """Send notification through this channel."""
+        """Send simple text notification through this channel."""
         try:
             if self.channel_type == 'email':
                 return self._send_email(notification, context_data)
@@ -229,6 +250,8 @@ class NotificationChannel(models.Model):
                 return self._send_push(notification, context_data)
             elif self.channel_type == 'in_app':
                 return self._send_in_app(notification, context_data)
+            elif self.channel_type == 'sms':
+                return self._send_sms(notification, context_data)
             elif self.channel_type == 'webhook':
                 return self._send_webhook(notification, context_data)
             else:
@@ -252,6 +275,11 @@ class NotificationChannel(models.Model):
         # Implementation for in-app notifications
         pass
     
+    def _send_sms(self, notification, context_data):
+        """Send SMS notification."""
+        # Implementation for SMS notifications
+        pass
+    
     def _send_webhook(self, notification, context_data):
         """Send webhook notification."""
         # Implementation for webhook notifications
@@ -265,7 +293,7 @@ class NotificationChannel(models.Model):
 
 class NotificationPreference(models.Model):
     """
-    User preferences for notifications.
+    User preferences for simple text notifications.
     """
     # Notification types preferences
     email_notifications = models.BooleanField(default=True)

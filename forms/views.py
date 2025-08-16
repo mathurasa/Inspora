@@ -7,3 +7,5 @@ def form_list(request):
     return render(request, 'forms/form_list.html', {
         'title': 'Forms'
     })
+
+

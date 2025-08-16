@@ -1,0 +1,200 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}{{ title }}{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-12">
+            <!-- Hero Section -->
+            <div class="text-center mb-5">
+                <h1 class="display-4 fw-bold mb-4">
+                    <i class="fas fa-code text-primary"></i> Development Solutions
+                </h1>
+                <p class="lead text-muted mb-4">
+                    Streamline your development workflow with agile project management, Git integration, and automated CI/CD pipelines.
+                </p>
+                <div class="d-flex justify-content-center gap-3">
+                    <a href="#features" class="btn btn-primary btn-lg">
+                        <i class="fas fa-star me-2"></i>Key Features
+                    </a>
+                    <a href="#pricing" class="btn btn-outline-primary btn-lg">
+                        <i class="fas fa-tags me-2"></i>Development Pricing
+                    </a>
+                </div>
+            </div>
+
+            <!-- Key Features Section -->
+            <div id="features" class="row mb-5">
+                <div class="col-12">
+                    <h2 class="text-center mb-4">
+                        <i class="fas fa-star text-warning me-3"></i>Development Features
+                    </h2>
+                </div>
+                
+                <div class="col-md-6 mb-4">
+                    <div class="card border-0 shadow-sm h-100">
+                        <div class="card-body p-4">
+                            <h5 class="card-title text-primary">
+                                <i class="fas fa-code-branch me-2"></i>Git Integration
+                            </h5>
+                            <p class="card-text">
+                                Seamlessly integrate with Git repositories for code management and version control.
+                            </p>
+                            <ul class="list-unstyled">
+                                <li><i class="fas fa-check text-success me-2"></i>GitHub integration</li>
+                                <li><i class="fas fa-check text-success me-2"></i>GitLab support</li>
+                                <li><i class="fas fa-check text-success me-2"></i>Branch management</li>
+                                <li><i class="fas fa-check text-success me-2"></i>Pull request tracking</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-6 mb-4">
+                    <div class="card border-0 shadow-sm h-100">
+                        <div class="card-body p-4">
+                            <h5 class="card-title text-success">
+                                <i class="fas fa-tasks me-2"></i>Agile Development
+                            </h5>
+                            <p class="card-text">
+                                Full support for agile methodologies including Scrum and Kanban boards.
+                            </p>
+                            <ul class="list-unstyled">
+                                <li><i class="fas fa-check text-success me-2"></i>Sprint planning</li>
+                                <li><i class="fas fa-check text-success me-2"></i>Backlog management</li>
+                                <li><i class="fas fa-check text-success me-2"></i>Burndown charts</li>
+                                <li><i class="fas fa-check text-success me-2"></i>Story point estimation</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-6 mb-4">
+                    <div class="card border-0 shadow-sm h-100">
+                        <div class="card-body p-4">
+                            <h5 class="card-title text-info">
+                                <i class="fas fa-robot me-2"></i>CI/CD Pipeline
+                            </h5>
+                            <p class="card-text">
+                                Automated continuous integration and deployment workflows.
+                            </p>
+                            <ul class="list-unstyled">
+                                <li><i class="fas fa-check text-success me-2"></i>Jenkins integration</li>
+                                <li><i class="fas fa-check text-success me-2"></i>GitHub Actions</li>
+                                <li><i class="fas fa-check text-success me-2"></i>Docker support</li>
+                                <li><i class="fas fa-check text-success me-2"></i>Automated testing</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-6 mb-4">
+                    <div class="card border-0 shadow-sm h-100">
+                        <div class="card-body p-4">
+                            <h5 class="card-title text-warning">
+                                <i class="fas fa-bug me-2"></i>Issue Tracking
+                            </h5>
+                            <p class="card-text">
+                                Comprehensive bug tracking and issue management system.
+                            </p>
+                            <ul class="list-unstyled">
+                                <li><i class="fas fa-check text-success me-2"></i>Bug reporting</li>
+                                <li><i class="fas fa-check text-success me-2"></i>Issue prioritization</li>
+                                <li><i class="fas fa-check text-success me-2"></i>Bug lifecycle management</li>
+                                <li><i class="fas fa-check text-success me-2"></i>Integration with Jira</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-6 mb-4">
+                    <div class="card border-0 shadow-sm h-100">
+                        <div class="card-body p-4">
+                            <h5 class="card-title text-danger">
+                                <i class="fas fa-chart-line me-2"></i>Performance Monitoring
+                            </h5>
+                            <p class="card-text">
+                                Monitor application performance and track key metrics.
+                            </p>
+                            <ul class="list-unstyled">
+                                <li><i class="fas fa-check text-success me-2"></i>Response time tracking</li>
+                                <li><i class="fas fa-check text-success me-2"></i>Error rate monitoring</li>
+                                <li><i class="fas fa-check text-success me-2"></i>Resource utilization</li>
+                                <li><i class="fas fa-check text-success me-2"></i>Performance alerts</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-6 mb-4">
+                    <div class="card border-0 shadow-sm h-100">
+                        <div class="card-body p-4">
+                            <h5 class="card-title text-secondary">
+                                <i class="fas fa-users me-2"></i>Team Collaboration
+                            </h5>
+                            <p class="card-text">
+                                Enhanced collaboration tools for development teams.
+                            </p>
+                            <ul class="list-unstyled">
+                                <li><i class="fas fa-check text-success me-2"></i>Code review workflows</li>
+                                <li><i class="fas fa-check text-success me-2"></i>Team chat integration</li>
+                                <li><i class="fas fa-check text-success me-2"></i>Documentation sharing</li>
+                                <li><i class="fas fa-check text-success me-2"></i>Knowledge base</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Use Cases Section -->
+            <div class="row mb-5">
+                <div class="col-12">
+                    <h2 class="text-center mb-4">
+                        <i class="fas fa-lightbulb text-info me-3"></i>Perfect For
+                    </h2>
+                </div>
+                
+                <div class="col-md-4 mb-4">
+                    <div class="text-center">
+                        <i class="fas fa-mobile-alt fa-3x text-primary mb-3"></i>
+                        <h5>Mobile App Development</h5>
+                        <p class="text-muted">Manage iOS and Android development projects with cross-platform coordination.</p>
+                    </div>
+                </div>
+                
+                <div class="col-md-4 mb-4">
+                    <div class="text-center">
+                        <i class="fas fa-globe fa-3x text-success mb-3"></i>
+                        <h5>Web Development</h5>
+                        <p class="text-muted">Full-stack web development with frontend and backend coordination.</p>
+                    </div>
+                </div>
+                
+                <div class="col-md-4 mb-4">
+                    <div class="text-center">
+                        <i class="fas fa-server fa-3x text-info mb-3"></i>
+                        <h5>DevOps Teams</h5>
+                        <p class="text-muted">Infrastructure management and deployment automation workflows.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- CTA Section -->
+            <div class="text-center py-5 bg-light rounded">
+                <h3 class="mb-3">Ready to Transform Your Development Workflow?</h3>
+                <p class="lead mb-4">Join thousands of development teams using Inspora to ship better code faster.</p>
+                <div class="d-flex justify-content-center gap-3 flex-wrap">
+                    <a href="{% url 'accounts:register' %}" class="btn btn-primary btn-lg">
+                        <i class="fas fa-rocket me-2"></i>Start Free Trial
+                    </a>
+                    <a href="{% url 'accounts:contact' %}" class="btn btn-outline-primary btn-lg">
+                        <i class="fas fa-phone me-2"></i>Contact Sales
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

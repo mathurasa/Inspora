@@ -3,6 +3,501 @@
 
 {% block title %}{{ task.title }} - Inspora{% endblock %}
 
+{% block extra_css %}
+<style>
+    /* Task Header Card */
+    .task-header-card {
+        background: linear-gradient(135deg, rgba(255, 255, 255, 0.95), rgba(255, 255, 255, 0.98));
+        border: 1px solid rgba(99, 102, 241, 0.2);
+        box-shadow: var(--shadow-xl);
+    }
+    
+    /* Modern Breadcrumb */
+    .modern-breadcrumb {
+        background: transparent;
+        padding: 0;
+        margin: 0;
+    }
+    
+    .modern-breadcrumb .breadcrumb-item + .breadcrumb-item::before {
+        content: "›";
+        color: var(--primary-color);
+        font-weight: 600;
+        font-size: 1.2rem;
+        line-height: 1;
+    }
+    
+    .breadcrumb-link {
+        color: var(--primary-color);
+        text-decoration: none;
+        font-weight: 500;
+        transition: all 0.3s ease;
+        padding: 0.5rem 0.75rem;
+        border-radius: 8px;
+        display: inline-block;
+    }
+    
+    .breadcrumb-link:hover {
+        color: var(--primary-dark);
+        background: rgba(99, 102, 241, 0.1);
+        transform: translateY(-1px);
+    }
+    
+    .breadcrumb-item.active .breadcrumb-link {
+        color: var(--secondary-color);
+        background: transparent;
+        cursor: default;
+    }
+    
+    /* Task Status Badges */
+    .task-status-badge {
+        padding: 0.75rem 1rem;
+        border-radius: 25px;
+        font-weight: 600;
+        font-size: 0.875rem;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        border: none;
+        box-shadow: var(--shadow-sm);
+    }
+    
+    .status-not_started {
+        background: linear-gradient(135deg, #64748b, #475569);
+        color: white;
+    }
+    
+    .status-in_progress {
+        background: linear-gradient(135deg, #f59e0b, #d97706);
+        color: white;
+    }
+    
+    .status-completed {
+        background: linear-gradient(135deg, #10b981, #059669);
+        color: white;
+    }
+    
+    .status-on_hold {
+        background: linear-gradient(135deg, #ef4444, #dc2626);
+        color: white;
+    }
+    
+    .status-cancelled {
+        background: linear-gradient(135deg, #6b7280, #4b5563);
+        color: white;
+    }
+    
+    /* Task Priority Badges */
+    .task-priority-badge {
+        padding: 0.75rem 1rem;
+        border-radius: 25px;
+        font-weight: 600;
+        font-size: 0.875rem;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        border: none;
+        box-shadow: var(--shadow-sm);
+    }
+    
+    .priority-low {
+        background: linear-gradient(135deg, #10b981, #059669);
+        color: white;
+    }
+    
+    .priority-medium {
+        background: linear-gradient(135deg, #f59e0b, #d97706);
+        color: white;
+    }
+    
+    .priority-high {
+        background: linear-gradient(135deg, #ef4444, #dc2626);
+        color: white;
+    }
+    
+    .priority-urgent {
+        background: linear-gradient(135deg, #8b5cf6, #7c3aed);
+        color: white;
+    }
+    
+    /* Task Metrics */
+    .task-metrics {
+        margin-top: 2rem;
+    }
+    
+    .metric-card {
+        background: rgba(255, 255, 255, 0.8);
+        border: 1px solid rgba(99, 102, 241, 0.1);
+        border-radius: 16px;
+        padding: 1.5rem;
+        text-align: center;
+        transition: all 0.3s ease;
+        position: relative;
+        overflow: hidden;
+    }
+    
+    .metric-card:hover {
+        transform: translateY(-4px);
+        box-shadow: var(--shadow-lg);
+        border-color: var(--primary-color);
+    }
+    
+    .metric-card::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 4px;
+        background: linear-gradient(135deg, var(--primary-color), var(--primary-light));
+    }
+    
+    .metric-icon {
+        width: 60px;
+        height: 60px;
+        background: linear-gradient(135deg, var(--primary-color), var(--primary-light));
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0 auto 1rem;
+        color: white;
+        font-size: 1.5rem;
+        box-shadow: var(--shadow-md);
+    }
+    
+    .metric-icon.overdue {
+        background: linear-gradient(135deg, #ef4444, #dc2626);
+        animation: pulse 2s infinite;
+    }
+    
+    @keyframes pulse {
+        0% { transform: scale(1); }
+        50% { transform: scale(1.05); }
+        100% { transform: scale(1); }
+    }
+    
+    .metric-content {
+        text-align: center;
+    }
+    
+    .metric-label {
+        color: var(--secondary-color);
+        font-size: 0.75rem;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        font-weight: 600;
+        margin-bottom: 0.5rem;
+        display: block;
+    }
+    
+    .metric-value {
+        color: var(--dark-color);
+        font-size: 1.25rem;
+        font-weight: 700;
+        display: block;
+    }
+    
+    /* Task Actions */
+    .task-actions {
+        min-width: 200px;
+    }
+    
+    .btn-group-vertical .btn {
+        border-radius: 12px;
+        margin-bottom: 0.5rem;
+        font-weight: 600;
+        transition: all 0.3s ease;
+    }
+    
+    .btn-group-vertical .btn:hover {
+        transform: translateY(-2px);
+        box-shadow: var(--shadow-lg);
+    }
+    
+    /* Modern Progress Bar */
+    .modern-progress {
+        height: 12px;
+        border-radius: 10px;
+        background: rgba(99, 102, 241, 0.1);
+        overflow: hidden;
+        border: 1px solid rgba(99, 102, 241, 0.2);
+    }
+    
+    .modern-progress .progress-bar {
+        background: linear-gradient(135deg, var(--primary-color), var(--success-color));
+        border-radius: 10px;
+        transition: all 0.3s ease;
+        position: relative;
+    }
+    
+    .modern-progress .progress-bar::after {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+        animation: shimmer 2s infinite;
+    }
+    
+    @keyframes shimmer {
+        0% { transform: translateX(-100%); }
+        100% { transform: translateX(100%); }
+    }
+    
+    /* Task Description */
+    .task-description {
+        font-size: 1.1rem;
+        line-height: 1.6;
+        color: var(--secondary-color);
+        background: rgba(99, 102, 241, 0.05);
+        padding: 1.5rem;
+        border-radius: 12px;
+        border-left: 4px solid var(--primary-color);
+    }
+    
+    /* Glass Card Enhancements */
+    .glass-card {
+        background: rgba(255, 255, 255, 0.95);
+        backdrop-filter: blur(20px);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+        transition: all 0.3s ease;
+    }
+    
+    .glass-card:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 12px 40px rgba(0, 0, 0, 0.15);
+    }
+    
+    .glass-card .card-header {
+        background: linear-gradient(135deg, var(--primary-color), var(--primary-dark));
+        color: white;
+        border: none;
+        padding: 1.5rem;
+        border-radius: 16px 16px 0 0;
+    }
+    
+    .glass-card .card-header .card-title {
+        color: white;
+        font-weight: 600;
+        font-size: 1.25rem;
+    }
+    
+    /* Responsive Design */
+    @media (max-width: 768px) {
+        .task-actions {
+            min-width: auto;
+            width: 100%;
+            margin-top: 1rem;
+        }
+        
+        .btn-group-vertical {
+            flex-direction: row;
+            gap: 0.5rem;
+        }
+        
+        .btn-group-vertical .btn {
+            margin-bottom: 0;
+        }
+        
+        .metric-card {
+            margin-bottom: 1rem;
+        }
+        
+        .task-header-card .card-body {
+            padding: 1.5rem;
+        }
+    }
+    
+    /* Animation Classes */
+    .fade-in-up {
+        animation: fadeInUp 0.6s ease-out;
+    }
+    
+    @keyframes fadeInUp {
+        from {
+            opacity: 0;
+            transform: translateY(30px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+    
+    /* Time Tracking Card */
+    .time-tracking-card {
+        background: linear-gradient(135deg, rgba(255, 255, 255, 0.95), rgba(255, 255, 255, 0.98));
+        border: 1px solid rgba(99, 102, 241, 0.2);
+    }
+    
+    .time-display {
+        font-size: 3rem;
+        font-weight: 700;
+        color: var(--primary-color);
+        text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        margin-bottom: 0.5rem;
+        font-family: 'Courier New', monospace;
+        background: linear-gradient(135deg, var(--primary-color), var(--primary-light));
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+    }
+    
+    .manual-time-entry {
+        background: rgba(99, 102, 241, 0.05);
+        padding: 1.5rem;
+        border-radius: 12px;
+        border: 1px solid rgba(99, 102, 241, 0.1);
+    }
+    
+    .estimated-time {
+        background: rgba(16, 185, 129, 0.1);
+        padding: 1rem;
+        border-radius: 10px;
+        border: 1px solid rgba(16, 185, 129, 0.2);
+        color: #059669;
+    }
+    
+    /* Enhanced Buttons */
+    .btn-lg {
+        padding: 1rem 1.5rem;
+        font-size: 1.1rem;
+        font-weight: 600;
+        border-radius: 12px;
+        transition: all 0.3s ease;
+    }
+    
+    .btn-success {
+        background: linear-gradient(135deg, #10b981, #059669);
+        border: none;
+        box-shadow: var(--shadow-md);
+    }
+    
+    .btn-success:hover {
+        background: linear-gradient(135deg, #059669, #047857);
+        transform: translateY(-2px);
+        box-shadow: var(--shadow-lg);
+        color: white;
+    }
+    
+    .btn-danger {
+        background: linear-gradient(135deg, #ef4444, #dc2626);
+        border: none;
+        box-shadow: var(--shadow-md);
+    }
+    
+    .btn-danger:hover {
+        background: linear-gradient(135deg, #dc2626, #b91c1c);
+        transform: translateY(-2px);
+        box-shadow: var(--shadow-lg);
+        color: white;
+    }
+    
+    .btn-primary {
+        background: linear-gradient(135deg, var(--primary-color), var(--primary-dark));
+        border: none;
+        box-shadow: var(--shadow-md);
+    }
+    
+    .btn-primary:hover {
+        background: linear-gradient(135deg, var(--primary-dark), var(--primary-color));
+        transform: translateY(-2px);
+        box-shadow: var(--shadow-lg);
+        color: white;
+    }
+    
+    /* Toast Notifications */
+    .toast-notification {
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        background: white;
+        border-radius: 12px;
+        padding: 1rem 1.5rem;
+        box-shadow: var(--shadow-xl);
+        border-left: 4px solid var(--primary-color);
+        transform: translateX(400px);
+        transition: all 0.3s ease;
+        z-index: 9999;
+        max-width: 350px;
+    }
+    
+    .toast-notification.show {
+        transform: translateX(0);
+    }
+    
+    .toast-notification.toast-success {
+        border-left-color: var(--success-color);
+    }
+    
+    .toast-notification.toast-error {
+        border-left-color: var(--danger-color);
+    }
+    
+    .toast-notification.toast-info {
+        border-left-color: var(--info-color);
+    }
+    
+    .toast-content {
+        display: flex;
+        align-items: center;
+        font-weight: 500;
+        color: var(--dark-color);
+    }
+    
+    /* Enhanced Animations */
+    .pulse-animation {
+        animation: pulse 2s infinite;
+    }
+    
+    .card.fade-in-up {
+        opacity: 0;
+        transform: translateY(30px);
+        animation: fadeInUp 0.6s ease-out forwards;
+    }
+    
+    /* Enhanced Form Controls */
+    .form-control:focus,
+    .form-select:focus {
+        border-color: var(--primary-color);
+        box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
+        transform: translateY(-1px);
+    }
+    
+    .input-group-text {
+        background: var(--primary-color);
+        color: white;
+        border: 1px solid var(--primary-color);
+        font-weight: 600;
+    }
+    
+    /* Enhanced Links */
+    a {
+        color: var(--primary-color);
+        text-decoration: none;
+        transition: all 0.3s ease;
+    }
+    
+    a:hover {
+        color: var(--primary-dark);
+        text-decoration: underline;
+    }
+    
+    /* Enhanced Checkboxes */
+    .form-check-input:checked {
+        background-color: var(--primary-color);
+        border-color: var(--primary-color);
+    }
+    
+    .form-check-input:focus {
+        border-color: var(--primary-color);
+        box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
+    }
+</style>
+{% endblock %}
+
 {% block content %}
 <div class="row">
     <!-- Task Header -->
@@ -91,11 +586,13 @@
     <!-- Task Content -->
     <div class="col-lg-8">
         <!-- Task Details -->
-        <div class="dashboard-card mb-4">
-            <div class="card-body">
-                <h5 class="card-title">
-                    <i class="bi bi-info-circle"></i> Task Details
+        <div class="card glass-card mb-4">
+            <div class="card-header">
+                <h5 class="card-title mb-0">
+                    <i class="fas fa-info-circle me-2"></i> Task Details
                 </h5>
+            </div>
+            <div class="card-body p-4">
                 
                 <div class="row">
                     <div class="col-md-6">
@@ -340,50 +837,58 @@
     <!-- Task Sidebar -->
     <div class="col-lg-4">
         <!-- Time Tracking -->
-        <div class="dashboard-card mb-4">
-            <div class="card-body">
-                <h5 class="card-title">
-                    <i class="bi bi-clock"></i> Time Tracking
+        <div class="card glass-card mb-4 time-tracking-card">
+            <div class="card-header">
+                <h5 class="card-title mb-0">
+                    <i class="fas fa-clock me-2"></i> Time Tracking
                 </h5>
-                
-                <div class="text-center mb-3">
-                    <div class="display-6 text-primary" id="timeDisplay">00:00:00</div>
-                    <small class="text-muted">Total Time Spent</small>
+            </div>
+            <div class="card-body p-4">
+                <div class="text-center mb-4">
+                    <div class="time-display" id="timeDisplay">00:00:00</div>
+                    <small class="text-muted fw-semibold">Total Time Spent</small>
                 </div>
                 
-                <div class="d-grid gap-2 mb-3">
-                    <button type="button" class="btn btn-success" id="startTimer" onclick="startTimer()">
-                        <i class="bi bi-play-circle"></i> Start Timer
+                <div class="d-grid gap-3 mb-4">
+                    <button type="button" class="btn btn-success btn-lg" id="startTimer" onclick="startTimer()">
+                        <i class="fas fa-play me-2"></i> Start Timer
                     </button>
-                    <button type="button" class="btn btn-danger" id="stopTimer" onclick="stopTimer()" style="display: none;">
-                        <i class="bi bi-stop-circle"></i> Stop Timer
+                    <button type="button" class="btn btn-danger btn-lg" id="stopTimer" onclick="stopTimer()" style="display: none;">
+                        <i class="fas fa-stop me-2"></i> Stop Timer
                     </button>
                 </div>
                 
-                <div class="mb-3">
-                    <label for="timeEntry" class="form-label">Manual Time Entry</label>
+                <div class="manual-time-entry">
+                    <label for="timeEntry" class="form-label fw-semibold">Manual Time Entry</label>
                     <div class="input-group">
                         <input type="number" class="form-control" id="timeEntry" placeholder="0.5" min="0" step="0.25">
                         <span class="input-group-text">hours</span>
-                        <button class="btn btn-outline-primary" type="button" onclick="addManualTime()">Add</button>
+                        <button class="btn btn-primary" type="button" onclick="addManualTime()">
+                            <i class="fas fa-plus me-1"></i> Add
+                        </button>
                     </div>
                 </div>
                 
-                <div class="text-center">
-                    <small class="text-muted">
-                        Estimated: {{ task.estimated_hours|default:"Not set" }} hours
-                    </small>
+                <div class="text-center mt-3">
+                    <div class="estimated-time">
+                        <i class="fas fa-hourglass-half me-2"></i>
+                        <small class="text-muted fw-semibold">
+                            Estimated: {{ task.estimated_hours|default:"Not set" }} hours
+                        </small>
+                    </div>
                 </div>
             </div>
         </div>
 
         <!-- Dependencies -->
         {% if task.dependencies.all or task.dependents.all %}
-        <div class="dashboard-card mb-4">
-            <div class="card-body">
-                <h5 class="card-title">
-                    <i class="bi bi-diagram-3"></i> Dependencies
+        <div class="card glass-card mb-4">
+            <div class="card-header">
+                <h5 class="card-title mb-0">
+                    <i class="fas fa-diagram-project me-2"></i> Dependencies
                 </h5>
+            </div>
+            <div class="card-body p-4">
                 
                 {% if task.dependencies.all %}
                 <div class="mb-3">
@@ -415,19 +920,21 @@
                 </div>
                 {% endif %}
                 
-                <a href="{% url 'tasks:dependency_add' task.pk %}" class="btn btn-outline-primary btn-sm">
-                    <i class="bi bi-plus-circle"></i> Add Dependency
+                <a href="{% url 'tasks:dependency_add' task.pk %}" class="btn btn-primary btn-sm">
+                    <i class="fas fa-plus me-1"></i> Add Dependency
                 </a>
             </div>
         </div>
         {% endif %}
 
         <!-- Activity Log -->
-        <div class="dashboard-card">
-            <div class="card-body">
-                <h5 class="card-title">
-                    <i class="bi bi-activity"></i> Recent Activity
+        <div class="card glass-card">
+            <div class="card-header">
+                <h5 class="card-title mb-0">
+                    <i class="fas fa-chart-line me-2"></i> Recent Activity
                 </h5>
+            </div>
+            <div class="card-body p-4">
                 
                 {% if task.history.all %}
                     <div class="list-group list-group-flush">
@@ -577,6 +1084,91 @@ function getCSRFToken() {
 
 // Get task ID from URL or data attribute
 const taskId = {{ task.pk }};
+
+// Enhanced UI animations and interactions
+document.addEventListener('DOMContentLoaded', function() {
+    // Add fade-in animations to cards
+    const cards = document.querySelectorAll('.card');
+    cards.forEach((card, index) => {
+        card.style.animationDelay = `${index * 0.1}s`;
+        card.classList.add('fade-in-up');
+    });
+    
+    // Add hover effects to metric cards
+    const metricCards = document.querySelectorAll('.metric-card');
+    metricCards.forEach(card => {
+        card.addEventListener('mouseenter', function() {
+            this.style.transform = 'translateY(-8px) scale(1.02)';
+        });
+        
+        card.addEventListener('mouseleave', function() {
+            this.style.transform = 'translateY(0) scale(1)';
+        });
+    });
+    
+    // Enhanced progress bar animation
+    const progressBar = document.querySelector('.progress-bar');
+    if (progressBar) {
+        setTimeout(() => {
+            progressBar.style.transition = 'width 1.5s ease-in-out';
+        }, 500);
+    }
+    
+    // Add pulse animation to overdue tasks
+    const overdueElements = document.querySelectorAll('.overdue');
+    overdueElements.forEach(element => {
+        element.classList.add('pulse-animation');
+    });
+    
+    // Enhanced button interactions
+    const buttons = document.querySelectorAll('.btn');
+    buttons.forEach(button => {
+        button.addEventListener('click', function() {
+            this.style.transform = 'scale(0.95)';
+            setTimeout(() => {
+                this.style.transform = 'scale(1)';
+            }, 150);
+        });
+    });
+    
+    // Smooth scroll for anchor links
+    const anchorLinks = document.querySelectorAll('a[href^="#"]');
+    anchorLinks.forEach(link => {
+        link.addEventListener('click', function(e) {
+            e.preventDefault();
+            const target = document.querySelector(this.getAttribute('href'));
+            if (target) {
+                target.scrollIntoView({
+                    behavior: 'smooth',
+                    block: 'start'
+                });
+            }
+        });
+    });
+});
+
+// Enhanced toast notifications
+function showToast(message, type = 'info') {
+    const toast = document.createElement('div');
+    toast.className = `toast-notification toast-${type}`;
+    toast.innerHTML = `
+        <div class="toast-content">
+            <i class="fas fa-${type === 'success' ? 'check-circle' : type === 'error' ? 'exclamation-circle' : 'info-circle'} me-2"></i>
+            ${message}
+        </div>
+    `;
+    
+    document.body.appendChild(toast);
+    
+    // Animate in
+    setTimeout(() => toast.classList.add('show'), 100);
+    
+    // Remove after 5 seconds
+    setTimeout(() => {
+        toast.classList.remove('show');
+        setTimeout(() => document.body.removeChild(toast), 300);
+    }, 5000);
+}
 
 // Load saved total time
 const savedTotalTime = localStorage.getItem(`taskTotalTime_${taskId}`);

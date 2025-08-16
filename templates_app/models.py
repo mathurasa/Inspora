@@ -29,3 +29,5 @@ class Template(models.Model):
     
     def get_absolute_url(self):
         return reverse('templates:template_detail', kwargs={'pk': self.pk})
+
+

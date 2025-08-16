@@ -3,7 +3,7 @@ Admin configuration for accounts app.
 """
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
-from .models import User, Team, TeamMembership, UserProfile, UserSession, AIChat, AIChatMessage, AISuggestion, AIWorkflowAssistant, AIKnowledgeBase
+from .models import User, Team, TeamMembership, UserProfile, UserSession, AIChat, AIChatMessage, AISuggestion, AIWorkflowAssistant, AIKnowledgeBase, SubscriptionPlan, UserSubscription, PaymentMethod, GoogleDriveIntegration, GitHubIntegration, Document, DocumentVersion
 
 
 @admin.register(User)
@@ -50,9 +50,9 @@ class TeamMembershipAdmin(admin.ModelAdmin):
 
 @admin.register(UserProfile)
 class UserProfileAdmin(admin.ModelAdmin):
-    list_display = ['user', 'gender', 'city', 'country', 'work_schedule']
-    list_filter = ['gender', 'country', 'work_schedule']
-    search_fields = ['user__username', 'city', 'country']
+    list_display = ['user', 'company_name', 'company_size', 'industry', 'years_experience']
+    list_filter = ['company_size', 'industry', 'preferred_contact_method', 'marketing_consent']
+    search_fields = ['user__username', 'company_name', 'industry']
 
 
 @admin.register(UserSession)
@@ -105,3 +105,77 @@ class AIKnowledgeBaseAdmin(admin.ModelAdmin):
     list_filter = ['category', 'is_active', 'last_updated']
     search_fields = ['title', 'content', 'tags']
     ordering = ['-usage_count', '-last_updated']
+
+
+@admin.register(SubscriptionPlan)
+class SubscriptionPlanAdmin(admin.ModelAdmin):
+    list_display = ['name', 'display_name', 'monthly_price', 'yearly_price', 'max_team_members', 'max_projects', 'is_active', 'is_popular']
+    list_filter = ['is_active', 'is_popular', 'created_at']
+    search_fields = ['name', 'display_name', 'description']
+    list_editable = ['is_active', 'is_popular', 'monthly_price', 'yearly_price']
+    ordering = ['monthly_price']
+
+
+@admin.register(UserSubscription)
+class UserSubscriptionAdmin(admin.ModelAdmin):
+    list_display = ['user', 'plan', 'billing_cycle', 'status', 'start_date', 'trial_end_date', 'is_active']
+    list_filter = ['status', 'billing_cycle', 'plan', 'created_at']
+    search_fields = ['user__username', 'plan__name', 'stripe_customer_id']
+    readonly_fields = ['start_date', 'created_at', 'updated_at']
+    ordering = ['-created_at']
+    
+    def is_active(self, obj):
+        return obj.is_active()
+    is_active.boolean = True
+    is_active.short_description = 'Active'
+
+
+@admin.register(PaymentMethod)
+class PaymentMethodAdmin(admin.ModelAdmin):
+    list_display = ['user', 'payment_type', 'card_brand', 'card_last4', 'is_default', 'is_active', 'created_at']
+    list_filter = ['payment_type', 'card_brand', 'is_default', 'is_active', 'created_at']
+    search_fields = ['user__username', 'user__email', 'card_last4']
+    readonly_fields = ['created_at', 'updated_at']
+    ordering = ['-created_at']
+    
+    def get_queryset(self, request):
+        return super().get_queryset(request).select_related('user')
+
+
+@admin.register(GoogleDriveIntegration)
+class GoogleDriveIntegrationAdmin(admin.ModelAdmin):
+    list_display = ['user', 'drive_name', 'auto_sync', 'sync_frequency', 'is_active', 'last_sync', 'created_at']
+    list_filter = ['auto_sync', 'sync_frequency', 'is_active', 'created_at']
+    search_fields = ['user__username', 'user__email', 'drive_name']
+    readonly_fields = ['created_at', 'updated_at', 'last_sync']
+    ordering = ['-created_at']
+
+
+@admin.register(GitHubIntegration)
+class GitHubIntegrationAdmin(admin.ModelAdmin):
+    list_display = ['user', 'github_username', 'github_email', 'auto_sync', 'sync_frequency', 'is_active', 'last_sync', 'created_at']
+    list_filter = ['auto_sync', 'sync_frequency', 'is_active', 'created_at']
+    search_fields = ['user__username', 'user__email', 'github_username']
+    readonly_fields = ['created_at', 'updated_at', 'last_sync']
+    ordering = ['-created_at']
+
+
+@admin.register(Document)
+class DocumentAdmin(admin.ModelAdmin):
+    list_display = ['title', 'user', 'source', 'file_type', 'file_size', 'is_public', 'is_active', 'created_at']
+    list_filter = ['source', 'file_type', 'is_public', 'is_active', 'created_at']
+    search_fields = ['title', 'file_name', 'user__username', 'description']
+    readonly_fields = ['created_at', 'updated_at', 'last_accessed']
+    ordering = ['-updated_at']
+    
+    def get_queryset(self, request):
+        return super().get_queryset(request).select_related('user')
+
+
+@admin.register(DocumentVersion)
+class DocumentVersionAdmin(admin.ModelAdmin):
+    list_display = ['document', 'version_number', 'file_name', 'file_size', 'changed_by', 'created_at']
+    list_filter = ['created_at']
+    search_fields = ['document__title', 'file_name', 'changed_by__username']
+    readonly_fields = ['created_at']
+    ordering = ['-version_number']

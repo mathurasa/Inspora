@@ -1,198 +1,434 @@
 {% extends 'base.html' %}
 {% load static %}
 
-{% block title %}Login - Inspora{% endblock %}
+{% block title %}Welcome to Inspora - Team Collaboration & AI Integration{% endblock %}
 
 {% block extra_css %}
 <style>
     :root {
-        --primary-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-        --secondary-gradient: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
-        --accent-gradient: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
-        --success-gradient: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);
-        --text-primary: #2d3748;
-        --text-secondary: #718096;
-        --bg-light: #f7fafc;
-        --shadow-soft: 0 10px 25px rgba(0, 0, 0, 0.1);
-        --shadow-hover: 0 20px 40px rgba(0, 0, 0, 0.15);
-        --border-radius: 16px;
+        /* Asana-inspired color palette */
+        --primary-purple: #8B5CF6;
+        --primary-dark: #7C3AED;
+        --primary-light: #A78BFA;
+        --secondary-pink: #FCE7F3;
+        --accent-pink: #FDF2F8;
+        --text-dark: #1F2937;
+        --text-secondary: #6B7280;
+        --text-light: #9CA3AF;
+        --white: #FFFFFF;
+        --border-light: #E5E7EB;
+        --shadow-soft: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        --shadow-medium: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+        --shadow-large: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+        --border-radius: 12px;
+        --border-radius-large: 20px;
         --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     }
 
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+    }
+
     body {
-        background: var(--bg-light);
-        font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+        font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        line-height: 1.6;
+        color: var(--text-dark);
+        background: var(--white);
         overflow-x: hidden;
     }
 
-    .login-container {
-        min-height: 100vh;
-        display: flex;
-        align-items: center;
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-        position: relative;
-    }
-
-    .login-container::before {
-        content: '';
-        position: absolute;
+    /* Header Navigation */
+    .header {
+        position: fixed;
         top: 0;
         left: 0;
         right: 0;
-        bottom: 0;
-        background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="grain" width="100" height="100" patternUnits="userSpaceOnUse"><circle cx="50" cy="50" r="1" fill="rgba(255,255,255,0.1)"/></pattern></defs><rect width="100" height="100" fill="url(%23grain)"/></svg>');
-        opacity: 0.3;
+        background: var(--white);
+        border-bottom: 1px solid var(--border-light);
+        padding: 1rem 2rem;
+        z-index: 1000;
+        backdrop-filter: blur(10px);
+        background: rgba(255, 255, 255, 0.95);
     }
 
-    .platform-intro {
-        flex: 1;
-        padding: 4rem;
-        color: white;
+    .header-content {
+        max-width: 1200px;
+        margin: 0 auto;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    .logo {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        font-size: 1.5rem;
+        font-weight: 700;
+        color: var(--primary-purple);
+        text-decoration: none;
+    }
+
+    .logo-dots {
+        display: flex;
+        gap: 0.25rem;
+    }
+
+    .logo-dot {
+        width: 8px;
+        height: 8px;
+        background: #EF4444;
+        border-radius: 50%;
+    }
+
+    .logo-dot:nth-child(2) {
+        background: var(--primary-purple);
+    }
+
+    .nav-links {
+        display: flex;
+        gap: 2rem;
+        align-items: center;
+    }
+
+    .nav-link {
+        color: var(--text-secondary);
+        text-decoration: none;
+        font-weight: 500;
+        transition: var(--transition);
+        position: relative;
+        padding: 0.5rem 0;
+    }
+
+    .nav-link:hover {
+        color: var(--text-dark);
+    }
+
+    .nav-link::after {
+        content: '';
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        width: 0;
+        height: 2px;
+        background: var(--primary-purple);
+        transition: var(--transition);
+    }
+
+    .nav-link:hover::after {
+        width: 100%;
+    }
+
+    .header-actions {
+        display: flex;
+        gap: 1rem;
+        align-items: center;
+    }
+
+    .btn-secondary {
+        padding: 0.5rem 1rem;
+        border: 1px solid var(--border-light);
+        border-radius: var(--border-radius);
+        background: var(--white);
+        color: var(--text-secondary);
+        text-decoration: none;
+        font-weight: 500;
+        transition: var(--transition);
+    }
+
+    .btn-secondary:hover {
+        border-color: var(--primary-purple);
+        color: var(--primary-purple);
+    }
+
+    .btn-primary {
+        padding: 0.75rem 1.5rem;
+        background: var(--primary-purple);
+        color: var(--white);
+        border: none;
+        border-radius: var(--border-radius);
+        font-weight: 600;
+        text-decoration: none;
+        transition: var(--transition);
+        cursor: pointer;
+    }
+
+    .btn-primary:hover {
+        background: var(--primary-dark);
+        transform: translateY(-1px);
+        box-shadow: var(--shadow-medium);
+    }
+
+    /* Main Content */
+    .main-container {
+        margin-top: 80px;
+        min-height: calc(100vh - 80px);
+        display: flex;
+        flex-direction: column;
+    }
+
+    /* Hero Section */
+    .hero-section {
+        background: linear-gradient(135deg, var(--secondary-pink) 0%, var(--accent-pink) 100%);
+        padding: 4rem 2rem;
+        text-align: center;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .hero-section::before {
+        content: '';
+        position: absolute;
+        top: -50%;
+        right: -50%;
+        width: 100%;
+        height: 100%;
+        background: radial-gradient(circle, rgba(139, 92, 246, 0.1) 0%, transparent 70%);
+        animation: float 20s ease-in-out infinite;
+    }
+
+    @keyframes float {
+        0%, 100% { transform: translateY(0px) rotate(0deg); }
+        50% { transform: translateY(-20px) rotate(180deg); }
+    }
+
+    .hero-content {
+        max-width: 800px;
+        margin: 0 auto;
         position: relative;
         z-index: 2;
     }
 
-    .platform-intro h1 {
+    .hero-title {
         font-size: 3.5rem;
         font-weight: 800;
+        color: var(--text-dark);
         margin-bottom: 1.5rem;
-        background: linear-gradient(135deg, #ffffff 0%, #e2e8f0 100%);
+        line-height: 1.2;
+        background: linear-gradient(135deg, var(--primary-purple), var(--primary-dark));
         -webkit-background-clip: text;
         -webkit-text-fill-color: transparent;
         background-clip: text;
-        line-height: 1.1;
     }
 
-    .platform-intro .tagline {
-        font-size: 1.5rem;
+    .hero-subtitle {
+        font-size: 1.25rem;
+        color: var(--text-secondary);
+        margin-bottom: 3rem;
         font-weight: 400;
-        margin-bottom: 2rem;
-        opacity: 0.9;
         line-height: 1.6;
     }
 
-    .features-grid {
+    .hero-actions {
+        display: flex;
+        gap: 1rem;
+        justify-content: center;
+        flex-wrap: wrap;
+    }
+
+    .btn-hero-primary {
+        padding: 1rem 2rem;
+        background: var(--primary-purple);
+        color: var(--white);
+        border: none;
+        border-radius: var(--border-radius);
+        font-size: 1.1rem;
+        font-weight: 600;
+        text-decoration: none;
+        transition: var(--transition);
+        cursor: pointer;
+    }
+
+    .btn-hero-primary:hover {
+        background: var(--primary-dark);
+        transform: translateY(-2px);
+        box-shadow: var(--shadow-large);
+    }
+
+    .btn-hero-secondary {
+        padding: 1rem 2rem;
+        background: var(--white);
+        color: var(--primary-purple);
+        border: 2px solid var(--primary-purple);
+        border-radius: var(--border-radius);
+        font-size: 1.1rem;
+        font-weight: 600;
+        text-decoration: none;
+        transition: var(--transition);
+        cursor: pointer;
+    }
+
+    .btn-hero-secondary:hover {
+        background: var(--primary-purple);
+        color: var(--white);
+        transform: translateY(-2px);
+        box-shadow: var(--shadow-large);
+    }
+
+    /* Visual Showcase Section */
+    .showcase-section {
+        padding: 4rem 2rem;
+        background: var(--white);
+    }
+
+    .showcase-content {
+        max-width: 1200px;
+        margin: 0 auto;
         display: grid;
-        grid-template-columns: repeat(2, 1fr);
-        gap: 2rem;
-        margin-top: 3rem;
+        grid-template-columns: 1fr 1fr;
+        gap: 3rem;
+        align-items: center;
+    }
+
+    .showcase-text {
+        padding-right: 2rem;
+    }
+
+    .showcase-title {
+        font-size: 2.5rem;
+        font-weight: 700;
+        color: var(--text-dark);
+        margin-bottom: 1.5rem;
+        line-height: 1.3;
+    }
+
+    .showcase-description {
+        font-size: 1.1rem;
+        color: var(--text-secondary);
+        margin-bottom: 2rem;
+        line-height: 1.6;
+    }
+
+    .feature-list {
+        list-style: none;
+        margin-bottom: 2rem;
     }
 
     .feature-item {
         display: flex;
         align-items: center;
         gap: 1rem;
-        padding: 1.5rem;
-        background: rgba(255, 255, 255, 0.1);
-        border-radius: var(--border-radius);
-        backdrop-filter: blur(10px);
-        border: 1px solid rgba(255, 255, 255, 0.2);
-        transition: var(--transition);
-    }
-
-    .feature-item:hover {
-        background: rgba(255, 255, 255, 0.15);
-        transform: translateY(-2px);
+        margin-bottom: 1rem;
+        font-size: 1.1rem;
+        color: var(--text-secondary);
     }
 
     .feature-icon {
-        width: 50px;
-        height: 50px;
-        border-radius: 12px;
+        width: 24px;
+        height: 24px;
+        background: var(--primary-purple);
+        border-radius: 50%;
         display: flex;
         align-items: center;
         justify-content: center;
-        font-size: 1.5rem;
-        background: rgba(255, 255, 255, 0.2);
-        backdrop-filter: blur(10px);
+        color: var(--white);
+        font-size: 0.875rem;
     }
 
-    .feature-text {
-        font-size: 1rem;
-        font-weight: 500;
-    }
-
-    .stats-section {
-        display: flex;
-        gap: 3rem;
-        margin-top: 3rem;
-        padding: 2rem;
-        background: rgba(255, 255, 255, 0.1);
-        border-radius: var(--border-radius);
-        backdrop-filter: blur(10px);
-        border: 1px solid rgba(255, 255, 255, 0.2);
-    }
-
-    .stat-item {
-        text-align: center;
-    }
-
-    .stat-number {
-        font-size: 2.5rem;
-        font-weight: 800;
-        color: #fbbf24;
-        display: block;
-    }
-
-    .stat-label {
-        font-size: 0.9rem;
-        opacity: 0.8;
-        text-transform: uppercase;
-        letter-spacing: 0.5px;
-    }
-
-    .login-form-container {
-        flex: 1;
-        padding: 4rem;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-    }
-
-    .login-card {
-        background: white;
-        padding: 3rem;
-        border-radius: var(--border-radius);
-        box-shadow: var(--shadow-soft);
-        width: 100%;
-        max-width: 450px;
+    .showcase-visual {
         position: relative;
+        height: 500px;
+        background: linear-gradient(135deg, var(--secondary-pink), var(--accent-pink));
+        border-radius: var(--border-radius-large);
         overflow: hidden;
+        display: flex;
+        align-items: center;
+        justify-content: center;
     }
 
-    .login-card::before {
-        content: '';
+    .ai-card {
         position: absolute;
-        top: 0;
-        left: 0;
-        right: 0;
-        height: 4px;
-        background: var(--primary-gradient);
+        background: var(--white);
+        border-radius: var(--border-radius);
+        padding: 1.5rem;
+        box-shadow: var(--shadow-large);
+        border: 1px solid var(--border-light);
+        max-width: 300px;
+        animation: slideInUp 0.8s ease-out;
+    }
+
+    .ai-card.top {
+        top: 20%;
+        left: 10%;
+        transform: rotate(-5deg);
+    }
+
+    .ai-card.bottom {
+        bottom: 20%;
+        right: 10%;
+        transform: rotate(5deg);
+    }
+
+    .ai-card-header {
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+        margin-bottom: 1rem;
+    }
+
+    .ai-icon {
+        width: 32px;
+        height: 32px;
+        background: linear-gradient(135deg, var(--primary-purple), var(--primary-light));
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: var(--white);
+        font-size: 1rem;
+    }
+
+    .ai-card-title {
+        font-weight: 600;
+        color: var(--text-dark);
+        font-size: 0.9rem;
+    }
+
+    .ai-card-content {
+        color: var(--text-secondary);
+        font-size: 0.875rem;
+        line-height: 1.5;
+    }
+
+    @keyframes slideInUp {
+        from {
+            opacity: 0;
+            transform: translateY(30px) rotate(-5deg);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0) rotate(-5deg);
+        }
+    }
+
+    /* Login Section */
+    .login-section {
+        background: var(--white);
+        padding: 4rem 2rem;
+        border-top: 1px solid var(--border-light);
+    }
+
+    .login-container {
+        max-width: 400px;
+        margin: 0 auto;
+        background: var(--white);
+        border-radius: var(--border-radius-large);
+        padding: 2.5rem;
+        box-shadow: var(--shadow-large);
+        border: 1px solid var(--border-light);
     }
 
     .login-header {
         text-align: center;
-        margin-bottom: 2.5rem;
-    }
-
-    .login-logo {
-        width: 80px;
-        height: 80px;
-        background: var(--primary-gradient);
-        border-radius: 20px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        margin: 0 auto 1.5rem;
-        font-size: 2rem;
-        color: white;
-        box-shadow: var(--shadow-soft);
+        margin-bottom: 2rem;
     }
 
     .login-title {
-        font-size: 2rem;
+        font-size: 1.75rem;
         font-weight: 700;
-        color: var(--text-primary);
+        color: var(--text-dark);
         margin-bottom: 0.5rem;
     }
 
@@ -208,30 +444,25 @@
     .form-label {
         display: block;
         margin-bottom: 0.5rem;
-        font-weight: 600;
-        color: var(--text-primary);
+        font-weight: 500;
+        color: var(--text-dark);
         font-size: 0.9rem;
     }
 
     .form-control {
         width: 100%;
-        padding: 1rem 1.25rem;
-        border: 2px solid #e2e8f0;
-        border-radius: 12px;
+        padding: 0.75rem 1rem;
+        border: 2px solid var(--border-light);
+        border-radius: var(--border-radius);
         font-size: 1rem;
         transition: var(--transition);
-        background: #f8fafc;
+        background: var(--white);
     }
 
     .form-control:focus {
         outline: none;
-        border-color: #667eea;
-        background: white;
-        box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
-    }
-
-    .form-control::placeholder {
-        color: #a0aec0;
+        border-color: var(--primary-purple);
+        box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.1);
     }
 
     .password-field {
@@ -245,23 +476,16 @@
         transform: translateY(-50%);
         background: none;
         border: none;
-        color: #a0aec0;
+        color: var(--text-light);
         cursor: pointer;
         padding: 0.25rem;
-        border-radius: 4px;
-        transition: var(--transition);
-    }
-
-    .password-toggle:hover {
-        color: #667eea;
-        background: rgba(102, 126, 234, 0.1);
     }
 
     .form-options {
         display: flex;
         justify-content: space-between;
         align-items: center;
-        margin-bottom: 2rem;
+        margin-bottom: 1.5rem;
         font-size: 0.9rem;
     }
 
@@ -269,54 +493,50 @@
         display: flex;
         align-items: center;
         gap: 0.5rem;
+        color: var(--text-secondary);
     }
 
     .checkbox-wrapper input[type="checkbox"] {
-        width: 18px;
-        height: 18px;
-        accent-color: #667eea;
+        width: 16px;
+        height: 16px;
+        accent-color: var(--primary-purple);
     }
 
     .forgot-password {
-        color: #667eea;
+        color: var(--primary-purple);
         text-decoration: none;
         font-weight: 500;
-        transition: var(--transition);
     }
 
     .forgot-password:hover {
-        color: #5a67d8;
         text-decoration: underline;
     }
 
     .login-button {
         width: 100%;
-        padding: 1rem;
-        background: var(--primary-gradient);
+        padding: 0.875rem;
+        background: var(--primary-purple);
+        color: var(--white);
         border: none;
-        border-radius: 12px;
-        color: white;
-        font-size: 1.1rem;
+        border-radius: var(--border-radius);
+        font-size: 1rem;
         font-weight: 600;
         cursor: pointer;
         transition: var(--transition);
-        box-shadow: var(--shadow-soft);
+        margin-bottom: 1.5rem;
     }
 
     .login-button:hover {
-        transform: translateY(-2px);
-        box-shadow: var(--shadow-hover);
-    }
-
-    .login-button:active {
-        transform: translateY(0);
+        background: var(--primary-dark);
+        transform: translateY(-1px);
+        box-shadow: var(--shadow-medium);
     }
 
     .divider {
         text-align: center;
-        margin: 2rem 0;
+        margin: 1.5rem 0;
         position: relative;
-        color: var(--text-secondary);
+        color: var(--text-light);
         font-size: 0.9rem;
     }
 
@@ -327,11 +547,11 @@
         left: 0;
         right: 0;
         height: 1px;
-        background: #e2e8f0;
+        background: var(--border-light);
     }
 
     .divider span {
-        background: white;
+        background: var(--white);
         padding: 0 1rem;
         position: relative;
         z-index: 1;
@@ -340,18 +560,19 @@
     .social-login {
         display: flex;
         gap: 1rem;
-        margin-bottom: 2rem;
+        margin-bottom: 1.5rem;
     }
 
     .social-button {
         flex: 1;
         padding: 0.75rem;
-        border: 2px solid #e2e8f0;
-        border-radius: 12px;
-        background: white;
-        color: var(--text-primary);
+        border: 2px solid var(--border-light);
+        border-radius: var(--border-radius);
+        background: var(--white);
+        color: var(--text-dark);
+        text-decoration: none;
         font-weight: 500;
-        cursor: pointer;
+        text-align: center;
         transition: var(--transition);
         display: flex;
         align-items: center;
@@ -360,191 +581,273 @@
     }
 
     .social-button:hover {
-        border-color: #667eea;
-        background: #f8fafc;
+        border-color: var(--primary-purple);
+        color: var(--primary-purple);
         transform: translateY(-1px);
+    }
+
+    .social-button.disabled {
+        opacity: 0.5;
+        cursor: not-allowed;
+    }
+
+    .social-button.disabled:hover {
+        transform: none;
+        border-color: var(--border-light);
+        color: var(--text-dark);
     }
 
     .register-link {
         text-align: center;
-        margin-top: 2rem;
         color: var(--text-secondary);
+        font-size: 0.9rem;
     }
 
     .register-link a {
-        color: #667eea;
+        color: var(--primary-purple);
         text-decoration: none;
-        font-weight: 600;
-        margin-left: 0.5rem;
+        font-weight: 500;
+        margin-left: 0.25rem;
     }
 
     .register-link a:hover {
         text-decoration: underline;
     }
 
-    .floating-shapes {
-        position: absolute;
-        top: 0;
-        left: 0;
-        right: 0;
-        bottom: 0;
-        pointer-events: none;
-        overflow: hidden;
-    }
-
-    .shape {
-        position: absolute;
-        border-radius: 50%;
-        background: rgba(255, 255, 255, 0.1);
-        animation: float 6s ease-in-out infinite;
-    }
-
-    .shape:nth-child(1) {
-        width: 80px;
-        height: 80px;
-        top: 20%;
-        left: 10%;
-        animation-delay: 0s;
-    }
-
-    .shape:nth-child(2) {
-        width: 120px;
-        height: 120px;
-        top: 60%;
-        right: 15%;
-        animation-delay: 2s;
-    }
-
-    .shape:nth-child(3) {
-        width: 60px;
-        height: 60px;
-        bottom: 20%;
-        left: 20%;
-        animation-delay: 4s;
-    }
-
-    @keyframes float {
-        0%, 100% { transform: translateY(0px) rotate(0deg); }
-        50% { transform: translateY(-20px) rotate(180deg); }
-    }
-
+    /* Responsive Design */
     @media (max-width: 1024px) {
-        .login-container {
-            flex-direction: column;
+        .showcase-content {
+            grid-template-columns: 1fr;
+            gap: 2rem;
         }
-        
-        .platform-intro {
-            padding: 2rem;
+
+        .showcase-text {
+            padding-right: 0;
             text-align: center;
         }
-        
-        .platform-intro h1 {
-            font-size: 2.5rem;
-        }
-        
-        .features-grid {
-            grid-template-columns: 1fr;
-            gap: 1rem;
-        }
-        
-        .stats-section {
-            flex-direction: column;
-            gap: 1.5rem;
-        }
-        
-        .login-form-container {
-            padding: 2rem;
+
+        .hero-title {
+            font-size: 3rem;
         }
     }
 
     @media (max-width: 768px) {
-        .platform-intro h1 {
+        .header {
+            padding: 1rem;
+        }
+
+        .nav-links {
+            display: none;
+        }
+
+        .hero-section {
+            padding: 3rem 1rem;
+        }
+
+        .hero-title {
+            font-size: 2.5rem;
+        }
+
+        .hero-subtitle {
+            font-size: 1.1rem;
+        }
+
+        .hero-actions {
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .btn-hero-primary,
+        .btn-hero-secondary {
+            width: 100%;
+            max-width: 300px;
+        }
+
+        .showcase-section {
+            padding: 3rem 1rem;
+        }
+
+        .showcase-title {
+            font-size: 2rem;
+        }
+
+        .login-section {
+            padding: 3rem 1rem;
+        }
+
+        .login-container {
+            padding: 2rem;
+        }
+        
+        .login-section {
+            padding: 2rem 1rem;
+        }
+        
+        .login-container {
+            padding: 2rem;
+        }
+        
+        .login-title {
             font-size: 2rem;
         }
         
-        .platform-intro .tagline {
-            font-size: 1.2rem;
+        .login-subtitle {
+            font-size: 1rem;
         }
         
-        .login-card {
-            padding: 2rem;
+        .form-control {
+            padding: 1rem;
+        }
+        
+        .login-button {
+            padding: 1rem;
+        }
+        
+        .social-login {
+            flex-direction: column;
+            gap: 1rem;
+        }
+        
+        .social-button {
+            width: 100%;
+        }
+        
+        .feature-grid {
+            grid-template-columns: 1fr;
+            gap: 1.5rem;
+        }
+        
+        .ai-card {
+            padding: 1.5rem;
+        }
+        
+        .ai-card h3 {
+            font-size: 1.25rem;
+        }
+        
+        .ai-card p {
+            font-size: 0.9rem;
+        }
+    }
+
+    @media (max-width: 480px) {
+        .hero-title {
+            font-size: 2rem;
+        }
+
+        .showcase-title {
+            font-size: 1.75rem;
+        }
+
+        .ai-card {
+            max-width: 250px;
+            padding: 1rem;
         }
     }
 </style>
 {% endblock %}
 
 {% block content %}
-<div class="login-container">
-    <!-- Floating shapes for visual appeal -->
-    <div class="floating-shapes">
-        <div class="shape"></div>
-        <div class="shape"></div>
-        <div class="shape"></div>
-    </div>
-
-    <!-- Platform Introduction Section -->
-    <div class="platform-intro">
-        <h1>Transform Your Work</h1>
-        <p class="tagline">
-            The intelligent platform that brings teams together, 
-            streamlines workflows, and turns ideas into reality.
-        </p>
-
-        <div class="features-grid">
-            <div class="feature-item">
-                <div class="feature-icon">
-                    <i class="fas fa-project-diagram"></i>
-                </div>
-                <div class="feature-text">Smart Project Management</div>
+<!-- Header Navigation -->
+<header class="header">
+    <div class="header-content">
+        <a href="/" class="logo">
+            <div class="logo-dots">
+                <div class="logo-dot"></div>
+                <div class="logo-dot"></div>
             </div>
-            <div class="feature-item">
-                <div class="feature-icon">
-                    <i class="fas fa-users"></i>
-                </div>
-                <div class="feature-text">Team Collaboration</div>
-            </div>
-            <div class="feature-item">
-                <div class="feature-icon">
-                    <i class="fas fa-robot"></i>
-                </div>
-                <div class="feature-text">AI-Powered Insights</div>
-            </div>
-            <div class="feature-item">
-                <div class="feature-icon">
-                    <i class="fas fa-chart-line"></i>
-                </div>
-                <div class="feature-text">Real-time Analytics</div>
-            </div>
-        </div>
-
-        <div class="stats-section">
-            <div class="stat-item">
-                <span class="stat-number">10K+</span>
-                <span class="stat-label">Teams</span>
-            </div>
-            <div class="stat-item">
-                <span class="stat-number">50K+</span>
-                <span class="stat-label">Projects</span>
-            </div>
-            <div class="stat-item">
-                <span class="stat-number">99.9%</span>
-                <span class="stat-label">Uptime</span>
-            </div>
+            inspora
+        </a>
+        
+        <nav class="nav-links">
+            <a href="#" class="nav-link">Product</a>
+            <a href="#" class="nav-link">Solutions</a>
+            <a href="#" class="nav-link">Resources</a>
+            <a href="#" class="nav-link">Pricing</a>
+        </nav>
+        
+        <div class="header-actions">
+            <a href="#" class="btn-secondary">Contact sales</a>
+            <a href="{% url 'accounts:login' %}" class="btn-secondary">Log in</a>
+            <a href="{% url 'accounts:register' %}" class="btn-primary">Get started</a>
         </div>
     </div>
+</header>
 
-    <!-- Login Form Section -->
-    <div class="login-form-container">
-        <div class="login-card">
+<div class="main-container">
+    <!-- Hero Section -->
+    <section class="hero-section">
+        <div class="hero-content">
+            <h1 class="hero-title">Where your teams and AI coordinate work together</h1>
+            <p class="hero-subtitle">See how your work connects to goals while working alongside AI that understands your business.</p>
+            <div class="hero-actions">
+                <a href="{% url 'accounts:register' %}" class="btn-hero-primary">Get started</a>
+                <a href="#showcase" class="btn-hero-secondary">See how it works</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Visual Showcase Section -->
+    <section class="showcase-section" id="showcase">
+        <div class="showcase-content">
+            <div class="showcase-text">
+                <h2 class="showcase-title">Transform your workflow with AI-powered insights</h2>
+                <p class="showcase-description">Inspora combines the power of human collaboration with intelligent automation to help your team work smarter, not harder.</p>
+                <ul class="feature-list">
+                    <li class="feature-item">
+                        <div class="feature-icon">✓</div>
+                        <span>AI-powered task prioritization</span>
+                    </li>
+                    <li class="feature-item">
+                        <div class="feature-icon">✓</div>
+                        <span>Smart document management</span>
+                    </li>
+                    <li class="feature-item">
+                        <div class="feature-icon">✓</div>
+                        <span>Automated workflow suggestions</span>
+                    </li>
+                    <li class="feature-item">
+                        <div class="feature-icon">✓</div>
+                        <span>Real-time collaboration tools</span>
+                    </li>
+                </ul>
+            </div>
+            
+            <div class="showcase-visual">
+                <div class="ai-card top">
+                    <div class="ai-card-header">
+                        <div class="ai-icon">✨</div>
+                        <div class="ai-card-title">Inspora AI wrote brief</div>
+                    </div>
+                    <div class="ai-card-content">
+                        Here's a first draft based on your request:<br>
+                        <strong>Product launch brief - Draft</strong> ✓
+                    </div>
+                </div>
+                
+                <div class="ai-card bottom">
+                    <div class="ai-card-header">
+                        <div class="ai-icon">👤</div>
+                        <div class="ai-card-title">Team approved brief</div>
+                    </div>
+                    <div class="ai-card-content">
+                        <strong>Sarah approved brief</strong> ✓<br>
+                        Ready for next phase
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Login Section -->
+    <section class="login-section">
+        <div class="login-container">
             <div class="login-header">
-                <div class="login-logo">
-                    <i class="fas fa-rocket"></i>
-                </div>
                 <h2 class="login-title">Welcome Back</h2>
                 <p class="login-subtitle">Sign in to continue your journey</p>
             </div>
-
-            <form method="post">
+            
+            <form method="post" action="{% url 'accounts:login' %}" id="loginForm">
                 {% csrf_token %}
                 
                 <div class="form-group">
@@ -554,9 +857,13 @@
                            id="username" 
                            name="username" 
                            placeholder="Enter your username or email"
+                           autocomplete="off"
+                           autocorrect="off"
+                           autocapitalize="off"
+                           spellcheck="false"
                            required>
                 </div>
-
+                
                 <div class="form-group">
                     <label for="password" class="form-label">Password</label>
                     <div class="password-field">
@@ -565,13 +872,14 @@
                                id="password" 
                                name="password" 
                                placeholder="Enter your password"
+                               autocomplete="new-password"
                                required>
                         <button type="button" class="password-toggle" onclick="togglePassword()">
                             <i class="fas fa-eye" id="password-icon"></i>
                         </button>
                     </div>
                 </div>
-
+                
                 <div class="form-options">
                     <label class="checkbox-wrapper">
                         <input type="checkbox" name="remember" id="remember">
@@ -579,33 +887,37 @@
                     </label>
                     <a href="#" class="forgot-password">Forgot password?</a>
                 </div>
-
+                
                 <button type="submit" class="login-button">
                     <i class="fas fa-sign-in-alt me-2"></i>Sign In
                 </button>
+                
+                <button type="button" class="btn-secondary" style="width: 100%; margin-bottom: 1rem;" onclick="clearFormFields()">
+                    <i class="fas fa-eraser me-2"></i>Clear Fields
+                </button>
             </form>
-
+            
             <div class="divider">
                 <span>or continue with</span>
             </div>
-
+            
             <div class="social-login">
                 <a href="{% url 'google_login' %}" class="social-button">
                     <i class="fab fa-google"></i>
                     Google
                 </a>
-                <button type="button" class="social-button" disabled>
+                <button type="button" class="social-button disabled">
                     <i class="fab fa-microsoft"></i>
                     Microsoft
                     <small class="d-block">Coming Soon</small>
                 </button>
             </div>
-
+            
             <div class="register-link">
                 Don't have an account?<a href="{% url 'accounts:register' %}">Sign up</a>
             </div>
         </div>
-    </div>
+    </section>
 </div>
 {% endblock %}
 
@@ -624,29 +936,22 @@ function togglePassword() {
     }
 }
 
-// Add smooth animations
-document.addEventListener('DOMContentLoaded', function() {
-    const elements = document.querySelectorAll('.feature-item, .stat-item, .login-card');
-    
-    const observer = new IntersectionObserver((entries) => {
-        entries.forEach(entry => {
-            if (entry.isIntersecting) {
-                entry.target.style.opacity = '1';
-                entry.target.style.transform = 'translateY(0)';
-            }
-        });
-    });
-    
-    elements.forEach(el => {
-        el.style.opacity = '0';
-        el.style.transform = 'translateY(20px)';
-        el.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
-        observer.observe(el);
+// Smooth scrolling for anchor links
+document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+    anchor.addEventListener('click', function (e) {
+        e.preventDefault();
+        const target = document.querySelector(this.getAttribute('href'));
+        if (target) {
+            target.scrollIntoView({
+                behavior: 'smooth',
+                block: 'start'
+            });
+        }
     });
 });
 
 // Form validation and enhancement
-document.querySelector('form').addEventListener('submit', function(e) {
+document.getElementById('loginForm').addEventListener('submit', function(e) {
     const username = document.getElementById('username').value.trim();
     const password = document.getElementById('password').value.trim();
     
@@ -669,22 +974,78 @@ document.querySelector('form').addEventListener('submit', function(e) {
     }, 3000);
 });
 
+// Add smooth animations
+document.addEventListener('DOMContentLoaded', function() {
+    const elements = document.querySelectorAll('.feature-item, .ai-card, .login-container');
+    
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.style.opacity = '1';
+                entry.target.style.transform = 'translateY(0)';
+            }
+        });
+    });
+    
+    elements.forEach(el => {
+        el.style.opacity = '0';
+        el.style.transform = 'translateY(20px)';
+        el.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+        observer.observe(el);
+    });
+    
+    // Clear any pre-filled values in form fields
+    clearFormFields();
+});
+
+// Function to clear form fields
+function clearFormFields() {
+    const usernameField = document.getElementById('username');
+    const passwordField = document.getElementById('password');
+    
+    if (usernameField) {
+        usernameField.value = '';
+        usernameField.focus();
+    }
+    
+    if (passwordField) {
+        passwordField.value = '';
+    }
+    
+    // Also clear any browser autocomplete
+    setTimeout(() => {
+        if (usernameField && usernameField.value) {
+            usernameField.value = '';
+        }
+        if (passwordField && passwordField.value) {
+            passwordField.value = '';
+        }
+    }, 100);
+}
+
+// Simple notification function
 function showNotification(message, type = 'info') {
     const notification = document.createElement('div');
-    notification.className = `alert alert-${type === 'error' ? 'danger' : type} alert-dismissible fade show position-fixed`;
-    notification.style.cssText = 'top: 20px; right: 20px; z-index: 9999; min-width: 300px;';
-    notification.innerHTML = `
-        ${message}
-        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    notification.className = `notification notification-${type}`;
+    notification.textContent = message;
+    notification.style.cssText = `
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        padding: 1rem 1.5rem;
+        background: ${type === 'error' ? '#EF4444' : '#10B981'};
+        color: white;
+        border-radius: 8px;
+        box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        z-index: 10000;
+        animation: slideInRight 0.3s ease-out;
     `;
     
     document.body.appendChild(notification);
     
     setTimeout(() => {
-        if (notification.parentNode) {
-            notification.parentNode.removeChild(notification);
-        }
-    }, 5000);
+        notification.remove();
+    }, 3000);
 }
 </script>
 {% endblock %}

@@ -7,3 +7,5 @@ urlpatterns = [
     path('', views.template_list, name='template_list'),
     path('<int:pk>/', views.template_detail, name='template_detail'),
 ]
+
+

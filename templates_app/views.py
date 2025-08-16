@@ -19,3 +19,5 @@ def template_detail(request, pk):
         'template': template,
         'title': template.name
     })
+
+

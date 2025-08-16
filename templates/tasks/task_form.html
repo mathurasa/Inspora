@@ -62,10 +62,19 @@
                                 
                                 <div class="row">
                                     <div class="col-md-6 mb-3">
-                                        {{ form.start_date|as_crispy_field }}
+                                        <label for="id_start_date" class="form-label">Start Date & Time</label>
+                                        <input type="datetime-local" class="form-control" id="id_start_date" name="start_date" 
+                                               value="{% if form.instance.start_date %}{{ form.instance.start_date|date:'Y-m-d\TH:i' }}{% endif %}">
+                                        <div class="form-text">When you plan to start this task</div>
                                     </div>
                                     <div class="col-md-6 mb-3">
-                                        {{ form.due_date|as_crispy_field }}
+                                        <label for="id_due_date" class="form-label">Due Date *</label>
+                                        <input type="date" class="form-control" id="id_due_date" name="due_date" 
+                                               required
+                                               value="{% if form.instance.due_date %}{{ form.instance.due_date|date:'Y-m-d' }}{% endif %}">
+                                        <div class="invalid-feedback">
+                                            Please select a due date.
+                                        </div>
                                     </div>
                                 </div>
                                 
@@ -285,20 +294,42 @@ document.addEventListener('DOMContentLoaded', function() {
     const dueDateInput = document.getElementById('id_due_date');
     
     if (startDateInput && dueDateInput) {
+        // Set minimum dates
+        const today = new Date().toISOString().split('T')[0];
+        dueDateInput.min = today;
+        
+        // Date validation function
+        function validateDates() {
+            const startDate = startDateInput.value;
+            const dueDate = dueDateInput.value;
+            
+            if (startDate && dueDate) {
+                const startDateTime = new Date(startDate);
+                const dueDateOnly = new Date(dueDate);
+                
+                if (startDateTime > dueDateOnly) {
+                    dueDateInput.classList.add('is-invalid');
+                    dueDateInput.nextElementSibling.textContent = 'Due date must be after start date';
+                } else {
+                    dueDateInput.classList.remove('is-invalid');
+                    dueDateInput.nextElementSibling.textContent = '';
+                }
+            }
+        }
+        
+        // Update due date minimum when start date changes
         startDateInput.addEventListener('change', function() {
-            if (this.value && dueDateInput.value && this.value > dueDateInput.value) {
-                dueDateInput.setCustomValidity('Due date must be after start date');
-            } else {
-                dueDateInput.setCustomValidity('');
+            if (this.value) {
+                const startDate = new Date(this.value);
+                const startDateOnly = startDate.toISOString().split('T')[0];
+                dueDateInput.min = startDateOnly;
+                validateDates();
             }
         });
         
+        // Validate when due date changes
         dueDateInput.addEventListener('change', function() {
-            if (this.value && startDateInput.value && startDateInput.value > this.value) {
-                this.setCustomValidity('Due date must be after start date');
-            } else {
-                this.setCustomValidity('');
-            }
+            validateDates();
         });
     }
 

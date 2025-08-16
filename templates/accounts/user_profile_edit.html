@@ -46,6 +46,36 @@
                                         {{ form.email|as_crispy_field }}
                                     </div>
                                 </div>
+                                
+                                <!-- Profile Picture Section -->
+                                <div class="row">
+                                    <div class="col-12 mb-3">
+                                        <label class="form-label">Profile Picture</label>
+                                        <div class="d-flex align-items-center">
+                                            {% if user.avatar %}
+                                                <img src="{{ user.avatar.url }}" alt="Current Profile Picture" 
+                                                     class="rounded-circle me-3" style="width: 60px; height: 60px; object-fit: cover;">
+                                            {% else %}
+                                                <div class="rounded-circle bg-secondary me-3 d-flex align-items-center justify-content-center" 
+                                                     style="width: 60px; height: 60px;">
+                                                    <i class="fas fa-user text-white"></i>
+                                                </div>
+                                            {% endif %}
+                                            <div class="flex-grow-1">
+                                                {{ form.avatar|as_crispy_field }}
+                                                <small class="form-text text-muted">
+                                                    Upload a profile picture (JPEG, PNG, GIF, WebP). Max size: 5MB.
+                                                </small>
+                                            </div>
+                                        </div>
+                                        <div class="mt-2">
+                                            <small class="text-muted">
+                                                <i class="fas fa-info-circle me-1"></i>
+                                                Profile picture management is now available directly on your profile page.
+                                            </small>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
 
                             <!-- Professional Information -->

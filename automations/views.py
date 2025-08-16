@@ -7,3 +7,5 @@ def automation_list(request):
     return render(request, 'automations/automation_list.html', {
         'title': 'Automations'
     })
+
+

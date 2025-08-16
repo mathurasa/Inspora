@@ -1,0 +1,619 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}AI Assistant Dashboard - Inspora{% endblock %}
+
+{% block extra_css %}
+<style>
+    .ai-dashboard {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        min-height: 100vh;
+        padding: 2rem 0;
+    }
+    
+    .ai-card {
+        background: white;
+        border-radius: 15px;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        transition: all 0.3s ease;
+        border: none;
+        overflow: hidden;
+    }
+    
+    .ai-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 20px 40px rgba(0,0,0,0.15);
+    }
+    
+    .ai-card-header {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        border: none;
+        padding: 1.5rem;
+    }
+    
+    .ai-stats-card {
+        background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+        color: white;
+        border-radius: 15px;
+        padding: 1.5rem;
+        margin-bottom: 1.5rem;
+    }
+    
+    .ai-feature-card {
+        background: white;
+        border-radius: 15px;
+        padding: 1.5rem;
+        margin-bottom: 1.5rem;
+        border-left: 4px solid #667eea;
+        transition: all 0.3s ease;
+    }
+    
+    .ai-feature-card:hover {
+        border-left-color: #764ba2;
+        transform: translateX(5px);
+    }
+    
+    .ai-icon {
+        font-size: 2.5rem;
+        margin-bottom: 1rem;
+        color: #667eea;
+    }
+    
+    .ai-stat-number {
+        font-size: 2rem;
+        font-weight: bold;
+        margin-bottom: 0.5rem;
+    }
+    
+    .ai-suggestion-item {
+        background: #f8f9fa;
+        border-radius: 10px;
+        padding: 1rem;
+        margin-bottom: 1rem;
+        border-left: 4px solid #28a745;
+        transition: all 0.3s ease;
+    }
+    
+    .ai-suggestion-item:hover {
+        background: #e9ecef;
+        transform: translateX(5px);
+    }
+    
+    .ai-suggestion-item.high-priority {
+        border-left-color: #dc3545;
+    }
+    
+    .ai-suggestion-item.medium-priority {
+        border-left-color: #ffc107;
+    }
+    
+    .ai-suggestion-item.low-priority {
+        border-left-color: #17a2b8;
+    }
+    
+    .workflow-metric {
+        text-align: center;
+        padding: 1rem;
+        background: white;
+        border-radius: 10px;
+        margin-bottom: 1rem;
+        box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+    }
+    
+    .workflow-metric-value {
+        font-size: 2rem;
+        font-weight: bold;
+        color: #667eea;
+        margin-bottom: 0.5rem;
+    }
+    
+    .productivity-score {
+        background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+        color: white;
+        border-radius: 15px;
+        padding: 2rem;
+        text-align: center;
+        margin-bottom: 2rem;
+    }
+    
+    .productivity-score-value {
+        font-size: 4rem;
+        font-weight: bold;
+        margin-bottom: 1rem;
+    }
+    
+    .ai-quick-actions {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 1rem;
+        margin-bottom: 2rem;
+    }
+    
+    .ai-quick-action {
+        background: white;
+        border-radius: 10px;
+        padding: 1.5rem;
+        text-align: center;
+        text-decoration: none;
+        color: #333;
+        transition: all 0.3s ease;
+        border: 2px solid transparent;
+    }
+    
+    .ai-quick-action:hover {
+        transform: translateY(-3px);
+        border-color: #667eea;
+        color: #667eea;
+        text-decoration: none;
+    }
+    
+    .ai-quick-action-icon {
+        font-size: 2rem;
+        margin-bottom: 1rem;
+        color: #667eea;
+    }
+    
+    .typing-animation {
+        display: inline-block;
+        position: relative;
+        width: 80px;
+        height: 20px;
+    }
+    
+    .typing-animation span {
+        position: absolute;
+        top: 0;
+        width: 10px;
+        height: 10px;
+        border-radius: 50%;
+        background: #667eea;
+        animation: typing 1.4s infinite ease-in-out;
+    }
+    
+    .typing-animation span:nth-child(1) {
+        left: 0;
+        animation-delay: -0.32s;
+    }
+    
+    .typing-animation span:nth-child(2) {
+        left: 20px;
+        animation-delay: -0.16s;
+    }
+    
+    .typing-animation span:nth-child(3) {
+        left: 40px;
+        animation-delay: 0s;
+    }
+    
+    @keyframes typing {
+        0%, 80%, 100% {
+            transform: scale(0);
+            opacity: 0.5;
+        }
+        40% {
+            transform: scale(1);
+            opacity: 1;
+        }
+    }
+    
+    .fade-in {
+        animation: fadeIn 0.8s ease-in;
+    }
+    
+    @keyframes fadeIn {
+        from { opacity: 0; transform: translateY(20px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="ai-dashboard">
+    <div class="container-fluid">
+        <!-- Header Section -->
+        <div class="row mb-4">
+            <div class="col-12">
+                <div class="ai-card">
+                    <div class="ai-card-header text-center">
+                        <h1 class="display-4 mb-3">
+                            <i class="fas fa-robot me-3"></i>AI Assistant Dashboard
+                        </h1>
+                        <p class="lead mb-0">Your intelligent companion for productivity and workflow optimization</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- AI Usage Statistics -->
+        <div class="row mb-4">
+            <div class="col-md-3">
+                <div class="ai-stats-card text-center">
+                    <div class="ai-icon">
+                        <i class="fas fa-comments"></i>
+                    </div>
+                    <div class="ai-stat-number">{{ ai_usage_stats.total_chats }}</div>
+                    <div>AI Conversations</div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="ai-stats-card text-center">
+                    <div class="ai-icon">
+                        <i class="fas fa-lightbulb"></i>
+                    </div>
+                    <div class="ai-stat-number">{{ ai_usage_stats.total_suggestions }}</div>
+                    <div>AI Suggestions</div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="ai-stats-card text-center">
+                    <div class="ai-icon">
+                        <i class="fas fa-check-circle"></i>
+                    </div>
+                    <div class="ai-stat-number">{{ ai_usage_stats.applied_suggestions }}</div>
+                    <div>Applied Suggestions</div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="ai-stats-card text-center">
+                    <div class="ai-icon">
+                        <i class="fas fa-brain"></i>
+                    </div>
+                    <div class="ai-stat-number">{{ ai_usage_stats.knowledge_articles }}</div>
+                    <div>Knowledge Articles</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Productivity Score -->
+        <div class="row mb-4">
+            <div class="col-12">
+                <div class="productivity-score">
+                    <h3 class="mb-3">Your Productivity Score</h3>
+                    <div class="productivity-score-value">{{ workflow_analysis.productivity_score }}%</div>
+                    <p class="mb-0">Based on your task completion rate and project management efficiency</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Quick Actions -->
+        <div class="row mb-4">
+            <div class="col-12">
+                <div class="ai-card">
+                    <div class="card-body">
+                        <h4 class="mb-3"><i class="fas fa-bolt me-2"></i>Quick Actions</h4>
+                        <div class="ai-quick-actions">
+                            <a href="{% url 'accounts:ai_chat' %}" class="ai-quick-action">
+                                <div class="ai-quick-action-icon">
+                                    <i class="fas fa-comments"></i>
+                                </div>
+                                <div class="fw-bold">Start AI Chat</div>
+                                <small class="text-muted">Get instant help</small>
+                            </a>
+                            <a href="{% url 'accounts:ai_suggestions' %}" class="ai-quick-action">
+                                <div class="ai-quick-action-icon">
+                                    <i class="fas fa-lightbulb"></i>
+                                </div>
+                                <div class="fw-bold">View Suggestions</div>
+                                <small class="text-muted">AI-powered tips</small>
+                            </a>
+                            <a href="{% url 'accounts:ai_workflow' %}" class="ai-quick-action">
+                                <div class="ai-quick-action-icon">
+                                    <i class="fas fa-cogs"></i>
+                                </div>
+                                <div class="fw-bold">Workflow Analysis</div>
+                                <small class="text-muted">Optimize your process</small>
+                            </a>
+                            <a href="{% url 'accounts:ai_knowledge' %}" class="ai-quick-action">
+                                <div class="ai-quick-action-icon">
+                                    <i class="fas fa-brain"></i>
+                                </div>
+                                <div class="fw-bold">Knowledge Base</div>
+                                <small class="text-muted">Learn & explore</small>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <!-- Workflow Analysis -->
+            <div class="col-md-6 mb-4">
+                <div class="ai-card">
+                    <div class="card-body">
+                        <h4 class="mb-3">
+                            <i class="fas fa-chart-line me-2"></i>Workflow Analysis
+                        </h4>
+                        
+                        <div class="row">
+                            <div class="col-6">
+                                <div class="workflow-metric">
+                                    <div class="workflow-metric-value">{{ workflow_analysis.total_projects }}</div>
+                                    <div class="text-muted">Total Projects</div>
+                                </div>
+                            </div>
+                            <div class="col-6">
+                                <div class="workflow-metric">
+                                    <div class="workflow-metric-value">{{ workflow_analysis.active_projects }}</div>
+                                    <div class="text-muted">Active Projects</div>
+                                </div>
+                            </div>
+                            <div class="col-6">
+                                <div class="workflow-metric">
+                                    <div class="workflow-metric-value">{{ workflow_analysis.total_tasks }}</div>
+                                    <div class="text-muted">Total Tasks</div>
+                                </div>
+                            </div>
+                            <div class="col-6">
+                                <div class="workflow-metric">
+                                    <div class="workflow-metric-value">{{ workflow_analysis.overdue_tasks }}</div>
+                                    <div class="text-muted">Overdue Tasks</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        {% if workflow_suggestions %}
+                        <h6 class="mt-3 mb-2">Workflow Improvements:</h6>
+                        <ul class="list-unstyled">
+                            {% for suggestion in workflow_suggestions %}
+                            <li class="mb-2">
+                                <i class="fas fa-arrow-right text-primary me-2"></i>{{ suggestion }}
+                            </li>
+                            {% endfor %}
+                        </ul>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+
+            <!-- Recent AI Suggestions -->
+            <div class="col-md-6 mb-4">
+                <div class="ai-card">
+                    <div class="card-body">
+                        <h4 class="mb-3">
+                            <i class="fas fa-lightbulb me-2"></i>Recent AI Suggestions
+                        </h4>
+                        
+                        {% if recent_suggestions %}
+                            {% for suggestion in recent_suggestions %}
+                            <div class="ai-suggestion-item {% if suggestion.priority >= 4 %}high-priority{% elif suggestion.priority >= 3 %}medium-priority{% else %}low-priority{% endif %}">
+                                <div class="d-flex justify-content-between align-items-start">
+                                    <div>
+                                        <h6 class="mb-1">{{ suggestion.title }}</h6>
+                                        <p class="mb-2 text-muted">{{ suggestion.description }}</p>
+                                        <small class="text-muted">
+                                            <i class="fas fa-tag me-1"></i>{{ suggestion.get_suggestion_type_display }}
+                                        </small>
+                                    </div>
+                                    <div class="text-end">
+                                        <span class="badge {% if suggestion.priority >= 4 %}bg-danger{% elif suggestion.priority >= 3 %}bg-warning{% else %}bg-info{% endif %}">
+                                            Priority {{ suggestion.priority }}
+                                        </span>
+                                    </div>
+                                </div>
+                                {% if suggestion.action_url %}
+                                <div class="mt-2">
+                                    <a href="{{ suggestion.action_url }}" class="btn btn-sm btn-primary">
+                                        {{ suggestion.action_text|default:"Take Action" }}
+                                    </a>
+                                </div>
+                                {% endif %}
+                            </div>
+                            {% endfor %}
+                        {% else %}
+                            <div class="text-center text-muted py-4">
+                                <i class="fas fa-lightbulb fa-3x mb-3"></i>
+                                <p>No AI suggestions yet. Start using Inspora to get personalized recommendations!</p>
+                                <button class="btn btn-primary" onclick="generateAISuggestions()">
+                                    <i class="fas fa-magic me-2"></i>Generate Suggestions
+                                </button>
+                            </div>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <!-- Recent AI Chats -->
+            <div class="col-md-6 mb-4">
+                <div class="ai-card">
+                    <div class="card-body">
+                        <h4 class="mb-3">
+                            <i class="fas fa-comments me-2"></i>Recent AI Conversations
+                        </h4>
+                        
+                        {% if recent_chats %}
+                            {% for chat in recent_chats %}
+                            <div class="ai-suggestion-item">
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <div>
+                                        <h6 class="mb-1">{{ chat.title|default:"AI Chat" }}</h6>
+                                        <small class="text-muted">
+                                            <i class="fas fa-clock me-1"></i>{{ chat.updated_at|timesince }} ago
+                                        </small>
+                                    </div>
+                                    <a href="{% url 'accounts:ai_chat' %}?session={{ chat.session_id }}" class="btn btn-sm btn-outline-primary">
+                                        Continue Chat
+                                    </a>
+                                </div>
+                            </div>
+                            {% endfor %}
+                        {% else %}
+                            <div class="text-center text-muted py-4">
+                                <i class="fas fa-comments fa-3x mb-3"></i>
+                                <p>No recent conversations. Start chatting with your AI assistant!</p>
+                                <a href="{% url 'accounts:ai_chat' %}" class="btn btn-primary">
+                                    <i class="fas fa-comments me-2"></i>Start Chat
+                                </a>
+                            </div>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+
+            <!-- Knowledge Base Recommendations -->
+            <div class="col-md-6 mb-4">
+                <div class="ai-card">
+                    <div class="card-body">
+                        <h4 class="mb-3">
+                            <i class="fas fa-brain me-2"></i>Recommended Knowledge
+                        </h4>
+                        
+                        {% if knowledge_recommendations %}
+                            {% for article in knowledge_recommendations %}
+                            <div class="ai-suggestion-item">
+                                <h6 class="mb-1">{{ article.title }}</h6>
+                                <p class="mb-2 text-muted">{{ article.content|truncatewords:20 }}</p>
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <small class="text-muted">
+                                        <i class="fas fa-tag me-1"></i>{{ article.category }}
+                                    </small>
+                                    <small class="text-muted">
+                                        <i class="fas fa-eye me-1"></i>{{ article.usage_count }} views
+                                    </small>
+                                </div>
+                            </div>
+                            {% endfor %}
+                        {% else %}
+                            <div class="text-center text-muted py-4">
+                                <i class="fas fa-brain fa-3x mb-3"></i>
+                                <p>No knowledge articles available yet.</p>
+                            </div>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- AI Assistant Welcome Message -->
+        <div class="row mb-4">
+            <div class="col-12">
+                <div class="ai-card">
+                    <div class="card-body text-center">
+                        <div class="ai-icon">
+                            <i class="fas fa-robot"></i>
+                        </div>
+                        <h4 class="mb-3">Ready to get started?</h4>
+                        <p class="lead mb-4">Your AI assistant is here to help you work smarter, not harder. Ask questions, get suggestions, and optimize your workflow.</p>
+                        <div class="d-flex justify-content-center gap-3">
+                            <a href="{% url 'accounts:ai_chat' %}" class="btn btn-primary btn-lg">
+                                <i class="fas fa-comments me-2"></i>Start AI Chat
+                            </a>
+                            <button class="btn btn-outline-primary btn-lg" onclick="generateAISuggestions()">
+                                <i class="fas fa-magic me-2"></i>Get AI Suggestions
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+// Initialize dashboard with fade-in animations
+document.addEventListener('DOMContentLoaded', function() {
+    // Add fade-in animation to cards
+    const cards = document.querySelectorAll('.ai-card, .ai-stats-card, .productivity-score');
+    cards.forEach((card, index) => {
+        card.style.animationDelay = `${index * 0.1}s`;
+        card.classList.add('fade-in');
+    });
+    
+    // Add typing animation to welcome message
+    const welcomeMessage = document.querySelector('.ai-card .card-body p.lead');
+    if (welcomeMessage) {
+        welcomeMessage.innerHTML = '';
+        const text = "Your AI assistant is here to help you work smarter, not harder. Ask questions, get suggestions, and optimize your workflow.";
+        let i = 0;
+        const typeWriter = () => {
+            if (i < text.length) {
+                welcomeMessage.innerHTML += text.charAt(i);
+                i++;
+                setTimeout(typeWriter, 50);
+            }
+        };
+        setTimeout(typeWriter, 1000);
+    }
+});
+
+// Generate AI suggestions
+function generateAISuggestions() {
+    const button = event.target;
+    const originalText = button.innerHTML;
+    
+    // Show loading state
+    button.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i>Generating...';
+    button.disabled = true;
+    
+    fetch('{% url "accounts:ai_generate_suggestions" %}', {
+        method: 'POST',
+        headers: {
+            'X-CSRFToken': getCookie('csrftoken'),
+            'Content-Type': 'application/json',
+        },
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            showNotification(`Generated ${data.count} new AI suggestions!`, 'success');
+            // Redirect to suggestions page
+            setTimeout(() => {
+                window.location.href = '{% url "accounts:ai_suggestions" %}';
+            }, 1500);
+        } else {
+            showNotification('Error generating suggestions: ' + data.error, 'error');
+        }
+    })
+    .catch(error => {
+        showNotification('Error generating suggestions: ' + error.message, 'error');
+    })
+    .finally(() => {
+        // Restore button state
+        button.innerHTML = originalText;
+        button.disabled = false;
+    });
+}
+
+// Show notification
+function showNotification(message, type = 'info') {
+    const notification = document.createElement('div');
+    notification.className = `alert alert-${type === 'error' ? 'danger' : type} alert-dismissible fade show position-fixed`;
+    notification.style.cssText = 'top: 20px; right: 20px; z-index: 9999; min-width: 300px;';
+    notification.innerHTML = `
+        ${message}
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    `;
+    
+    document.body.appendChild(notification);
+    
+    // Auto-remove after 5 seconds
+    setTimeout(() => {
+        if (notification.parentNode) {
+            notification.parentNode.removeChild(notification);
+        }
+    }, 5000);
+}
+
+// Get CSRF cookie
+function getCookie(name) {
+    let cookieValue = null;
+    if (document.cookie && document.cookie !== '') {
+        const cookies = document.cookie.split(';');
+        for (let i = 0; i < cookies.length; i++) {
+            const cookie = cookies[i].trim();
+            if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                break;
+            }
+        }
+    }
+    return cookieValue;
+}
+</script>
+{% endblock %}
+

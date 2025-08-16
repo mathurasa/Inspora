@@ -7,3 +7,5 @@ def portfolio_list(request):
     return render(request, 'portfolios/portfolio_list.html', {
         'title': 'Portfolios'
     })
+
+

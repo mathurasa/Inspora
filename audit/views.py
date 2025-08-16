@@ -7,3 +7,5 @@ def audit_list(request):
     return render(request, 'audit/audit_list.html', {
         'title': 'Audit Log'
     })
+
+

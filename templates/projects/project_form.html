@@ -6,6 +6,24 @@
     {% if form.instance.pk %}Edit Project{% else %}New Project{% endif %} - Inspora
 {% endblock %}
 
+{% block extra_css %}
+<style>
+    .form-control:focus,
+    .form-select:focus {
+        border-color: var(--primary-color);
+        box-shadow: 0 0 0 0.2rem rgba(13, 110, 253, 0.25);
+    }
+    
+    .card.bg-light {
+        background-color: #f8f9fa !important;
+    }
+    
+    .text-primary {
+        color: var(--primary-color) !important;
+    }
+</style>
+{% endblock %}
+
 {% block content %}
 <div class="row justify-content-center">
     <div class="col-lg-8">
@@ -62,10 +80,22 @@
                                 
                                 <div class="row">
                                     <div class="col-md-6 mb-3">
-                                        {{ form.start_date|as_crispy_field }}
+                                        <label for="id_start_date" class="form-label">Start Date *</label>
+                                        <input type="date" class="form-control" id="id_start_date" name="start_date" 
+                                               required
+                                               value="{% if form.instance.start_date %}{{ form.instance.start_date|date:'Y-m-d' }}{% endif %}">
+                                        <div class="invalid-feedback">
+                                            Please select a start date.
+                                        </div>
                                     </div>
                                     <div class="col-md-6 mb-3">
-                                        {{ form.due_date|as_crispy_field }}
+                                        <label for="id_due_date" class="form-label">Due Date *</label>
+                                        <input type="date" class="form-control" id="id_due_date" name="due_date" 
+                                               required
+                                               value="{% if form.instance.due_date %}{{ form.instance.due_date|date:'Y-m-d' }}{% endif %}">
+                                        <div class="invalid-feedback">
+                                            Please select a due date.
+                                        </div>
                                     </div>
                                 </div>
                                 
@@ -179,27 +209,45 @@
 </div>
 {% endblock %}
 
-{% block extra_css %}
-<style>
-    .form-control:focus,
-    .form-select:focus {
-        border-color: var(--primary-color);
-        box-shadow: 0 0 0 0.2rem rgba(13, 110, 253, 0.25);
-    }
-    
-    .card.bg-light {
-        background-color: #f8f9fa !important;
-    }
-    
-    .text-primary {
-        color: var(--primary-color) !important;
-    }
-</style>
-{% endblock %}
-
 {% block extra_js %}
 <script>
 document.addEventListener('DOMContentLoaded', function() {
+    // Get date inputs
+    const startDateInput = document.getElementById('id_start_date');
+    const dueDateInput = document.getElementById('id_due_date');
+    
+    // Set minimum dates
+    const today = new Date().toISOString().split('T')[0];
+    startDateInput.min = today;
+    dueDateInput.min = today;
+    
+    // Date validation function
+    function validateDates() {
+        const startDate = startDateInput.value;
+        const dueDate = dueDateInput.value;
+        
+        if (startDate && dueDate && startDate > dueDate) {
+            dueDateInput.classList.add('is-invalid');
+            dueDateInput.nextElementSibling.textContent = 'Due date must be after start date';
+        } else {
+            dueDateInput.classList.remove('is-invalid');
+            dueDateInput.nextElementSibling.textContent = '';
+        }
+    }
+    
+    // Update due date minimum when start date changes
+    startDateInput.addEventListener('change', function() {
+        if (this.value) {
+            dueDateInput.min = this.value;
+            validateDates();
+        }
+    });
+    
+    // Validate when due date changes
+    dueDateInput.addEventListener('change', function() {
+        validateDates();
+    });
+
     // Form validation
     const form = document.querySelector('.needs-validation');
     
@@ -233,6 +281,13 @@ document.addEventListener('DOMContentLoaded', function() {
             const input = form.querySelector(`[name="${key}"]`);
             if (input) {
                 input.value = data[key];
+                // Update date inputs if they have values
+                if (key === 'start_date' && data[key]) {
+                    startDateInput.value = data[key];
+                }
+                if (key === 'due_date' && data[key]) {
+                    dueDateInput.value = data[key];
+                }
             }
         });
     }
@@ -241,28 +296,6 @@ document.addEventListener('DOMContentLoaded', function() {
     form.addEventListener('submit', function() {
         localStorage.removeItem('projectFormData');
     });
-
-    // Date validation
-    const startDateInput = document.getElementById('id_start_date');
-    const dueDateInput = document.getElementById('id_due_date');
-    
-    if (startDateInput && dueDateInput) {
-        startDateInput.addEventListener('change', function() {
-            if (this.value && dueDateInput.value && this.value > dueDateInput.value) {
-                dueDateInput.setCustomValidity('Due date must be after start date');
-            } else {
-                dueDateInput.setCustomValidity('');
-            }
-        });
-        
-        dueDateInput.addEventListener('change', function() {
-            if (this.value && startDateInput.value && startDateInput.value > this.value) {
-                this.setCustomValidity('Due date must be after start date');
-            } else {
-                this.setCustomValidity('');
-            }
-        });
-    }
 });
 </script>
 {% endblock %}

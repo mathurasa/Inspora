@@ -6,6 +6,7 @@ from django.db import models
 from django.utils.translation import gettext_lazy as _
 from django.core.validators import RegexValidator
 from django.urls import reverse
+from django.utils import timezone
 
 
 class User(AbstractUser):
@@ -148,53 +149,210 @@ class TeamMembership(models.Model):
         super().save(*args, **kwargs)
 
 
+class SubscriptionPlan(models.Model):
+    """
+    Subscription plan model for different pricing tiers.
+    """
+    PLAN_CHOICES = [
+        ('free', 'Free'),
+        ('starter', 'Starter'),
+        ('professional', 'Professional'),
+        ('enterprise', 'Enterprise'),
+    ]
+    
+    BILLING_CHOICES = [
+        ('monthly', 'Monthly'),
+        ('yearly', 'Yearly'),
+    ]
+    
+    name = models.CharField(max_length=50, choices=PLAN_CHOICES, unique=True)
+    display_name = models.CharField(max_length=100)
+    description = models.TextField()
+    
+    # Pricing
+    monthly_price = models.DecimalField(max_digits=10, decimal_places=2, default=0)
+    yearly_price = models.DecimalField(max_digits=10, decimal_places=2, default=0)
+    
+    # Features
+    max_team_members = models.PositiveIntegerField(default=3)
+    max_projects = models.PositiveIntegerField(default=2)
+    max_storage_gb = models.PositiveIntegerField(default=1)
+    
+    # Plan features
+    features = models.JSONField(default=dict)
+    
+    # Plan status
+    is_active = models.BooleanField(default=True)
+    is_popular = models.BooleanField(default=False)
+    
+    # Metadata
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+    
+    class Meta:
+        ordering = ['monthly_price']
+        verbose_name = _('Subscription Plan')
+        verbose_name_plural = _('Subscription Plans')
+    
+    def __str__(self):
+        return self.display_name
+    
+    def get_price(self, billing_cycle):
+        """Return price for specific billing cycle."""
+        return self.yearly_price if billing_cycle == 'yearly' else self.monthly_price
+    
+    def get_discount_percentage(self):
+        """Calculate discount percentage for yearly billing."""
+        if self.monthly_price > 0:
+            yearly_total = self.monthly_price * 12
+            discount = ((yearly_total - self.yearly_price) / yearly_total) * 100
+            return round(discount, 1)
+        return 0
+
+
+class PaymentMethod(models.Model):
+    """
+    Payment method model for storing user payment information.
+    """
+    PAYMENT_TYPES = [
+        ('card', 'Credit/Debit Card'),
+        ('bank', 'Bank Transfer'),
+        ('paypal', 'PayPal'),
+    ]
+    
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='payment_methods')
+    payment_type = models.CharField(max_length=20, choices=PAYMENT_TYPES, default='card')
+    
+    # Card information (encrypted in production)
+    card_last4 = models.CharField(max_length=4, blank=True)
+    card_brand = models.CharField(max_length=20, blank=True)  # visa, mastercard, etc.
+    card_exp_month = models.PositiveIntegerField(null=True, blank=True)
+    card_exp_year = models.PositiveIntegerField(null=True)
+    
+    # Payment provider IDs
+    stripe_payment_method_id = models.CharField(max_length=100, blank=True)
+    stripe_customer_id = models.CharField(max_length=100, blank=True)
+    
+    # Status
+    is_default = models.BooleanField(default=False)
+    is_active = models.BooleanField(default=True)
+    
+    # Metadata
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+    
+    class Meta:
+        verbose_name = _('Payment Method')
+        verbose_name_plural = _('Payment Methods')
+        ordering = ['-is_default', '-created_at']
+    
+    def __str__(self):
+        if self.payment_type == 'card':
+            return f"{self.card_brand.title()} ****{self.card_last4}"
+        return f"{self.get_payment_type_display()} - {self.user.username}"
+    
+    def save(self, *args, **kwargs):
+        # Ensure only one default payment method per user
+        if self.is_default:
+            PaymentMethod.objects.filter(user=self.user, is_default=True).update(is_default=False)
+        super().save(*args, **kwargs)
+
+
+class UserSubscription(models.Model):
+    """
+    User subscription model to track user's current plan.
+    """
+    STATUS_CHOICES = [
+        ('active', 'Active'),
+        ('trial', 'Trial'),
+        ('expired', 'Expired'),
+        ('cancelled', 'Cancelled'),
+        ('past_due', 'Past Due'),
+        ('unpaid', 'Unpaid'),
+    ]
+    
+    user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='subscription')
+    plan = models.ForeignKey(SubscriptionPlan, on_delete=models.CASCADE)
+    billing_cycle = models.CharField(max_length=20, choices=SubscriptionPlan.BILLING_CHOICES, default='monthly')
+    
+    # Subscription details
+    status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='trial')
+    start_date = models.DateTimeField(auto_now_add=True)
+    end_date = models.DateTimeField(null=True, blank=True)
+    trial_end_date = models.DateTimeField(null=True, blank=True)
+    next_billing_date = models.DateTimeField(null=True, blank=True)
+    
+    # Payment details
+    payment_method = models.ForeignKey(PaymentMethod, on_delete=models.SET_NULL, null=True, blank=True)
+    stripe_subscription_id = models.CharField(max_length=100, blank=True)
+    stripe_invoice_id = models.CharField(max_length=100, blank=True)
+    
+    # Billing amounts
+    amount_paid = models.DecimalField(max_digits=10, decimal_places=2, default=0)
+    next_billing_amount = models.DecimalField(max_digits=10, decimal_places=2, default=0)
+    
+    # Metadata
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+    
+    class Meta:
+        verbose_name = _('User Subscription')
+        verbose_name_plural = _('User Subscriptions')
+        ordering = ['-created_at']
+    
+    def __str__(self):
+        return f"{self.user.username} - {self.plan.display_name}"
+    
+    def is_active(self):
+        """Check if subscription is currently active."""
+        if self.status == 'active':
+            if self.end_date:
+                return self.end_date > timezone.now()
+            return True
+        return False
+    
+    def is_trial_active(self):
+        """Check if trial period is still active."""
+        if self.trial_end_date:
+            return self.trial_end_date > timezone.now()
+        return False
+    
+    def get_next_billing_amount(self):
+        """Get the amount for the next billing cycle."""
+        if self.billing_cycle == 'yearly':
+            return self.plan.yearly_price
+        return self.plan.monthly_price
+
+
 class UserProfile(models.Model):
     """
-    Extended user profile information.
+    Extended user profile with additional information.
     """
     user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='profile')
     
-    # Personal information
-    date_of_birth = models.DateField(null=True, blank=True)
-    gender = models.CharField(max_length=20, blank=True, choices=[
-        ('male', 'Male'),
-        ('female', 'Female'),
-        ('other', 'Other'),
-        ('prefer_not_to_say', 'Prefer not to say'),
-    ])
+    # Company information
+    company_name = models.CharField(max_length=200, blank=True)
+    company_size = models.CharField(max_length=50, blank=True)
+    industry = models.CharField(max_length=100, blank=True)
     
-    # Address
-    address_line_1 = models.CharField(max_length=255, blank=True)
-    address_line_2 = models.CharField(max_length=255, blank=True)
-    city = models.CharField(max_length=100, blank=True)
-    state = models.CharField(max_length=100, blank=True)
-    postal_code = models.CharField(max_length=20, blank=True)
-    country = models.CharField(max_length=100, blank=True)
+    # Professional details
+    years_experience = models.PositiveIntegerField(default=0)
+    skills = models.JSONField(default=list)
     
-    # Social media
-    linkedin_url = models.URLField(blank=True)
-    twitter_url = models.URLField(blank=True)
-    github_url = models.URLField(blank=True)
+    # Preferences
+    preferred_contact_method = models.CharField(max_length=20, default='email')
+    marketing_consent = models.BooleanField(default=False)
     
-    # Work preferences
-    work_schedule = models.CharField(max_length=50, blank=True)
-    preferred_communication = models.CharField(max_length=50, blank=True, choices=[
-        ('email', 'Email'),
-        ('slack', 'Slack'),
-        ('teams', 'Microsoft Teams'),
-        ('phone', 'Phone'),
-        ('in_person', 'In Person'),
-    ])
+    # Metadata
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
     
     class Meta:
         verbose_name = _('User Profile')
         verbose_name_plural = _('User Profiles')
     
     def __str__(self):
-        return f"Profile for {self.user.username}"
-    
-    def get_absolute_url(self):
-        return reverse('accounts:profile', kwargs={'pk': self.pk})
+        return f"{self.user.username} Profile"
 
 
 class UserSession(models.Model):
@@ -316,3 +474,213 @@ class AIKnowledgeBase(models.Model):
     
     def __str__(self):
         return self.title
+
+
+class GoogleDriveIntegration(models.Model):
+    """
+    Google Drive integration for document management.
+    """
+    user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='google_drive')
+    
+    # OAuth2 credentials
+    access_token = models.TextField()
+    refresh_token = models.TextField()
+    token_expiry = models.DateTimeField()
+    
+    # Drive information
+    drive_id = models.CharField(max_length=100, blank=True)
+    drive_name = models.CharField(max_length=200, blank=True)
+    
+    # Settings
+    auto_sync = models.BooleanField(default=True)
+    sync_frequency = models.CharField(max_length=20, choices=[
+        ('hourly', 'Hourly'),
+        ('daily', 'Daily'),
+        ('weekly', 'Weekly'),
+        ('manual', 'Manual Only'),
+    ], default='daily')
+    
+    # Status
+    is_active = models.BooleanField(default=True)
+    last_sync = models.DateTimeField(null=True, blank=True)
+    
+    # Metadata
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+    
+    class Meta:
+        verbose_name = _('Google Drive Integration')
+        verbose_name_plural = _('Google Drive Integrations')
+    
+    def __str__(self):
+        return f"{self.user.username} - Google Drive"
+    
+    def is_token_expired(self):
+        """Check if the access token has expired."""
+        from django.utils import timezone
+        return timezone.now() > self.token_expiry
+
+
+class GitHubIntegration(models.Model):
+    """
+    GitHub integration for repository and file management.
+    """
+    user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='github')
+    
+    # OAuth2 credentials
+    access_token = models.TextField()
+    token_type = models.CharField(max_length=20, default='Bearer')
+    
+    # GitHub information
+    github_username = models.CharField(max_length=100, blank=True)
+    github_email = models.EmailField(blank=True)
+    
+    # Settings
+    auto_sync = models.BooleanField(default=True)
+    sync_frequency = models.CharField(max_length=20, choices=[
+        ('hourly', 'Hourly'),
+        ('daily', 'Daily'),
+        ('weekly', 'Weekly'),
+        ('manual', 'Manual Only'),
+    ], default='daily')
+    
+    # Repository settings
+    default_repo = models.CharField(max_length=200, blank=True)
+    sync_private_repos = models.BooleanField(default=False)
+    
+    # Status
+    is_active = models.BooleanField(default=True)
+    last_sync = models.DateTimeField(null=True, blank=True)
+    
+    # Metadata
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+    
+    class Meta:
+        verbose_name = _('GitHub Integration')
+        verbose_name_plural = _('GitHub Integrations')
+    
+    def __str__(self):
+        return f"{self.user.username} - GitHub"
+
+
+class Document(models.Model):
+    """
+    Document model for managing files from various sources.
+    """
+    SOURCE_CHOICES = [
+        ('local', 'Local Upload'),
+        ('google_drive', 'Google Drive'),
+        ('github', 'GitHub'),
+        ('dropbox', 'Dropbox'),
+        ('onedrive', 'OneDrive'),
+    ]
+    
+    FILE_TYPES = [
+        ('document', 'Document'),
+        ('spreadsheet', 'Spreadsheet'),
+        ('presentation', 'Presentation'),
+        ('image', 'Image'),
+        ('video', 'Video'),
+        ('audio', 'Audio'),
+        ('archive', 'Archive'),
+        ('other', 'Other'),
+    ]
+    
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='documents')
+    title = models.CharField(max_length=200)
+    description = models.TextField(blank=True)
+    
+    # File information
+    file_name = models.CharField(max_length=255)
+    file_size = models.BigIntegerField(default=0)  # in bytes
+    file_type = models.CharField(max_length=20, choices=FILE_TYPES, default='document')
+    mime_type = models.CharField(max_length=100, blank=True)
+    
+    # Source information
+    source = models.CharField(max_length=20, choices=SOURCE_CHOICES, default='local')
+    source_id = models.CharField(max_length=255, blank=True)  # ID from source system
+    source_url = models.URLField(blank=True)
+    
+    # File storage
+    local_file = models.FileField(upload_to='documents/', null=True, blank=True)
+    
+    # Sharing and permissions
+    is_public = models.BooleanField(default=False)
+    shared_with = models.ManyToManyField(User, related_name='shared_documents', blank=True)
+    
+    # Tags and organization
+    tags = models.JSONField(default=list)
+    folder = models.CharField(max_length=100, blank=True)
+    
+    # Status
+    is_active = models.BooleanField(default=True)
+    is_deleted = models.BooleanField(default=False)
+    
+    # Metadata
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+    last_accessed = models.DateTimeField(auto_now=True)
+    
+    class Meta:
+        ordering = ['-updated_at']
+        verbose_name = _('Document')
+        verbose_name_plural = _('Documents')
+    
+    def __str__(self):
+        return self.title
+    
+    def get_file_size_display(self):
+        """Return human-readable file size."""
+        for unit in ['B', 'KB', 'MB', 'GB']:
+            if self.file_size < 1024.0:
+                return f"{self.file_size:.1f} {unit}"
+            self.file_size /= 1024.0
+        return f"{self.file_size:.1f} TB"
+    
+    def get_download_url(self):
+        """Get download URL based on source."""
+        if self.source == 'local' and self.local_file:
+            return self.local_file.url
+        elif self.source_url:
+            return self.source_url
+        return None
+    
+    def can_access(self, user):
+        """Check if user can access this document."""
+        return (self.user == user or 
+                self.is_public or 
+                user in self.shared_with.all())
+
+
+class DocumentVersion(models.Model):
+    """
+    Version history for documents.
+    """
+    document = models.ForeignKey(Document, on_delete=models.CASCADE, related_name='versions')
+    version_number = models.PositiveIntegerField()
+    
+    # File information
+    file_name = models.CharField(max_length=255)
+    file_size = models.BigIntegerField()
+    mime_type = models.CharField(max_length=100)
+    
+    # Storage
+    local_file = models.FileField(upload_to='document_versions/', null=True, blank=True)
+    source_url = models.URLField(blank=True)
+    
+    # Change information
+    change_description = models.TextField(blank=True)
+    changed_by = models.ForeignKey(User, on_delete=models.CASCADE)
+    
+    # Metadata
+    created_at = models.DateTimeField(auto_now_add=True)
+    
+    class Meta:
+        ordering = ['-version_number']
+        unique_together = ['document', 'version_number']
+        verbose_name = _('Document Version')
+        verbose_name_plural = _('Document Versions')
+    
+    def __str__(self):
+        return f"{self.document.title} v{self.version_number}"

@@ -33,20 +33,21 @@ INSTALLED_APPS = [
     'channels',
     'crispy_forms',
     'crispy_bootstrap5',
-                    'django_filters',
+    'django_filters',
     
-                    # Local apps
-                'accounts',
-                'projects',
-                'tasks',
-                'goals',
-                'forms',
-                'audit',
-                'automations',
-                'portfolios',
-                'notifications_app',
-                'templates_app',
-                'solutions_app',
+    # Local apps
+    'accounts',
+    'projects',
+    'tasks',
+    'goals',
+    'forms',
+    'audit',
+    'automations',
+    'portfolios',
+    'notifications_app',
+    'templates_app',
+    'solutions_app',
+    'integrations',
 ]
 
 MIDDLEWARE = [
@@ -141,9 +142,9 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 AUTH_USER_MODEL = 'accounts.User'
 
 # Login URL configuration
-LOGIN_URL = '/login/'
+LOGIN_URL = '/dashboard/login/'
 LOGIN_REDIRECT_URL = '/'
-LOGOUT_REDIRECT_URL = '/login/'
+LOGOUT_REDIRECT_URL = '/dashboard/login/'
 
 # REST Framework settings
 REST_FRAMEWORK = {

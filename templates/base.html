@@ -4,87 +4,435 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{% block title %}Inspora - Work Management Platform{% endblock %}</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
         :root {
-            --primary-color: #f06a6f;
-            --secondary-color: #6c757d;
-            --success-color: #28a745;
-            --info-color: #17a2b8;
-            --warning-color: #ffc107;
-            --danger-color: #dc3545;
+            --primary-color: #6366f1;
+            --primary-dark: #4f46e5;
+            --primary-light: #a5b4fc;
+            --secondary-color: #64748b;
+            --success-color: #10b981;
+            --info-color: #06b6d4;
+            --warning-color: #f59e0b;
+            --danger-color: #ef4444;
+            --dark-color: #1e293b;
+            --light-color: #f8fafc;
+            --border-color: #e2e8f0;
+            --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+            --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+            --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+            --shadow-xl: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
         }
         
         body {
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             min-height: 100vh;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            font-weight: 400;
+            line-height: 1.6;
+        }
+        
+        /* Modern Navbar Styling */
+        .navbar {
+            background: rgba(30, 41, 59, 0.95) !important;
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 1rem 0;
+            transition: all 0.3s ease;
         }
         
         .navbar-brand {
             font-weight: 700;
-            font-size: 1.8rem;
+            font-size: 1.75rem;
             color: var(--primary-color) !important;
+            text-decoration: none;
+            transition: all 0.3s ease;
         }
         
-        .main-content {
-            padding: 2rem 0;
+        .navbar-brand:hover {
+            color: var(--primary-light) !important;
+            transform: translateY(-1px);
         }
         
-        .card {
-            background: rgba(255, 255, 255, 0.95);
-            border-radius: 15px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
-            border: none;
+        .navbar-nav .nav-link {
+            color: rgba(255, 255, 255, 0.8) !important;
+            font-weight: 500;
+            padding: 0.5rem 1rem !important;
+            margin: 0 0.25rem;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+            position: relative;
         }
         
-        .btn-primary {
-            background: var(--primary-color);
-            border-color: var(--primary-color);
+        .navbar-nav .nav-link:hover,
+        .navbar-nav .nav-link.active {
+            color: white !important;
+            background: rgba(255, 255, 255, 0.1);
+            transform: translateY(-1px);
         }
         
-        .btn-primary:hover {
-            background: #e55a5f;
-            border-color: #e55a5f;
+        .navbar-nav .nav-link i {
+            margin-right: 0.5rem;
+            width: 16px;
+            text-align: center;
         }
         
-        /* Resources dropdown styling */
-        .dropdown-menu-lg {
-            width: 800px;
-            padding: 1rem;
-        }
-        
-        .dropdown-header {
-            color: var(--primary-color);
-            font-size: 0.75rem;
-            letter-spacing: 0.5px;
-            padding: 0.5rem 1rem;
-            margin-bottom: 0.5rem;
+        /* Modern Dropdown Styling */
+        .dropdown-menu {
+            background: rgba(30, 41, 59, 0.98);
+            backdrop-filter: blur(15px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            box-shadow: var(--shadow-xl);
+            padding: 0.75rem 0;
+            margin-top: 0.5rem;
         }
         
         .dropdown-item {
-            padding: 0.5rem 1rem;
-            border-radius: 5px;
-            margin: 0.25rem 0;
+            color: rgba(255, 255, 255, 0.8);
+            padding: 0.75rem 1.5rem;
+            font-weight: 500;
             transition: all 0.2s ease;
         }
         
         .dropdown-item:hover {
-            background-color: rgba(240, 106, 111, 0.1);
-            color: var(--primary-color);
+            background: rgba(99, 102, 241, 0.1);
+            color: white;
+            transform: translateX(5px);
         }
         
         .dropdown-item i {
             width: 20px;
             text-align: center;
+            margin-right: 0.75rem;
+        }
+        
+        /* Main Content Styling */
+        .main-content {
+            padding: 2rem 0;
+            min-height: calc(100vh - 200px);
+        }
+        
+        /* Modern Card Styling */
+        .card {
+            background: rgba(255, 255, 255, 0.98);
+            border: none;
+            border-radius: 16px;
+            box-shadow: var(--shadow-lg);
+            transition: all 0.3s ease;
+            overflow: hidden;
+        }
+        
+        .card:hover {
+            transform: translateY(-4px);
+            box-shadow: var(--shadow-xl);
+        }
+        
+        .card-header {
+            background: linear-gradient(135deg, var(--primary-color), var(--primary-dark));
+            color: white;
+            border: none;
+            padding: 1.5rem;
+            font-weight: 600;
+        }
+        
+        .card-body {
+            padding: 1.5rem;
+        }
+        
+        /* Modern Button Styling */
+        .btn {
+            font-weight: 600;
+            padding: 0.75rem 1.5rem;
+            border-radius: 10px;
+            border: none;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .btn-primary {
+            background: linear-gradient(135deg, var(--primary-color), var(--primary-dark));
+            color: white;
+            box-shadow: var(--shadow-md);
+        }
+        
+        .btn-primary:hover {
+            background: linear-gradient(135deg, var(--primary-dark), var(--primary-color));
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-lg);
+            color: white;
+        }
+        
+        .btn-secondary {
+            background: linear-gradient(135deg, var(--secondary-color), #475569);
+            color: white;
+        }
+        
+        .btn-success {
+            background: linear-gradient(135deg, var(--success-color), #059669);
+            color: white;
+        }
+        
+        .btn-warning {
+            background: linear-gradient(135deg, var(--warning-color), #d97706);
+            color: white;
+        }
+        
+        .btn-danger {
+            background: linear-gradient(135deg, var(--danger-color), #dc2626);
+            color: white;
+        }
+        
+        .btn-outline-primary {
+            border: 2px solid var(--primary-color);
+            color: var(--primary-color);
+            background: transparent;
+        }
+        
+        .btn-outline-primary:hover {
+            background: var(--primary-color);
+            color: white;
+            transform: translateY(-2px);
+        }
+        
+        /* Modern Form Styling */
+        .form-control, .form-select {
+            border: 2px solid var(--border-color);
+            border-radius: 10px;
+            padding: 0.75rem 1rem;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            background: white;
+        }
+        
+        .form-control:focus, .form-select:focus {
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
+            transform: translateY(-1px);
+        }
+        
+        .form-label {
+            font-weight: 600;
+            color: var(--dark-color);
+            margin-bottom: 0.5rem;
+        }
+        
+        /* Modern Table Styling */
+        .table {
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: var(--shadow-md);
+        }
+        
+        .table thead th {
+            background: linear-gradient(135deg, var(--primary-color), var(--primary-dark));
+            color: white;
+            border: none;
+            padding: 1rem;
+            font-weight: 600;
+        }
+        
+        .table tbody tr {
+            transition: all 0.2s ease;
+        }
+        
+        .table tbody tr:hover {
+            background: rgba(99, 102, 241, 0.05);
+            transform: scale(1.01);
+        }
+        
+        /* Modern Badge Styling */
+        .badge {
+            font-weight: 600;
+            padding: 0.5rem 0.75rem;
+            border-radius: 8px;
+            font-size: 0.75rem;
+        }
+        
+        .badge.bg-primary {
+            background: linear-gradient(135deg, var(--primary-color), var(--primary-dark)) !important;
+        }
+        
+        .badge.bg-success {
+            background: linear-gradient(135deg, var(--success-color), #059669) !important;
+        }
+        
+        .badge.bg-warning {
+            background: linear-gradient(135deg, var(--warning-color), #d97706) !important;
+        }
+        
+        .badge.bg-danger {
+            background: linear-gradient(135deg, var(--danger-color), #dc2626) !important;
+        }
+        
+        /* Modern Alert Styling */
+        .alert {
+            border: none;
+            border-radius: 12px;
+            padding: 1rem 1.5rem;
+            font-weight: 500;
+            box-shadow: var(--shadow-sm);
+        }
+        
+        .alert-primary {
+            background: linear-gradient(135deg, rgba(99, 102, 241, 0.1), rgba(79, 70, 229, 0.1));
+            color: var(--primary-dark);
+            border-left: 4px solid var(--primary-color);
+        }
+        
+        .alert-success {
+            background: linear-gradient(135deg, rgba(16, 185, 129, 0.1), rgba(5, 150, 105, 0.1));
+            color: #059669;
+            border-left: 4px solid var(--success-color);
+        }
+        
+        /* Modern Footer Styling */
+        .footer {
+            background: rgba(30, 41, 59, 0.95);
+            backdrop-filter: blur(10px);
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            color: rgba(255, 255, 255, 0.8);
+            padding: 3rem 0 2rem;
+        }
+        
+        .footer h6 {
+            color: var(--primary-light);
+            font-weight: 600;
+            margin-bottom: 1.5rem;
+            font-size: 1.1rem;
+        }
+        
+        .footer a {
+            color: rgba(255, 255, 255, 0.8);
+            text-decoration: none;
+            transition: all 0.3s ease;
+            display: inline-block;
+            margin-bottom: 0.5rem;
+        }
+        
+        .footer a:hover {
+            color: var(--primary-light);
+            transform: translateX(5px);
+        }
+        
+        .footer .brand-section {
+            text-align: left;
+        }
+        
+        .footer .brand-section h6 {
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+        }
+        
+        /* Modern Progress Bar */
+        .progress {
+            height: 8px;
+            border-radius: 10px;
+            background: var(--border-color);
+            overflow: hidden;
+        }
+        
+        .progress-bar {
+            background: linear-gradient(135deg, var(--primary-color), var(--success-color));
+            border-radius: 10px;
+            transition: all 0.3s ease;
+        }
+        
+        /* Modern Search Bar */
+        .search-container {
+            position: relative;
+        }
+        
+        .search-container .form-control {
+            padding-left: 3rem;
+            background: white;
+            border-radius: 25px;
+            border: 2px solid var(--border-color);
+        }
+        
+        .search-container .search-icon {
+            position: absolute;
+            left: 1rem;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--secondary-color);
+            z-index: 10;
+        }
+        
+        /* Modern Filter Dropdowns */
+        .filter-dropdown {
+            background: white;
+            border: 2px solid var(--border-color);
+            border-radius: 10px;
+            padding: 0.5rem 1rem;
+            font-weight: 500;
+            min-width: 150px;
+        }
+        
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .navbar-brand {
+                font-size: 1.5rem;
+            }
+            
+            .main-content {
+                padding: 1rem 0;
+            }
+            
+            .card {
+                margin-bottom: 1rem;
+            }
+            
+            .footer .text-center {
+                text-align: left !important;
+                margin-bottom: 2rem;
+            }
+        }
+        
+        /* Animation Classes */
+        .fade-in {
+            animation: fadeIn 0.6s ease-in;
+        }
+        
+        .slide-up {
+            animation: slideUp 0.6s ease-out;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        
+        @keyframes slideUp {
+            from { transform: translateY(30px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+        
+        /* Glass Morphism Effect */
+        .glass-card {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+        }
+        
+        /* Modern Spacing Utilities */
+        .section-padding {
+            padding: 4rem 0;
+        }
+        
+        .section-margin {
+            margin: 4rem 0;
         }
     </style>
     {% block extra_css %}{% endblock %}
 </head>
 <body>
     <!-- Navigation -->
-    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <nav class="navbar navbar-expand-lg navbar-dark fixed-top">
         <div class="container">
             <a class="navbar-brand" href="/">
                 <i class="fas fa-rocket me-2"></i>Inspora
@@ -95,211 +443,112 @@
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav me-auto">
                     {% if user.is_authenticated %}
+
                         <li class="nav-item">
                             <a class="nav-link" href="/projects/">
-                                <i class="fas fa-project-diagram me-1"></i>Projects
+                                <i class="fas fa-project-diagram"></i>Projects
                             </a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link" href="/tasks/">
-                                <i class="fas fa-tasks me-1"></i>Tasks
+                                <i class="fas fa-tasks"></i>Tasks
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="/teams/">
-                                <i class="fas fa-users me-1"></i>Teams
+                            <a class="nav-link" href="{% url 'accounts:team_list' %}">
+                                <i class="fas fa-users"></i>Teams
                             </a>
                         </li>
                         <li class="nav-item dropdown">
-                            <a class="nav-link dropdown-toggle" href="#" id="aiDropdown" role="button" data-bs-toggle="dropdown">
-                                <i class="fas fa-robot me-1"></i>AI Assistant
+                            <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                <i class="fas fa-robot"></i>AI Assistant
                             </a>
                             <ul class="dropdown-menu">
+                                <li><a class="dropdown-item" href="{% url 'accounts:ai_dashboard' %}">
+                                    <i class="fas fa-tachometer-alt me-2"></i>AI Dashboard
+                                </a></li>
                                 <li><a class="dropdown-item" href="{% url 'accounts:ai_chat' %}">
-                                    <i class="fas fa-comments me-2"></i>Chat with AI
+                                    <i class="fas fa-comments me-2"></i>AI Chat
                                 </a></li>
                                 <li><a class="dropdown-item" href="{% url 'accounts:ai_suggestions' %}">
-                                    <i class="fas fa-lightbulb me-2"></i>Smart Suggestions
+                                    <i class="fas fa-lightbulb me-2"></i>AI Suggestions
                                 </a></li>
                                 <li><a class="dropdown-item" href="{% url 'accounts:ai_workflow' %}">
-                                    <i class="fas fa-cogs me-2"></i>Workflow Analysis
+                                    <i class="fas fa-project-diagram me-2"></i>AI Workflow
                                 </a></li>
                                 <li><a class="dropdown-item" href="{% url 'accounts:ai_knowledge' %}">
-                                    <i class="fas fa-search me-2"></i>Knowledge Search
-                                </a></li>
-                                <li><hr class="dropdown-divider"></li>
-                                <li><a class="dropdown-item" href="#" onclick="generateAISuggestions()">
-                                    <i class="fas fa-magic me-2"></i>Generate Suggestions
+                                    <i class="fas fa-search me-2"></i>AI Knowledge
                                 </a></li>
                             </ul>
                         </li>
+                        
+
+                        
+
                     {% endif %}
                 </ul>
-                
-                <ul class="navbar-nav me-3">
+                <ul class="navbar-nav">
                     <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle" href="#" id="solutionsDropdown" role="button" data-bs-toggle="dropdown">
-                            <i class="fas fa-puzzle-piece me-1"></i>Solutions
+                        <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
+                            <i class="fas fa-puzzle-piece"></i>Solutions
                         </a>
                         <ul class="dropdown-menu dropdown-menu-lg">
-                            <div class="row g-0">
-                                <div class="col-md-3">
-                                    <h6 class="dropdown-header text-uppercase fw-bold">COMPANY TYPE</h6>
-                                    <a class="dropdown-item" href="/solutions/enterprise/">
-                                        <i class="fas fa-building me-2"></i>Enterprise
-                                    </a>
-                                    <a class="dropdown-item" href="/solutions/small-business/">
-                                        <i class="fas fa-store me-2"></i>Small Business
-                                    </a>
-                                    <a class="dropdown-item" href="/solutions/nonprofit/">
-                                        <i class="fas fa-heart me-2"></i>Nonprofit
-                                    </a>
-                                    <a class="dropdown-item" href="/solutions/startup/">
-                                        <i class="fas fa-rocket me-2"></i>Startup
-                                    </a>
-                                </div>
-                                <div class="col-md-3">
-                                    <h6 class="dropdown-header text-uppercase fw-bold">TEAMS</h6>
-                                    <a class="dropdown-item" href="/solutions/operations/">
-                                        <i class="fas fa-cogs me-2"></i>Operations
-                                    </a>
-                                    <a class="dropdown-item" href="/solutions/marketing/">
-                                        <i class="fas fa-bullhorn me-2"></i>Marketing
-                                    </a>
-                                    <a class="dropdown-item" href="/solutions/it/">
-                                        <i class="fas fa-laptop-code me-2"></i>IT
-                                    </a>
-                                    <a class="dropdown-item" href="/solutions/leaders/">
-                                        <i class="fas fa-user-tie me-2"></i>Leaders
-                                    </a>
-                                    <a class="dropdown-item" href="/solutions/sales/">
-                                        <i class="fas fa-chart-line me-2"></i>Sales
-                                    </a>
-                                </div>
-                                <div class="col-md-3">
-                                    <h6 class="dropdown-header text-uppercase fw-bold">INDUSTRIES</h6>
-                                    <a class="dropdown-item" href="/solutions/healthcare/">
-                                        <i class="fas fa-heartbeat me-2"></i>Healthcare
-                                    </a>
-                                    <a class="dropdown-item" href="/solutions/retail/">
-                                        <i class="fas fa-shopping-cart me-2"></i>Retail
-                                    </a>
-                                    <a class="dropdown-item" href="/solutions/financial/">
-                                        <i class="fas fa-university me-2"></i>Financial Services
-                                    </a>
-                                    <a class="dropdown-item" href="/solutions/education/">
-                                        <i class="fas fa-graduation-cap me-2"></i>Education
-                                    </a>
-                                    <a class="dropdown-item" href="/solutions/manufacturing/">
-                                        <i class="fas fa-industry me-2"></i>Manufacturing
-                                    </a>
-                                </div>
-                                <div class="col-md-3">
-                                    <h6 class="dropdown-header text-uppercase fw-bold">USE CASES</h6>
-                                    <a class="dropdown-item" href="/solutions/goal-management/">
-                                        <i class="fas fa-bullseye me-2"></i>Goal Management
-                                    </a>
-                                    <a class="dropdown-item" href="/solutions/organizational-planning/">
-                                        <i class="fas fa-sitemap me-2"></i>Organizational Planning
-                                    </a>
-                                    <a class="dropdown-item" href="/solutions/project-intake/">
-                                        <i class="fas fa-inbox me-2"></i>Project Intake
-                                    </a>
-                                    <a class="dropdown-item" href="/solutions/resource-planning/">
-                                        <i class="fas fa-users-cog me-2"></i>Resource Planning
-                                    </a>
-                                    <a class="dropdown-item" href="/solutions/product-launches/">
-                                        <i class="fas fa-rocket me-2"></i>Product Launches
-                                    </a>
-                                    <a class="dropdown-item" href="/solutions/">
-                                        <i class="fas fa-arrow-right me-2"></i>View all use cases →
-                                    </a>
-                                </div>
-                            </div>
+                            <li><h6 class="dropdown-header">Industry Solutions</h6></li>
+                            <li><a class="dropdown-item" href="/solutions/enterprise/">
+                                <i class="fas fa-building"></i>Enterprise
+                            </a></li>
+                            <li><a class="dropdown-item" href="/solutions/healthcare/">
+                                <i class="fas fa-heartbeat"></i>Healthcare
+                            </a></li>
+                            <li><a class="dropdown-item" href="/solutions/financial/">
+                                <i class="fas fa-chart-line"></i>Financial
+                            </a></li>
+                            <li><a class="dropdown-item" href="/solutions/education/">
+                                <i class="fas fa-graduation-cap"></i>Education
+                            </a></li>
                         </ul>
                     </li>
                     <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle" href="#" id="resourcesDropdown" role="button" data-bs-toggle="dropdown">
-                            <i class="fas fa-book me-1"></i>Resources
+                        <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
+                            <i class="fas fa-book"></i>Resources
                         </a>
-                        <ul class="dropdown-menu dropdown-menu-lg">
-                            <div class="row g-0">
-                                <div class="col-md-3">
-                                    <h6 class="dropdown-header text-uppercase fw-bold">LEARN</h6>
-                                    <a class="dropdown-item" href="/resources/help/">
-                                        <i class="fas fa-question-circle me-2"></i>Help Center
-                                    </a>
-                                    <a class="dropdown-item" href="/resources/academy/">
-                                        <i class="fas fa-graduation-cap me-2"></i>Inspora Academy
-                                    </a>
-                                    <a class="dropdown-item" href="/resources/certifications/">
-                                        <i class="fas fa-certificate me-2"></i>Certifications
-                                    </a>
-                                    <a class="dropdown-item" href="/resources/forums/">
-                                        <i class="fas fa-comments me-2"></i>Community Forums
-                                    </a>
-                                </div>
-                                <div class="col-md-3">
-                                    <h6 class="dropdown-header text-uppercase fw-bold">DISCOVER</h6>
-                                    <a class="dropdown-item" href="/resources/work-management/">
-                                        <i class="fas fa-cogs me-2"></i>Work Management Hub
-                                    </a>
-                                    <a class="dropdown-item" href="/resources/customer-stories/">
-                                        <i class="fas fa-users me-2"></i>Customer Stories
-                                    </a>
-                                    <a class="dropdown-item" href="/resources/events/">
-                                        <i class="fas fa-calendar-alt me-2"></i>Events & Webinars
-                                    </a>
-                                </div>
-                                <div class="col-md-3">
-                                    <h6 class="dropdown-header text-uppercase fw-bold">SUPPORT</h6>
-                                    <a class="dropdown-item" href="/resources/support/">
-                                        <i class="fas fa-headset me-2"></i>Get Support
-                                    </a>
-                                    <a class="dropdown-item" href="/resources/developer/">
-                                        <i class="fas fa-code me-2"></i>Developer Support
-                                    </a>
-                                    <a class="dropdown-item" href="/resources/partners/">
-                                        <i class="fas fa-handshake me-2"></i>Partners
-                                    </a>
-                                </div>
-                                <div class="col-md-3">
-                                    <h6 class="dropdown-header text-uppercase fw-bold">TEMPLATES</h6>
-                                    <a class="dropdown-item" href="/resources/templates/projects/">
-                                        <i class="fas fa-project-diagram me-2"></i>Project Plans
-                                    </a>
-                                    <a class="dropdown-item" href="/resources/templates/goals/">
-                                        <i class="fas fa-bullseye me-2"></i>Team Goals
-                                    </a>
-                                    <a class="dropdown-item" href="/resources/templates/meetings/">
-                                        <i class="fas fa-users me-2"></i>Meeting Agendas
-                                    </a>
-                                    <a class="dropdown-item" href="/resources/templates/">
-                                        <i class="fas fa-arrow-right me-2"></i>View All Templates
-                                    </a>
-                                </div>
-                            </div>
+                        <ul class="dropdown-menu">
+                            <li><a class="dropdown-item" href="/resources/help/">
+                                <i class="fas fa-question-circle"></i>Help Center
+                            </a></li>
+                            <li><a class="dropdown-item" href="/resources/academy/">
+                                <i class="fas fa-graduation-cap"></i>Academy
+                            </a></li>
+                            <li><a class="dropdown-item" href="/resources/forums/">
+                                <i class="fas fa-comments"></i>Community
+                            </a></li>
+                            <li><a class="dropdown-item" href="/resources/support/">
+                                <i class="fas fa-headset"></i>Support
+                            </a></li>
                         </ul>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="/pricing/">
-                            <i class="fas fa-tags me-1"></i>Pricing
+                            <i class="fas fa-tags"></i>Pricing
                         </a>
                     </li>
-                </ul>
-                
-                <ul class="navbar-nav">
                     {% if user.is_authenticated %}
                         <li class="nav-item dropdown">
-                            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown">
-                                <i class="fas fa-user me-1"></i>{{ user.username }}
+                            <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
+                                <i class="fas fa-user-circle"></i>{{ user.username }}
                             </a>
                             <ul class="dropdown-menu">
-                                <li><a class="dropdown-item" href="/profile/">
-                                    <i class="fas fa-user-circle me-2"></i>Profile
+                                <li><a class="dropdown-item" href="{% url 'accounts:profile' %}">
+                                    <i class="fas fa-user me-2"></i>Profile
                                 </a></li>
-                                <li><a class="dropdown-item" href="/admin/" target="_blank">
-                                    <i class="fas fa-cog me-2"></i>Admin
+                                <li><a class="dropdown-item" href="{% url 'accounts:profile_edit' %}">
+                                    <i class="fas fa-camera me-2"></i>Edit Profile
+                                </a></li>
+                                <li><a class="dropdown-item" href="{% url 'accounts:user_settings' %}">
+                                    <i class="fas fa-cog me-2"></i>Settings
+                                </a></li>
+                                <li><a class="dropdown-item" href="{% url 'accounts:admin_dashboard' %}">
+                                    <i class="fas fa-cog me-2"></i>Admin Dashboard
                                 </a></li>
                                 <li><hr class="dropdown-divider"></li>
                                 <li><a class="dropdown-item" href="{% url 'accounts:logout' %}">
@@ -309,18 +558,18 @@
                         </li>
                     {% else %}
                         <li class="nav-item">
-                            <a class="nav-link" href="/login/">
-                                <i class="fas fa-sign-in-alt me-1"></i>Login
+                            <a class="nav-link" href="{% url 'accounts:login' %}">
+                                <i class="fas fa-sign-in-alt"></i>Login
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="/register/">
-                                <i class="fas fa-user-plus me-1"></i>Register
+                            <a class="nav-link" href="{% url 'accounts:register' %}">
+                                <i class="fas fa-user-plus"></i>Register
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="/admin/" target="_blank">
-                                <i class="fas fa-cog me-1"></i>Admin
+                            <a class="nav-link" href="{% url 'accounts:admin_dashboard' %}">
+                                <i class="fas fa-cog"></i>Admin Dashboard
                             </a>
                         </li>
                     {% endif %}
@@ -330,60 +579,62 @@
     </nav>
 
     <!-- Main Content -->
-    <div class="main-content">
+    <div class="main-content" style="margin-top: 80px;">
         <div class="container">
             {% block content %}{% endblock %}
         </div>
     </div>
 
     <!-- Footer -->
-    <footer class="text-center text-white py-4">
+    <footer class="footer">
         <div class="container">
             <div class="row">
-                <div class="col-md-4">
-                    <h6 class="text-light mb-3">🚀 Inspora</h6>
+                <div class="col-md-4 brand-section">
+                    <h6><i class="fas fa-rocket me-2"></i>🚀 Inspora</h6>
                     <p class="mb-2">
                         <strong>Enterprise Work Management Platform</strong>
                     </p>
-                    <small class="text-light">
+                    <small>
                         Built with Django, Django REST Framework, and modern web technologies
                     </small>
                 </div>
                 <div class="col-md-4">
-                    <h6 class="text-light mb-3">Contact Information</h6>
+                    <h6><i class="fas fa-address-card me-2"></i>Contact Information</h6>
                     <p class="mb-1">
                         <i class="fas fa-user me-2"></i><strong>Mathusha.P</strong>
                     </p>
                     <p class="mb-1">
                         <i class="fas fa-envelope me-2"></i>
-                        <a href="mailto:mathurasa98@gmail.com" class="text-light text-decoration-none">
+                        <a href="mailto:mathurasa98@gmail.com">
                             mathurasa98@gmail.com
                         </a>
                     </p>
                 </div>
                 <div class="col-md-4">
-                    <h6 class="text-light mb-3">Quick Links</h6>
+                    <h6><i class="fas fa-link me-2"></i>Quick Links</h6>
                     <div class="d-flex flex-column">
-                        <a href="/solutions/" class="text-light text-decoration-none mb-1">
+                        <a href="/solutions/">
                             <i class="fas fa-puzzle-piece me-2"></i>Solutions
                         </a>
-                        <a href="/pricing/" class="text-light text-decoration-none mb-1">
+                        <a href="/pricing/">
                             <i class="fas fa-tags me-2"></i>Pricing
                         </a>
-                        <a href="/resources/support/" class="text-light text-decoration-none mb-1">
+                        <a href="/resources/support/">
                             <i class="fas fa-headset me-2"></i>Support
                         </a>
                     </div>
                 </div>
             </div>
-            <hr class="my-3">
-            <small class="text-light">
-                © 2024 Inspora. All rights reserved.
-            </small>
+            <hr class="my-4" style="border-color: rgba(255, 255, 255, 0.1);">
+            <div class="text-center">
+                <small>
+                    © 2024 Inspora. All rights reserved.
+                </small>
+            </div>
         </div>
     </footer>
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
     
     <!-- AI Assistant JavaScript -->
     <script>
@@ -459,12 +710,468 @@
             }
         }
         
+        
+        
         // Initialize AI features when page loads
         document.addEventListener('DOMContentLoaded', function() {
             initAIChat();
+            initNotifications();
+            
+            // Add fade-in animation to cards
+            const cards = document.querySelectorAll('.card');
+            cards.forEach((card, index) => {
+                card.style.animationDelay = `${index * 0.1}s`;
+                card.classList.add('fade-in');
+            });
+            
+            // Add slide-up animation to sections
+            const sections = document.querySelectorAll('.row');
+            sections.forEach((section, index) => {
+                section.style.animationDelay = `${index * 0.2}s`;
+                section.classList.add('slide-up');
+            });
         });
     </script>
     
     {% block extra_js %}{% endblock %}
+    
+    <!-- Chat Support Widget - Only on Login Page -->
+    {% if request.resolver_match.url_name == 'login' %}
+    <div class="chat-widget">
+        <div class="chat-header">
+            <div class="chat-avatars">
+                <div class="chat-avatar">👤</div>
+                <div class="chat-avatar">👤</div>
+                <div class="chat-avatar ai">✨</div>
+            </div>
+            <div class="chat-title">Can I help answer any questions?</div>
+        </div>
+        
+        <div class="chat-body">
+            We're standing by to chat now, or take your time browsing!
+        </div>
+        
+        <div class="chat-actions">
+            <button class="chat-btn">Chat now</button>
+            <button class="chat-btn">I'm not ready to chat</button>
+            <button class="chat-btn">I am looking for support</button>
+        </div>
+        
+        <div class="chat-footer">
+            By continuing, you agree to our privacy policy. This conversation may be recorded for training purposes.
+        </div>
+    </div>
+    
+    <!-- Chat Widget CSS - Only on Login Page -->
+    <style>
+        /* Chat Support Widget */
+        .chat-widget {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            width: 320px;
+            background: linear-gradient(135deg, #8B5CF6 0%, #7C3AED 100%);
+            border-radius: 16px;
+            padding: 1.5rem;
+            color: white;
+            box-shadow: 0 20px 40px rgba(139, 92, 246, 0.3);
+            z-index: 1000;
+            animation: slideInUp 0.6s ease-out 1s both;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .chat-header {
+            margin-bottom: 1rem;
+        }
+
+        .chat-avatars {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-bottom: 0.75rem;
+        }
+
+        .chat-avatar {
+            width: 32px;
+            height: 32px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1rem;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+        }
+
+        .chat-avatar.ai {
+            background: linear-gradient(135deg, #F59E0B, #F97316);
+            border-color: rgba(255, 255, 255, 0.4);
+        }
+
+        .chat-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            line-height: 1.4;
+            margin-bottom: 0.5rem;
+        }
+
+        .chat-body {
+            font-size: 0.95rem;
+            line-height: 1.5;
+            margin-bottom: 1.5rem;
+            opacity: 0.9;
+        }
+
+        .chat-actions {
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .chat-btn {
+            background: white;
+            color: #7C3AED;
+            border: none;
+            border-radius: 12px;
+            padding: 0.75rem 1rem;
+            font-size: 0.9rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-align: center;
+            width: 100%;
+        }
+
+        .chat-btn:hover {
+            background: #F8FAFC;
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+        }
+
+        .chat-btn:active {
+            transform: translateY(0);
+        }
+
+        .chat-footer {
+            font-size: 0.75rem;
+            opacity: 0.7;
+            line-height: 1.4;
+            text-align: center;
+            border-top: 1px solid rgba(255, 255, 255, 0.2);
+            padding-top: 1rem;
+        }
+
+        /* Chat Widget Animation */
+        @keyframes slideInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Responsive Chat Widget */
+        @media (max-width: 768px) {
+            .chat-widget {
+                bottom: 20px;
+                right: 20px;
+                left: 20px;
+                width: auto;
+                max-width: 400px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .chat-widget {
+                bottom: 15px;
+                right: 15px;
+                left: 15px;
+                padding: 1.25rem;
+            }
+            
+            .chat-title {
+                font-size: 1rem;
+            }
+            
+            .chat-body {
+                font-size: 0.9rem;
+            }
+        }
+    </style>
+    
+    <!-- Chat Widget JavaScript - Only on Login Page -->
+    <script>
+        // Chat Widget Functionality
+        document.addEventListener('DOMContentLoaded', function() {
+            const chatWidget = document.querySelector('.chat-widget');
+            const chatButtons = document.querySelectorAll('.chat-btn');
+            
+            if (chatWidget) {
+                // Chat button click handlers
+                chatButtons.forEach(button => {
+                    button.addEventListener('click', function() {
+                        const buttonText = this.textContent.trim();
+                        
+                        switch(buttonText) {
+                            case 'Chat now':
+                                handleChatNow();
+                                break;
+                            case 'I\'m not ready to chat':
+                                handleNotReady();
+                                break;
+                            case 'I am looking for support':
+                                handleSupportRequest();
+                                break;
+                        }
+                    });
+                });
+                
+                // Add hover effect to chat widget
+                chatWidget.addEventListener('mouseenter', function() {
+                    this.style.transform = 'translateY(-5px)';
+                    this.style.boxShadow = '0 25px 50px rgba(139, 92, 246, 0.4)';
+                });
+                
+                chatWidget.addEventListener('mouseleave', function() {
+                    this.style.transform = 'translateY(0)';
+                    this.style.boxShadow = '0 20px 40px rgba(139, 92, 246, 0.3)';
+                });
+            }
+        });
+
+        function handleChatNow() {
+            showNotification('Connecting you to our support team...', 'info');
+            
+            // Simulate chat connection
+            setTimeout(() => {
+                showNotification('Support team connected! Starting chat...', 'success');
+                
+                // Update chat widget to show chat interface
+                updateChatWidgetToChatMode();
+            }, 2000);
+        }
+
+        function handleNotReady() {
+            showNotification('No problem! Take your time. We\'re here when you need us.', 'info');
+            
+            // Hide chat widget temporarily
+            const chatWidget = document.querySelector('.chat-widget');
+            if (chatWidget) {
+                chatWidget.style.opacity = '0.5';
+                chatWidget.style.transform = 'scale(0.95)';
+                
+                setTimeout(() => {
+                    chatWidget.style.opacity = '1';
+                    chatWidget.style.transform = 'scale(1)';
+                }, 3000);
+            }
+        }
+
+        function handleSupportRequest() {
+            showNotification('Redirecting you to our support center...', 'info');
+            
+            // Simulate redirect to support
+            setTimeout(() => {
+                showNotification('Support center opened in new tab', 'success');
+            }, 1500);
+        }
+
+        function updateChatWidgetToChatMode() {
+            const chatWidget = document.querySelector('.chat-widget');
+            if (chatWidget) {
+                chatWidget.innerHTML = `
+                    <div class="chat-header">
+                        <div class="chat-avatars">
+                            <div class="chat-avatar">👤</div>
+                            <div class="chat-avatar ai">✨</div>
+                        </div>
+                        <div class="chat-title">Chat with Support</div>
+                    </div>
+                    
+                    <div class="chat-body">
+                        <div class="chat-message support">
+                            <div class="message-avatar">✨</div>
+                            <div class="message-content">
+                                Hi! I'm here to help. How can I assist you today?
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="chat-input-area">
+                        <input type="text" placeholder="Type your message..." class="chat-input">
+                        <button class="chat-send-btn">
+                            <i class="fas fa-paper-plane"></i>
+                        </button>
+                    </div>
+                    
+                    <div class="chat-footer">
+                        <small>Typing...</small>
+                    </div>
+                `;
+                
+                // Add chat input functionality
+                const chatInput = chatWidget.querySelector('.chat-input');
+                const sendBtn = chatWidget.querySelector('.chat-send-btn');
+                
+                if (chatInput && sendBtn) {
+                    sendBtn.addEventListener('click', sendChatMessage);
+                    chatInput.addEventListener('keypress', function(e) {
+                        if (e.key === 'Enter') {
+                            sendChatMessage();
+                        }
+                    });
+                }
+            }
+        }
+
+        function sendChatMessage() {
+            const chatInput = document.querySelector('.chat-input');
+            const chatBody = document.querySelector('.chat-body');
+            
+            if (chatInput && chatBody && chatInput.value.trim()) {
+                const message = chatInput.value.trim();
+                
+                // Add user message
+                const userMessage = document.createElement('div');
+                userMessage.className = 'chat-message user';
+                userMessage.innerHTML = `
+                    <div class="message-content">
+                        ${message}
+                    </div>
+                    <div class="message-avatar">👤</div>
+                `;
+                chatBody.appendChild(userMessage);
+                
+                // Clear input
+                chatInput.value = '';
+                
+                // Simulate support response
+                setTimeout(() => {
+                    const supportMessage = document.createElement('div');
+                    supportMessage.className = 'chat-message support';
+                    supportMessage.innerHTML = `
+                        <div class="message-avatar">✨</div>
+                        <div class="message-content">
+                            Thanks for your message! Our team will get back to you shortly.
+                        </div>
+                    `;
+                    chatBody.appendChild(supportMessage);
+                    
+                    // Scroll to bottom
+                    chatBody.scrollTop = chatBody.scrollHeight;
+                }, 1000);
+                
+                // Scroll to bottom
+                chatBody.scrollTop = chatBody.scrollHeight;
+            }
+        }
+
+        // Add CSS for chat mode
+        const chatModeStyles = document.createElement('style');
+        chatModeStyles.textContent = `
+            .chat-message {
+                display: flex;
+                align-items: flex-start;
+                gap: 0.75rem;
+                margin-bottom: 1rem;
+            }
+            
+            .chat-message.user {
+                flex-direction: row-reverse;
+            }
+            
+            .message-avatar {
+                width: 28px;
+                height: 28px;
+                background: rgba(255, 255, 255, 0.2);
+                border-radius: 50%;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                font-size: 0.875rem;
+                flex-shrink: 0;
+            }
+            
+            .message-content {
+                background: rgba(255, 255, 255, 0.1);
+                padding: 0.75rem;
+                border-radius: 12px;
+                max-width: 200px;
+                word-wrap: break-word;
+                line-height: 1.4;
+            }
+            
+            .chat-input-area {
+                display: flex;
+                gap: 0.5rem;
+                margin-bottom: 1rem;
+            }
+            
+            .chat-input {
+                flex: 1;
+                background: rgba(255, 255, 255, 0.1);
+                border: 1px solid rgba(255, 255, 255, 0.2);
+                border-radius: 20px;
+                padding: 0.75rem 1rem;
+                color: white;
+                font-size: 0.9rem;
+            }
+            
+            .chat-input::placeholder {
+                color: rgba(255, 255, 255, 0.6);
+            }
+            
+            .chat-input:focus {
+                outline: none;
+                border-color: rgba(255, 255, 255, 0.4);
+                background: rgba(255, 255, 255, 0.15);
+            }
+            
+            .chat-send-btn {
+                background: white;
+                color: #7C3AED;
+                border: none;
+                border-radius: 50%;
+                width: 40px;
+                height: 40px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                cursor: pointer;
+                transition: all 0.3s ease;
+            }
+            
+            .chat-send-btn:hover {
+                transform: scale(1.1);
+                box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+            }
+            
+            .chat-body {
+                max-height: 200px;
+                overflow-y: auto;
+                scrollbar-width: thin;
+                scrollbar-color: rgba(255, 255, 255, 0.3) transparent;
+            }
+            
+            .chat-body::-webkit-scrollbar {
+                width: 4px;
+            }
+            
+            .chat-body::-webkit-scrollbar-track {
+                background: transparent;
+            }
+            
+            .chat-body::-webkit-scrollbar-thumb {
+                background: rgba(255, 255, 255, 0.3);
+                background: rgba(255, 255, 255, 0.3);
+            }
+        `;
+        document.head.appendChild(chatModeStyles);
+    </script>
+    {% endif %}
 </body>
 </html>
