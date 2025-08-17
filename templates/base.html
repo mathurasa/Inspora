@@ -494,16 +494,16 @@
                         </a>
                         <ul class="dropdown-menu dropdown-menu-lg">
                             <li><h6 class="dropdown-header">Industry Solutions</h6></li>
-                            <li><a class="dropdown-item" href="/solutions/enterprise/">
+                            <li><a class="dropdown-item" href="{% url 'solutions:enterprise' %}">
                                 <i class="fas fa-building"></i>Enterprise
                             </a></li>
-                            <li><a class="dropdown-item" href="/solutions/healthcare/">
+                            <li><a class="dropdown-item" href="{% url 'solutions:healthcare' %}">
                                 <i class="fas fa-heartbeat"></i>Healthcare
                             </a></li>
-                            <li><a class="dropdown-item" href="/solutions/financial/">
+                            <li><a class="dropdown-item" href="{% url 'solutions:financial' %}">
                                 <i class="fas fa-chart-line"></i>Financial
                             </a></li>
-                            <li><a class="dropdown-item" href="/solutions/education/">
+                            <li><a class="dropdown-item" href="{% url 'solutions:education' %}">
                                 <i class="fas fa-graduation-cap"></i>Education
                             </a></li>
                         </ul>
@@ -513,22 +513,22 @@
                             <i class="fas fa-book"></i>Resources
                         </a>
                         <ul class="dropdown-menu">
-                            <li><a class="dropdown-item" href="/resources/help/">
+                            <li><a class="dropdown-item" href="{% url 'accounts:help_center' %}">
                                 <i class="fas fa-question-circle"></i>Help Center
                             </a></li>
-                            <li><a class="dropdown-item" href="/resources/academy/">
+                            <li><a class="dropdown-item" href="{% url 'accounts:academy' %}">
                                 <i class="fas fa-graduation-cap"></i>Academy
                             </a></li>
-                            <li><a class="dropdown-item" href="/resources/forums/">
+                            <li><a class="dropdown-item" href="{% url 'accounts:forums' %}">
                                 <i class="fas fa-comments"></i>Community
                             </a></li>
-                            <li><a class="dropdown-item" href="/resources/support/">
+                            <li><a class="dropdown-item" href="{% url 'accounts:support' %}">
                                 <i class="fas fa-headset"></i>Support
                             </a></li>
                         </ul>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="/pricing/">
+                        <a class="nav-link" href="{% url 'accounts:pricing' %}">
                             <i class="fas fa-tags"></i>Pricing
                         </a>
                     </li>
@@ -613,13 +613,13 @@
                 <div class="col-md-4">
                     <h6><i class="fas fa-link me-2"></i>Quick Links</h6>
                     <div class="d-flex flex-column">
-                        <a href="/solutions/">
+                        <a href="{% url 'solutions:overview' %}">
                             <i class="fas fa-puzzle-piece me-2"></i>Solutions
                         </a>
-                        <a href="/pricing/">
+                        <a href="{% url 'accounts:pricing' %}">
                             <i class="fas fa-tags me-2"></i>Pricing
                         </a>
-                        <a href="/resources/support/">
+                        <a href="{% url 'accounts:support' %}">
                             <i class="fas fa-headset me-2"></i>Support
                         </a>
                     </div>
