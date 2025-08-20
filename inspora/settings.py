@@ -48,6 +48,8 @@ INSTALLED_APPS = [
     'templates_app',
     'solutions_app',
     'integrations',
+    'blog',
+    'admin_system',
 ]
 
 MIDDLEWARE = [

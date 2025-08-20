@@ -1,0 +1,646 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Home Dashboard - Inspora{% endblock %}
+
+{% block extra_css %}
+<style>
+    body {
+        background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+        color: #e2e8f0;
+    }
+    
+    .home-hero {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        padding: 3rem 0;
+        margin-bottom: 2rem;
+        border-radius: 0 0 30px 30px;
+        box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+    }
+    
+    .quick-actions {
+        background: linear-gradient(135deg, #2d3748 0%, #4a5568 100%);
+        border-radius: 20px;
+        padding: 2rem;
+        margin-bottom: 2rem;
+        box-shadow: 0 15px 35px rgba(0, 0, 0, 0.4);
+        border: 1px solid #4a5568;
+    }
+    
+    .quick-action-card {
+        background: linear-gradient(135deg, #2d3748 0%, #1a202c 100%);
+        border: 2px solid #4a5568;
+        border-radius: 16px;
+        padding: 1.5rem;
+        text-align: center;
+        transition: all 0.3s ease;
+        cursor: pointer;
+        height: 100%;
+        color: #e2e8f0;
+    }
+    
+    .quick-action-card:hover {
+        transform: translateY(-8px);
+        border-color: #667eea;
+        box-shadow: 0 20px 40px rgba(102, 126, 234, 0.3);
+        background: linear-gradient(135deg, #4a5568 0%, #2d3748 100%);
+    }
+    
+    .quick-action-icon {
+        width: 60px;
+        height: 60px;
+        background: linear-gradient(135deg, #667eea, #764ba2);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0 auto 1rem;
+        color: white;
+        font-size: 1.5rem;
+        box-shadow: 0 8px 20px rgba(102, 126, 234, 0.4);
+    }
+    
+    .stats-card {
+        background: linear-gradient(135deg, #2d3748 0%, #1a202c 100%);
+        border-radius: 16px;
+        padding: 1.5rem;
+        border: 1px solid #4a5568;
+        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+        transition: all 0.3s ease;
+        color: #e2e8f0;
+    }
+    
+    .stats-card:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 15px 35px rgba(0, 0, 0, 0.4);
+        border-color: #667eea;
+    }
+    
+    .stats-number {
+        font-size: 2.5rem;
+        font-weight: 700;
+        background: linear-gradient(135deg, #667eea, #764ba2);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+    }
+    
+    .recent-activity {
+        background: linear-gradient(135deg, #2d3748 0%, #4a5568 100%);
+        border-radius: 20px;
+        padding: 2rem;
+        box-shadow: 0 15px 35px rgba(0, 0, 0, 0.4);
+        border: 1px solid #4a5568;
+        color: #e2e8f0;
+    }
+    
+    .activity-item {
+        display: flex;
+        align-items: center;
+        padding: 1rem 0;
+        border-bottom: 1px solid #4a5568;
+        transition: all 0.3s ease;
+    }
+    
+    .activity-item:last-child {
+        border-bottom: none;
+    }
+    
+    .activity-item:hover {
+        background: linear-gradient(135deg, #4a5568 0%, #2d3748 100%);
+        border-radius: 12px;
+        padding-left: 1rem;
+        padding-right: 1rem;
+        margin-left: -1rem;
+        margin-right: -1rem;
+        transform: translateX(5px);
+    }
+    
+    .activity-icon {
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-right: 1rem;
+        font-size: 1rem;
+        color: white;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+    }
+    
+    .activity-icon.project { background: linear-gradient(135deg, #667eea, #764ba2); }
+    .activity-icon.task { background: linear-gradient(135deg, #10b981, #059669); }
+    .activity-icon.team { background: linear-gradient(135deg, #f59e0b, #d97706); }
+    .activity-icon.notification { background: linear-gradient(135deg, #ef4444, #dc2626); }
+    
+    .project-card {
+        background: linear-gradient(135deg, #2d3748 0%, #1a202c 100%);
+        border-radius: 16px;
+        padding: 1.5rem;
+        border: 1px solid #4a5568;
+        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+        transition: all 0.3s ease;
+        height: 100%;
+        color: #e2e8f0;
+    }
+    
+    .project-card:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 15px 35px rgba(0, 0, 0, 0.4);
+        border-color: #667eea;
+    }
+    
+    .progress-bar {
+        height: 10px;
+        border-radius: 10px;
+        background: #4a5568;
+        overflow: hidden;
+        margin: 1rem 0;
+        box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.3);
+    }
+    
+    .progress-fill {
+        height: 100%;
+        border-radius: 10px;
+        transition: width 0.3s ease;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+    }
+    
+    .progress-fill.high { background: linear-gradient(135deg, #10b981, #059669); }
+    .progress-fill.medium { background: linear-gradient(135deg, #f59e0b, #d97706); }
+    .progress-fill.low { background: linear-gradient(135deg, #ef4444, #dc2626); }
+    
+    .welcome-message {
+        background: linear-gradient(135deg, rgba(102, 126, 234, 0.2), rgba(118, 75, 162, 0.2));
+        border: 1px solid rgba(102, 126, 234, 0.4);
+        border-radius: 16px;
+        padding: 1.5rem;
+        margin-bottom: 2rem;
+        backdrop-filter: blur(10px);
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+    }
+    
+    .welcome-message h2 {
+        color: #667eea;
+        margin-bottom: 0.5rem;
+        text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+    }
+    
+    .welcome-message p {
+        color: #e2e8f0;
+        margin-bottom: 0;
+    }
+    
+    .search-bar {
+        background: linear-gradient(135deg, #2d3748 0%, #1a202c 100%);
+        border-radius: 25px;
+        padding: 0.75rem 1.5rem;
+        border: 2px solid #4a5568;
+        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+        transition: all 0.3s ease;
+    }
+    
+    .search-bar:focus-within {
+        border-color: #667eea;
+        box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.2), 0 8px 25px rgba(0, 0, 0, 0.3);
+        transform: translateY(-2px);
+    }
+    
+    .search-input {
+        border: none;
+        outline: none;
+        width: 100%;
+        background: transparent;
+        color: #e2e8f0;
+    }
+    
+    .search-input::placeholder {
+        color: #a0aec0;
+    }
+    
+    .notification-badge {
+        position: absolute;
+        top: -8px;
+        right: -8px;
+        background: linear-gradient(135deg, #ef4444, #dc2626);
+        color: white;
+        border-radius: 50%;
+        width: 20px;
+        height: 20px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 0.75rem;
+        font-weight: 600;
+        box-shadow: 0 4px 15px rgba(239, 68, 68, 0.4);
+    }
+    
+    .btn-light {
+        background: linear-gradient(135deg, #e2e8f0 0%, #cbd5e0 100%);
+        border: none;
+        color: #2d3748;
+        font-weight: 600;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+        transition: all 0.3s ease;
+    }
+    
+    .btn-light:hover {
+        background: linear-gradient(135deg, #f7fafc 0%, #e2e8f0 100%);
+        transform: translateY(-2px);
+        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+    }
+    
+    .btn-outline-primary {
+        background: transparent;
+        border: 2px solid #667eea;
+        color: #667eea;
+        font-weight: 600;
+        transition: all 0.3s ease;
+    }
+    
+    .btn-outline-primary:hover {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        border-color: #667eea;
+        color: white;
+        transform: translateY(-2px);
+        box-shadow: 0 8px 25px rgba(102, 126, 234, 0.4);
+    }
+    
+    .badge {
+        font-weight: 600;
+        padding: 0.5rem 0.75rem;
+        border-radius: 20px;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+    }
+    
+    .bg-success {
+        background: linear-gradient(135deg, #10b981, #059669) !important;
+    }
+    
+    .bg-warning {
+        background: linear-gradient(135deg, #f59e0b, #d97706) !important;
+    }
+    
+    .text-muted {
+        color: #a0aec0 !important;
+    }
+    
+    .text-primary {
+        color: #667eea !important;
+    }
+    
+    .text-success {
+        color: #10b981 !important;
+    }
+    
+    .text-warning {
+        color: #f59e0b !important;
+    }
+    
+    /* Custom scrollbar */
+    ::-webkit-scrollbar {
+        width: 8px;
+    }
+    
+    ::-webkit-scrollbar-track {
+        background: #2d3748;
+        border-radius: 10px;
+    }
+    
+    ::-webkit-scrollbar-thumb {
+        background: linear-gradient(135deg, #667eea, #764ba2);
+        border-radius: 10px;
+    }
+    
+    ::-webkit-scrollbar-thumb:hover {
+        background: linear-gradient(135deg, #764ba2, #667eea);
+    }
+    
+    /* Animation for cards */
+    @keyframes fadeInUp {
+        from {
+            opacity: 0;
+            transform: translateY(30px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+    
+    .quick-action-card,
+    .stats-card,
+    .project-card {
+        animation: fadeInUp 0.6s ease-out;
+    }
+    
+    .quick-action-card:nth-child(1) { animation-delay: 0.1s; }
+    .quick-action-card:nth-child(2) { animation-delay: 0.2s; }
+    .quick-action-card:nth-child(3) { animation-delay: 0.3s; }
+    .quick-action-card:nth-child(4) { animation-delay: 0.4s; }
+</style>
+{% endblock %}
+
+{% block content %}
+<!-- Home Hero Section -->
+<section class="home-hero">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-lg-8">
+                <h1 class="display-5 fw-bold mb-3">Welcome back, {{ user.get_full_name|default:user.username }}! 👋</h1>
+                <p class="lead mb-4">Here's what's happening with your projects and team today</p>
+                
+                <!-- Search Bar -->
+                <div class="search-bar d-flex align-items-center">
+                    <i class="fas fa-search text-muted me-3"></i>
+                    <input type="text" class="search-input" placeholder="Search projects, tasks, or team members...">
+                    <button class="btn btn-light ms-3">
+                        <i class="fas fa-arrow-right"></i>
+                    </button>
+                </div>
+            </div>
+            <div class="col-lg-4 text-center">
+                <div class="position-relative d-inline-block">
+                    <div class="bg-white bg-opacity-20 rounded-circle p-4">
+                        <i class="fas fa-rocket fa-3x"></i>
+                    </div>
+                    <div class="notification-badge">3</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<div class="container">
+    <!-- Welcome Message -->
+    <div class="welcome-message">
+        <h2><i class="fas fa-sun me-2"></i>Good morning!</h2>
+        <p>You have <strong>5 tasks</strong> due today and <strong>2 projects</strong> that need your attention.</p>
+    </div>
+    
+    <!-- Quick Actions -->
+    <div class="quick-actions">
+        <h3 class="mb-4"><i class="fas fa-bolt me-2"></i>Quick Actions</h3>
+        <div class="row g-4">
+            <div class="col-lg-3 col-md-6">
+                <div class="quick-action-card" onclick="window.location.href='/tasks/'">
+                    <div class="quick-action-icon">
+                        <i class="fas fa-plus"></i>
+                    </div>
+                    <h5>New Task</h5>
+                    <p class="text-muted small">Create a new task or to-do item</p>
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-6">
+                <div class="quick-action-card" onclick="window.location.href='/projects/'">
+                    <div class="quick-action-icon">
+                        <i class="fas fa-project-diagram"></i>
+                    </div>
+                    <h5>New Project</h5>
+                    <p class="text-muted small">Start a new project</p>
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-6">
+                <div class="quick-action-card" onclick="window.location.href='/dashboard/team/'">
+                    <div class="quick-action-icon">
+                        <i class="fas fa-users"></i>
+                    </div>
+                    <h5>Invite Team</h5>
+                    <p class="text-muted small">Add new team members</p>
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-6">
+                <div class="quick-action-card" onclick="window.location.href='/dashboard/ai/'">
+                    <div class="quick-action-icon">
+                        <i class="fas fa-robot"></i>
+                    </div>
+                    <h5>AI Assistant</h5>
+                    <p class="text-muted small">Get AI-powered insights</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="row">
+        <!-- Statistics -->
+        <div class="col-lg-8">
+            <div class="row g-4 mb-4">
+                <div class="col-md-4">
+                    <div class="stats-card">
+                        <div class="d-flex align-items-center">
+                            <div class="me-3">
+                                <i class="fas fa-tasks fa-2x text-primary"></i>
+                            </div>
+                            <div>
+                                <div class="stats-number">24</div>
+                                <div class="text-muted">Active Tasks</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="stats-card">
+                        <div class="d-flex align-items-center">
+                            <div class="me-3">
+                                <i class="fas fa-project-diagram fa-2x text-success"></i>
+                            </div>
+                            <div>
+                                <div class="stats-number">8</div>
+                                <div class="text-muted">Active Projects</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="stats-card">
+                        <div class="d-flex align-items-center">
+                            <div class="me-3">
+                                <i class="fas fa-users fa-2x text-warning"></i>
+                            </div>
+                            <div>
+                                <div class="stats-number">12</div>
+                                <div class="text-muted">Team Members</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Recent Projects -->
+            <div class="project-card">
+                <h4 class="mb-4"><i class="fas fa-project-diagram me-2"></i>Recent Projects</h4>
+                <div class="row g-4">
+                    <div class="col-md-6">
+                        <div class="project-card">
+                            <div class="d-flex justify-content-between align-items-start mb-3">
+                                <h6 class="mb-0">Website Redesign</h6>
+                                <span class="badge bg-success">On Track</span>
+                            </div>
+                            <p class="text-muted small mb-3">Redesigning the company website with modern UI/UX</p>
+                            <div class="progress-bar">
+                                <div class="progress-fill high" style="width: 75%"></div>
+                            </div>
+                            <div class="d-flex justify-content-between align-items-center">
+                                <small class="text-muted">75% Complete</small>
+                                <small class="text-muted">Due in 5 days</small>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="project-card">
+                            <div class="d-flex justify-content-between align-items-start mb-3">
+                                <h6 class="mb-0">Mobile App Development</h6>
+                                <span class="badge bg-warning">At Risk</span>
+                            </div>
+                            <p class="text-muted small mb-3">Building a new mobile application for iOS and Android</p>
+                            <div class="progress-bar">
+                                <div class="progress-fill medium" style="width: 45%"></div>
+                            </div>
+                            <div class="d-flex justify-content-between align-items-center">
+                                <small class="text-muted">45% Complete</small>
+                                <small class="text-muted">Due in 12 days</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Sidebar -->
+        <div class="col-lg-4">
+            <!-- Recent Activity -->
+            <div class="recent-activity">
+                <h4 class="mb-4"><i class="fas fa-clock me-2"></i>Recent Activity</h4>
+                
+                <div class="activity-item">
+                    <div class="activity-icon project">
+                        <i class="fas fa-plus"></i>
+                    </div>
+                    <div class="flex-grow-1">
+                        <div class="fw-semibold">New project created</div>
+                        <small class="text-muted">Website Redesign • 2 hours ago</small>
+                    </div>
+                </div>
+                
+                <div class="activity-item">
+                    <div class="activity-icon task">
+                        <i class="fas fa-check"></i>
+                    </div>
+                    <div class="flex-grow-1">
+                        <div class="fw-semibold">Task completed</div>
+                        <small class="text-muted">Design homepage mockup • 4 hours ago</small>
+                    </div>
+                </div>
+                
+                <div class="activity-item">
+                    <div class="activity-icon team">
+                        <i class="fas fa-user-plus"></i>
+                    </div>
+                    <div class="flex-grow-1">
+                        <div class="fw-semibold">Team member added</div>
+                        <small class="text-muted">Sarah Chen joined • 1 day ago</small>
+                    </div>
+                </div>
+                
+                <div class="activity-item">
+                    <div class="activity-icon notification">
+                        <i class="fas fa-bell"></i>
+                    </div>
+                    <div class="flex-grow-1">
+                        <div class="fw-semibold">Deadline reminder</div>
+                        <small class="text-muted">Project review due tomorrow • 1 day ago</small>
+                    </div>
+                </div>
+                
+                <div class="text-center mt-4">
+                    <a href="#" class="btn btn-outline-primary btn-sm">
+                        <i class="fas fa-eye me-2"></i>View All Activity
+                    </a>
+                </div>
+            </div>
+            
+            <!-- Quick Stats -->
+            <div class="stats-card mt-4">
+                <h5 class="mb-3"><i class="fas fa-chart-line me-2"></i>This Week</h5>
+                <div class="row text-center">
+                    <div class="col-6">
+                        <div class="stats-number" style="font-size: 1.5rem;">18</div>
+                        <small class="text-muted">Tasks Done</small>
+                    </div>
+                    <div class="col-6">
+                        <div class="stats-number" style="font-size: 1.5rem;">85%</div>
+                        <small class="text-muted">Efficiency</small>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    // Add smooth animations
+    document.addEventListener('DOMContentLoaded', function() {
+        // Animate stats numbers
+        const statsNumbers = document.querySelectorAll('.stats-number');
+        statsNumbers.forEach(number => {
+            const finalValue = number.textContent;
+            const isPercentage = finalValue.includes('%');
+            const numericValue = parseInt(finalValue.replace(/\D/g, ''));
+            
+            let currentValue = 0;
+            const increment = numericValue / 50;
+            
+            const timer = setInterval(() => {
+                currentValue += increment;
+                if (currentValue >= numericValue) {
+                    currentValue = numericValue;
+                    clearInterval(timer);
+                }
+                
+                if (isPercentage) {
+                    number.textContent = Math.floor(currentValue) + '%';
+                } else {
+                    number.textContent = Math.floor(currentValue);
+                }
+            }, 30);
+        });
+        
+        // Add hover effects to quick action cards
+        const quickActionCards = document.querySelectorAll('.quick-action-card');
+        quickActionCards.forEach(card => {
+            card.addEventListener('mouseenter', function() {
+                this.style.transform = 'translateY(-8px)';
+            });
+            
+            card.addEventListener('mouseleave', function() {
+                this.style.transform = 'translateY(0)';
+            });
+        });
+        
+        // Search functionality
+        const searchInput = document.querySelector('.search-input');
+        searchInput.addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                const query = this.value.trim();
+                if (query) {
+                    // Redirect to search results
+                    window.location.href = `/search/?q=${encodeURIComponent(query)}`;
+                }
+            }
+        });
+        
+        // Add glow effect to search bar on focus
+        searchInput.addEventListener('focus', function() {
+            this.parentElement.style.boxShadow = '0 0 0 3px rgba(102, 126, 234, 0.3), 0 8px 25px rgba(0, 0, 0, 0.4)';
+        });
+        
+        searchInput.addEventListener('blur', function() {
+            this.parentElement.style.boxShadow = '0 8px 25px rgba(0, 0, 0, 0.3)';
+        });
+    });
+</script>
+{% endblock %}

@@ -1,0 +1,505 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Admin Dashboard - Inspora{% endblock %}
+
+{% block extra_css %}
+<style>
+    body {
+        background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+        color: #e2e8f0;
+    }
+    
+    .admin-hero {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        padding: 2rem 0;
+        margin-bottom: 2rem;
+        border-radius: 0 0 30px 30px;
+        box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+    }
+    
+    .metric-card {
+        background: linear-gradient(135deg, #2d3748 0%, #1a202c 100%);
+        border-radius: 16px;
+        padding: 1.5rem;
+        border: 1px solid #4a5568;
+        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+        transition: all 0.3s ease;
+        height: 100%;
+        color: #e2e8f0;
+    }
+    
+    .metric-card:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 15px 35px rgba(0, 0, 0, 0.4);
+        border-color: #667eea;
+    }
+    
+    .metric-number {
+        font-size: 2.5rem;
+        font-weight: 700;
+        background: linear-gradient(135deg, #667eea, #764ba2);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+    }
+    
+    .metric-icon {
+        width: 60px;
+        height: 60px;
+        background: linear-gradient(135deg, #667eea, #764ba2);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-bottom: 1rem;
+        color: white;
+        font-size: 1.5rem;
+        box-shadow: 0 8px 20px rgba(102, 126, 234, 0.4);
+    }
+    
+    .activity-card {
+        background: linear-gradient(135deg, #2d3748 0%, #4a5568 100%);
+        border-radius: 20px;
+        padding: 2rem;
+        box-shadow: 0 15px 35px rgba(0, 0, 0, 0.4);
+        border: 1px solid #4a5568;
+        color: #e2e8f0;
+        margin-bottom: 2rem;
+    }
+    
+    .activity-item {
+        display: flex;
+        align-items: center;
+        padding: 1rem 0;
+        border-bottom: 1px solid #4a5568;
+        transition: all 0.3s ease;
+    }
+    
+    .activity-item:last-child {
+        border-bottom: none;
+    }
+    
+    .activity-item:hover {
+        background: linear-gradient(135deg, #4a5568 0%, #2d3748 100%);
+        border-radius: 12px;
+        padding-left: 1rem;
+        padding-right: 1rem;
+        margin-left: -1rem;
+        margin-right: -1rem;
+    }
+    
+    .activity-icon {
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-right: 1rem;
+        font-size: 1rem;
+        color: white;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+    }
+    
+    .activity-icon.company { background: linear-gradient(135deg, #667eea, #764ba2); }
+    .activity-icon.lead { background: linear-gradient(135deg, #10b981, #059669); }
+    .activity-icon.invoice { background: linear-gradient(135deg, #f59e0b, #d97706); }
+    .activity-icon.workflow { background: linear-gradient(135deg, #8b5cf6, #7c3aed); }
+    
+    .quick-actions {
+        background: linear-gradient(135deg, #2d3748 0%, #4a5568 100%);
+        border-radius: 20px;
+        padding: 2rem;
+        margin-bottom: 2rem;
+        box-shadow: 0 15px 35px rgba(0, 0, 0, 0.4);
+        border: 1px solid #4a5568;
+    }
+    
+    .quick-action-btn {
+        background: linear-gradient(135deg, #4a5568 0%, #2d3748 100%);
+        border: 2px solid #4a5568;
+        border-radius: 12px;
+        padding: 1rem;
+        text-align: center;
+        transition: all 0.3s ease;
+        cursor: pointer;
+        color: #e2e8f0;
+        text-decoration: none;
+        display: block;
+        height: 100%;
+    }
+    
+    .quick-action-btn:hover {
+        transform: translateY(-4px);
+        border-color: #667eea;
+        box-shadow: 0 15px 35px rgba(102, 126, 234, 0.3);
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        text-decoration: none;
+    }
+    
+    .quick-action-icon {
+        width: 50px;
+        height: 50px;
+        background: linear-gradient(135deg, #667eea, #764ba2);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0 auto 1rem;
+        color: white;
+        font-size: 1.25rem;
+    }
+    
+    .chart-container {
+        background: linear-gradient(135deg, #2d3748 0%, #4a5568 100%);
+        border-radius: 20px;
+        padding: 2rem;
+        box-shadow: 0 15px 35px rgba(0, 0, 0, 0.4);
+        border: 1px solid #4a5568;
+        color: #e2e8f0;
+        margin-bottom: 2rem;
+    }
+    
+    .status-badge {
+        padding: 0.25rem 0.75rem;
+        border-radius: 20px;
+        font-size: 0.875rem;
+        font-weight: 600;
+        text-transform: capitalize;
+    }
+    
+    .status-prospect { background: linear-gradient(135deg, #f59e0b, #d97706); color: white; }
+    .status-lead { background: linear-gradient(135deg, #10b981, #059669); color: white; }
+    .status-qualified { background: linear-gradient(135deg, #3b82f6, #2563eb); color: white; }
+    .status-customer { background: linear-gradient(135deg, #8b5cf6, #7c3aed); color: white; }
+    .status-churned { background: linear-gradient(135deg, #ef4444, #dc2626); color: white; }
+    
+    .btn-admin {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        border: none;
+        color: white;
+        font-weight: 600;
+        padding: 0.75rem 1.5rem;
+        border-radius: 12px;
+        transition: all 0.3s ease;
+        text-decoration: none;
+        display: inline-block;
+    }
+    
+    .btn-admin:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 25px rgba(102, 126, 234, 0.4);
+        color: white;
+        text-decoration: none;
+    }
+    
+    .text-muted {
+        color: #a0aec0 !important;
+    }
+    
+    .text-primary {
+        color: #667eea !important;
+    }
+    
+    .text-success {
+        color: #10b981 !important;
+    }
+    
+    .text-warning {
+        color: #f59e0b !important;
+    }
+    
+    .text-info {
+        color: #3b82f6 !important;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<!-- Admin Hero Section -->
+<section class="admin-hero">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-lg-8">
+                <h1 class="display-5 fw-bold mb-3">Admin Dashboard</h1>
+                <p class="lead mb-4">Manage companies, sales, and system workflows</p>
+            </div>
+            <div class="col-lg-4 text-center">
+                <div class="bg-white bg-opacity-20 rounded-circle p-4 d-inline-block">
+                    <i class="fas fa-cogs fa-3x"></i>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<div class="container">
+    <!-- Key Metrics -->
+    <div class="row g-4 mb-4">
+        <div class="col-lg-3 col-md-6">
+            <div class="metric-card text-center">
+                <div class="metric-icon mx-auto">
+                    <i class="fas fa-building"></i>
+                </div>
+                <div class="metric-number">{{ total_companies }}</div>
+                <div class="text-muted">Active Companies</div>
+            </div>
+        </div>
+        <div class="col-lg-3 col-md-6">
+            <div class="metric-card text-center">
+                <div class="metric-icon mx-auto">
+                    <i class="fas fa-chart-line"></i>
+                </div>
+                <div class="metric-number">{{ total_leads }}</div>
+                <div class="text-muted">Sales Leads</div>
+            </div>
+        </div>
+        <div class="col-lg-3 col-md-6">
+            <div class="metric-card text-center">
+                <div class="metric-icon mx-auto">
+                    <i class="fas fa-dollar-sign"></i>
+                </div>
+                <div class="metric-number">${{ total_revenue|floatformat:0 }}</div>
+                <div class="text-muted">Total Revenue</div>
+            </div>
+        </div>
+        <div class="col-lg-3 col-md-6">
+            <div class="metric-card text-center">
+                <div class="metric-icon mx-auto">
+                    <i class="fas fa-calendar-alt"></i>
+                </div>
+                <div class="metric-number">${{ monthly_revenue|floatformat:0 }}</div>
+                <div class="text-muted">This Month</div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Quick Actions -->
+    <div class="quick-actions">
+        <h3 class="mb-4"><i class="fas fa-bolt me-2"></i>Quick Actions</h3>
+        <div class="row g-4">
+            <div class="col-lg-3 col-md-6">
+                <a href="{% url 'admin_system:company_create' %}" class="quick-action-btn">
+                    <div class="quick-action-icon">
+                        <i class="fas fa-plus"></i>
+                    </div>
+                    <h6>Add Company</h6>
+                    <small class="text-muted">Create new company</small>
+                </a>
+            </div>
+            <div class="col-lg-3 col-md-6">
+                <a href="{% url 'admin_system:sales_lead_create' %}" class="quick-action-btn">
+                    <div class="quick-action-icon">
+                        <i class="fas fa-user-plus"></i>
+                    </div>
+                    <h6>Add Lead</h6>
+                    <small class="text-muted">Create sales lead</small>
+                </a>
+            </div>
+            <div class="col-lg-3 col-md-6">
+                <a href="{% url 'admin_system:invoice_create' %}" class="quick-action-btn">
+                    <div class="quick-action-icon">
+                        <i class="fas fa-file-invoice"></i>
+                    </div>
+                    <h6>Create Invoice</h6>
+                    <small class="text-muted">Generate invoice</small>
+                </a>
+            </div>
+            <div class="col-lg-3 col-md-6">
+                <a href="{% url 'admin_system:workflow_template_create' %}" class="quick-action-btn">
+                    <div class="quick-action-icon">
+                        <i class="fas fa-project-diagram"></i>
+                    </div>
+                    <h6>New Workflow</h6>
+                    <small class="text-muted">Create template</small>
+                </a>
+            </div>
+        </div>
+    </div>
+    
+    <div class="row">
+        <!-- Recent Companies -->
+        <div class="col-lg-6">
+            <div class="activity-card">
+                <h4 class="mb-4">
+                    <i class="fas fa-building me-2"></i>Recent Companies
+                    <a href="{% url 'admin_system:company_list' %}" class="btn-admin btn-sm float-end">View All</a>
+                </h4>
+                
+                {% for company in recent_companies %}
+                <div class="activity-item">
+                    <div class="activity-icon company">
+                        <i class="fas fa-building"></i>
+                    </div>
+                    <div class="flex-grow-1">
+                        <div class="d-flex justify-content-between align-items-start">
+                            <div>
+                                <div class="fw-semibold">{{ company.name }}</div>
+                                <small class="text-muted">{{ company.company_type|title }} • {{ company.industry }}</small>
+                            </div>
+                            <span class="status-badge status-{{ company.status }}">{{ company.status }}</span>
+                        </div>
+                    </div>
+                </div>
+                {% empty %}
+                <p class="text-muted text-center py-3">No companies yet</p>
+                {% endfor %}
+            </div>
+        </div>
+        
+        <!-- Recent Sales Leads -->
+        <div class="col-lg-6">
+            <div class="activity-card">
+                <h4 class="mb-4">
+                    <i class="fas fa-chart-line me-2"></i>Recent Sales Leads
+                    <a href="{% url 'admin_system:sales_lead_list' %}" class="btn-admin btn-sm float-end">View All</a>
+                </h4>
+                
+                {% for lead in recent_leads %}
+                <div class="activity-item">
+                    <div class="activity-icon lead">
+                        <i class="fas fa-user"></i>
+                    </div>
+                    <div class="flex-grow-1">
+                        <div class="d-flex justify-content-between align-items-start">
+                            <div>
+                                <div class="fw-semibold">{{ lead.company_name }}</div>
+                                <small class="text-muted">{{ lead.contact_person }} • {{ lead.lead_source|title }}</small>
+                            </div>
+                            <span class="status-badge status-{{ lead.status }}">{{ lead.status }}</span>
+                        </div>
+                    </div>
+                </div>
+                {% empty %}
+                <p class="text-muted text-center py-3">No leads yet</p>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+    
+    <!-- Conversion Metrics -->
+    <div class="chart-container">
+        <h4 class="mb-4"><i class="fas fa-chart-pie me-2"></i>Company Conversion Pipeline</h4>
+        <div class="row">
+            {% for item in conversion_data %}
+            <div class="col-md-2 col-6 mb-3">
+                <div class="text-center">
+                    <div class="metric-number" style="font-size: 2rem;">{{ item.count }}</div>
+                    <div class="text-muted">{{ item.status|title }}</div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+    
+    <!-- Recent Invoices -->
+    <div class="activity-card">
+        <h4 class="mb-4">
+            <i class="fas fa-file-invoice-dollar me-2"></i>Recent Invoices
+            <a href="{% url 'admin_system:invoice_list' %}" class="btn-admin btn-sm float-end">View All</a>
+        </h4>
+        
+        {% for invoice in recent_invoices %}
+        <div class="activity-item">
+            <div class="activity-icon invoice">
+                <i class="fas fa-file-invoice"></i>
+            </div>
+            <div class="flex-grow-1">
+                <div class="d-flex justify-content-between align-items-start">
+                    <div>
+                        <div class="fw-semibold">{{ invoice.invoice_number }}</div>
+                        <small class="text-muted">{{ invoice.company.name }} • ${{ invoice.total_amount }}</small>
+                    </div>
+                    <span class="status-badge status-{{ invoice.status }}">{{ invoice.status }}</span>
+                </div>
+            </div>
+        </div>
+        {% empty %}
+        <p class="text-muted text-center py-3">No invoices yet</p>
+        {% endfor %}
+    </div>
+    
+    <!-- Navigation Cards -->
+    <div class="row g-4">
+        <div class="col-lg-4 col-md-6">
+            <div class="metric-card text-center">
+                <div class="metric-icon mx-auto mb-3">
+                    <i class="fas fa-cogs"></i>
+                </div>
+                <h5>System Settings</h5>
+                <p class="text-muted">Configure platform settings and preferences</p>
+                <a href="{% url 'admin_system:system_settings' %}" class="btn-admin">Manage Settings</a>
+            </div>
+        </div>
+        <div class="col-lg-4 col-md-6">
+            <div class="metric-card text-center">
+                <div class="metric-icon mx-auto mb-3">
+                    <i class="fas fa-chart-bar"></i>
+                </div>
+                <h5>Analytics</h5>
+                <p class="text-muted">View detailed system analytics and reports</p>
+                <a href="{% url 'admin_system:system_analytics' %}" class="btn-admin">View Analytics</a>
+            </div>
+        </div>
+        <div class="col-lg-4 col-md-6">
+            <div class="metric-card text-center">
+                <div class="metric-icon mx-auto mb-3">
+                    <i class="fas fa-project-diagram"></i>
+                </div>
+                <h5>Workflows</h5>
+                <p class="text-muted">Manage workflow templates and instances</p>
+                <a href="{% url 'admin_system:workflow_template_list' %}" class="btn-admin">Manage Workflows</a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    // Add smooth animations
+    document.addEventListener('DOMContentLoaded', function() {
+        // Animate metric numbers
+        const metricNumbers = document.querySelectorAll('.metric-number');
+        metricNumbers.forEach(number => {
+            const finalValue = number.textContent;
+            const isCurrency = finalValue.includes('$');
+            const numericValue = parseFloat(finalValue.replace(/[$,]/g, ''));
+            
+            if (!isNaN(numericValue)) {
+                let currentValue = 0;
+                const increment = numericValue / 50;
+                
+                const timer = setInterval(() => {
+                    currentValue += increment;
+                    if (currentValue >= numericValue) {
+                        currentValue = numericValue;
+                        clearInterval(timer);
+                    }
+                    
+                    if (isCurrency) {
+                        number.textContent = '$' + Math.floor(currentValue).toLocaleString();
+                    } else {
+                        number.textContent = Math.floor(currentValue);
+                    }
+                }, 30);
+            }
+        });
+        
+        // Add hover effects to metric cards
+        const metricCards = document.querySelectorAll('.metric-card');
+        metricCards.forEach(card => {
+            card.addEventListener('mouseenter', function() {
+                this.style.transform = 'translateY(-4px)';
+            });
+            
+            card.addEventListener('mouseleave', function() {
+                this.style.transform = 'translateY(0)';
+            });
+        });
+    });
+</script>
+{% endblock %}

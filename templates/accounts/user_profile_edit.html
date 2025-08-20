@@ -1,156 +1,467 @@
 {% extends 'base.html' %}
 {% load static %}
-{% load crispy_forms_tags %}
 
 {% block title %}Edit Profile - Inspora{% endblock %}
 
+{% block extra_css %}
+<style>
+    body {
+        background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+        color: #e2e8f0;
+    }
+    
+    .profile-edit-container {
+        background: linear-gradient(135deg, #2d3748 0%, #1a202c 100%);
+        border-radius: 20px;
+        padding: 2rem;
+        margin: 2rem 0;
+        box-shadow: 0 15px 35px rgba(0, 0, 0, 0.4);
+        border: 1px solid #4a5568;
+    }
+    
+    .profile-header {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        padding: 2rem;
+        border-radius: 16px;
+        margin-bottom: 2rem;
+        text-align: center;
+    }
+    
+    .avatar-section {
+        text-align: center;
+        margin-bottom: 2rem;
+    }
+    
+    .avatar-preview {
+        width: 120px;
+        height: 120px;
+        border-radius: 50%;
+        object-fit: cover;
+        border: 4px solid #667eea;
+        margin-bottom: 1rem;
+        box-shadow: 0 8px 25px rgba(102, 126, 234, 0.3);
+    }
+    
+    .avatar-upload {
+        background: linear-gradient(135deg, #4a5568 0%, #2d3748 100%);
+        border: 2px dashed #667eea;
+        border-radius: 12px;
+        padding: 1.5rem;
+        text-align: center;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        margin-bottom: 1rem;
+    }
+    
+    .avatar-upload:hover {
+        border-color: #764ba2;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+    }
+    
+    .form-section {
+        background: linear-gradient(135deg, #4a5568 0%, #2d3748 100%);
+        border-radius: 16px;
+        padding: 1.5rem;
+        margin-bottom: 2rem;
+        border: 1px solid #4a5568;
+    }
+    
+    .form-section h4 {
+        color: #667eea;
+        margin-bottom: 1.5rem;
+        border-bottom: 2px solid #667eea;
+        padding-bottom: 0.5rem;
+    }
+    
+    .form-control, .form-select {
+        background: linear-gradient(135deg, #2d3748 0%, #1a202c 100%);
+        border: 1px solid #4a5568;
+        color: #e2e8f0;
+        border-radius: 8px;
+        padding: 0.75rem 1rem;
+        transition: all 0.3s ease;
+    }
+    
+    .form-control:focus, .form-select:focus {
+        background: linear-gradient(135deg, #4a5568 0%, #2d3748 100%);
+        border-color: #667eea;
+        box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.2);
+        color: white;
+    }
+    
+    .form-control::placeholder {
+        color: #a0aec0;
+    }
+    
+    .form-check-input {
+        background-color: #2d3748;
+        border-color: #4a5568;
+        width: 1.2em;
+        height: 1.2em;
+    }
+    
+    .form-check-input:checked {
+        background-color: #667eea;
+        border-color: #667eea;
+    }
+    
+    .form-check-input:focus {
+        box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.2);
+    }
+    
+    .btn-primary {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        border: none;
+        color: white;
+        font-weight: 600;
+        padding: 0.75rem 2rem;
+        border-radius: 12px;
+        transition: all 0.3s ease;
+    }
+    
+    .btn-primary:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 25px rgba(102, 126, 234, 0.4);
+        background: linear-gradient(135deg, #764ba2 0%, #667eea 100%);
+    }
+    
+    .btn-secondary {
+        background: linear-gradient(135deg, #4a5568 0%, #2d3748 100%);
+        border: 1px solid #4a5568;
+        color: #e2e8f0;
+        font-weight: 600;
+        padding: 0.75rem 2rem;
+        border-radius: 12px;
+        transition: all 0.3s ease;
+    }
+    
+    .btn-secondary:hover {
+        background: linear-gradient(135deg, #2d3748 0%, #4a5568 100%);
+        border-color: #667eea;
+        color: white;
+    }
+    
+    .help-text {
+        color: #a0aec0;
+        font-size: 0.875rem;
+        margin-top: 0.25rem;
+    }
+    
+    .error-message {
+        color: #ef4444;
+        background: rgba(239, 68, 68, 0.1);
+        border: 1px solid rgba(239, 68, 68, 0.3);
+        border-radius: 8px;
+        padding: 0.75rem;
+        margin-bottom: 1rem;
+    }
+    
+    .success-message {
+        color: #10b981;
+        background: rgba(16, 185, 129, 0.1);
+        border: 1px solid rgba(16, 185, 129, 0.3);
+        border-radius: 8px;
+        padding: 0.75rem;
+        margin-bottom: 1rem;
+    }
+    
+    .password-section {
+        background: linear-gradient(135deg, rgba(102, 126, 234, 0.1), rgba(118, 75, 162, 0.1));
+        border: 1px solid rgba(102, 126, 234, 0.2);
+        border-radius: 12px;
+        padding: 1.5rem;
+        margin-bottom: 1.5rem;
+    }
+    
+    .password-section h5 {
+        color: #667eea;
+        margin-bottom: 1rem;
+    }
+</style>
+{% endblock %}
+
 {% block content %}
-<div class="row justify-content-center">
-    <div class="col-lg-8">
-        <div class="card">
-            <div class="card-body">
-                <div class="d-flex justify-content-between align-items-center mb-4">
-                    <div>
-                        <h1 class="h3 mb-0">
-                            <i class="fas fa-edit text-primary"></i> Edit Profile
-                        </h1>
-                        <p class="text-muted">Update your personal information and preferences</p>
-                    </div>
-                    <a href="{% url 'accounts:profile' %}" class="btn btn-outline-secondary">
-                        <i class="fas fa-arrow-left"></i> Back to Profile
-                    </a>
-                </div>
-
-                <form method="post" class="needs-validation" novalidate>
-                    {% csrf_token %}
-                    
-                    <div class="row">
-                        <!-- Personal Information -->
-                        <div class="col-md-8">
-                            <div class="mb-4">
-                                <h5 class="text-primary mb-3">
-                                    <i class="fas fa-user"></i> Personal Information
-                                </h5>
-                                
-                                <div class="row">
-                                    <div class="col-md-6 mb-3">
-                                        {{ form.first_name|as_crispy_field }}
-                                    </div>
-                                    <div class="col-md-6 mb-3">
-                                        {{ form.last_name|as_crispy_field }}
-                                    </div>
-                                </div>
-                                
-                                <div class="row">
-                                    <div class="col-12 mb-3">
-                                        {{ form.email|as_crispy_field }}
-                                    </div>
-                                </div>
-                                
-                                <!-- Profile Picture Section -->
-                                <div class="row">
-                                    <div class="col-12 mb-3">
-                                        <label class="form-label">Profile Picture</label>
-                                        <div class="d-flex align-items-center">
-                                            {% if user.avatar %}
-                                                <img src="{{ user.avatar.url }}" alt="Current Profile Picture" 
-                                                     class="rounded-circle me-3" style="width: 60px; height: 60px; object-fit: cover;">
-                                            {% else %}
-                                                <div class="rounded-circle bg-secondary me-3 d-flex align-items-center justify-content-center" 
-                                                     style="width: 60px; height: 60px;">
-                                                    <i class="fas fa-user text-white"></i>
-                                                </div>
-                                            {% endif %}
-                                            <div class="flex-grow-1">
-                                                {{ form.avatar|as_crispy_field }}
-                                                <small class="form-text text-muted">
-                                                    Upload a profile picture (JPEG, PNG, GIF, WebP). Max size: 5MB.
-                                                </small>
-                                            </div>
-                                        </div>
-                                        <div class="mt-2">
-                                            <small class="text-muted">
-                                                <i class="fas fa-info-circle me-1"></i>
-                                                Profile picture management is now available directly on your profile page.
-                                            </small>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <!-- Professional Information -->
-                            <div class="mb-4">
-                                <h5 class="text-primary mb-3">
-                                    <i class="fas fa-briefcase"></i> Professional Information
-                                </h5>
-                                
-                                <div class="row">
-                                    <div class="col-md-6 mb-3">
-                                        {{ form.job_title|as_crispy_field }}
-                                    </div>
-                                    <div class="col-md-6 mb-3">
-                                        {{ form.department|as_crispy_field }}
-                                    </div>
-                                </div>
-                                
-                                <div class="row">
-                                    <div class="col-12 mb-3">
-                                        {{ form.bio|as_crispy_field }}
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Help and Tips -->
-                        <div class="col-md-4">
-                            <div class="card bg-light border-0">
-                                <div class="card-body">
-                                    <h6 class="card-title text-primary">
-                                        <i class="fas fa-lightbulb"></i> Tips
-                                    </h6>
-                                    <ul class="list-unstyled small text-muted mb-0">
-                                        <li class="mb-1">• Use your real name for better recognition</li>
-                                        <li class="mb-1">• Add a professional job title</li>
-                                        <li class="mb-1">• Include your department</li>
-                                        <li class="mb-1">• Write a brief bio about yourself</li>
-                                    </ul>
-                                </div>
-                            </div>
-                            
-                            <!-- Current Info -->
-                            <div class="card mt-3">
-                                <div class="card-body">
-                                    <h6 class="card-title text-primary">
-                                        <i class="fas fa-info-circle"></i> Current Information
-                                    </h6>
-                                    <ul class="list-unstyled small text-muted mb-0">
-                                        <li class="mb-1"><strong>Username:</strong> {{ user.username }}</li>
-                                        <li class="mb-1"><strong>Date Joined:</strong> {{ user.date_joined|date:"M d, Y" }}</li>
-                                        <li class="mb-1"><strong>Last Login:</strong> {{ user.last_login|date:"M d, Y" }}</li>
-                                    </ul>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Form Actions -->
-                    <div class="border-top pt-4 mt-4">
-                        <div class="d-flex justify-content-between align-items-center">
-                            <div>
-                                <a href="{% url 'accounts:profile' %}" class="btn btn-outline-secondary">
-                                    <i class="fas fa-times"></i> Cancel
-                                </a>
-                            </div>
-                            <div>
-                                <button type="submit" class="btn btn-primary">
-                                    <i class="fas fa-save"></i> Save Changes
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                </form>
-            </div>
+<div class="container">
+    <div class="profile-edit-container">
+        <!-- Profile Header -->
+        <div class="profile-header">
+            <h1><i class="fas fa-user-edit me-2"></i>Edit Profile</h1>
+            <p class="lead mb-0">Update your personal information and preferences</p>
         </div>
+        
+        <!-- Messages -->
+        {% if messages %}
+            {% for message in messages %}
+                <div class="{% if message.tags == 'error' %}error-message{% else %}success-message{% endif %}">
+                    <i class="fas fa-{% if message.tags == 'error' %}exclamation-circle{% else %}check-circle{% endif %} me-2"></i>
+                    {{ message }}
+                </div>
+            {% endfor %}
+        {% endif %}
+        
+        <form method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+            
+            <!-- Avatar Section -->
+            <div class="avatar-section">
+                <div class="mb-3">
+                    {% if user.avatar %}
+                        <img src="{{ user.avatar.url }}" alt="Profile Avatar" class="avatar-preview" id="avatar-preview">
+                    {% else %}
+                        <div class="avatar-preview bg-secondary d-flex align-items-center justify-content-center">
+                            <i class="fas fa-user fa-3x text-white"></i>
+                        </div>
+                    {% endif %}
+                </div>
+                
+                <div class="avatar-upload" onclick="document.getElementById('id_avatar').click()">
+                    <i class="fas fa-camera fa-2x mb-2"></i>
+                    <div>Click to upload new avatar</div>
+                    <small class="text-muted">JPEG, PNG, GIF, WebP up to 5MB</small>
+                </div>
+                
+                {{ form.avatar }}
+                <div class="help-text">{{ form.avatar.help_text }}</div>
+                {% if form.avatar.errors %}
+                    <div class="error-message">{{ form.avatar.errors.0 }}</div>
+                {% endif %}
+            </div>
+            
+            <!-- Basic Information -->
+            <div class="form-section">
+                <h4><i class="fas fa-user me-2"></i>Basic Information</h4>
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label for="{{ form.first_name.id_for_label }}" class="form-label">First Name</label>
+                        {{ form.first_name }}
+                        {% if form.first_name.errors %}
+                            <div class="error-message">{{ form.first_name.errors.0 }}</div>
+                        {% endif %}
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label for="{{ form.last_name.id_for_label }}" class="form-label">Last Name</label>
+                        {{ form.last_name }}
+                        {% if form.last_name.errors %}
+                            <div class="error-message">{{ form.last_name.errors.0 }}</div>
+                        {% endif %}
+                    </div>
+                </div>
+                
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label for="{{ form.email.id_for_label }}" class="form-label">Email Address</label>
+                        {{ form.email }}
+                        <div class="help-text">{{ form.email.help_text }}</div>
+                        {% if form.email.errors %}
+                            <div class="error-message">{{ form.email.errors.0 }}</div>
+                        {% endif %}
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label for="{{ form.confirm_email.id_for_label }}" class="form-label">Confirm Email</label>
+                        {{ form.confirm_email }}
+                        <div class="help-text">{{ form.confirm_email.help_text }}</div>
+                        {% if form.confirm_email.errors %}
+                            <div class="error-message">{{ form.confirm_email.errors.0 }}</div>
+                        {% endif %}
+                    </div>
+                </div>
+                
+                <div class="mb-3">
+                    <label for="{{ form.bio.id_for_label }}" class="form-label">Bio</label>
+                    {{ form.bio }}
+                    <div class="help-text">{{ form.bio.help_text }}</div>
+                    {% if form.bio.errors %}
+                        <div class="error-message">{{ form.bio.errors.0 }}</div>
+                    {% endif %}
+                </div>
+            </div>
+            
+            <!-- Professional Information -->
+            <div class="form-section">
+                <h4><i class="fas fa-briefcase me-2"></i>Professional Information</h4>
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label for="{{ form.job_title.id_for_label }}" class="form-label">Job Title</label>
+                        {{ form.job_title }}
+                        <div class="help-text">{{ form.job_title.help_text }}</div>
+                        {% if form.job_title.errors %}
+                            <div class="error-message">{{ form.job_title.errors.0 }}</div>
+                        {% endif %}
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label for="{{ form.department.id_for_label }}" class="form-label">Department</label>
+                        {{ form.department }}
+                        <div class="help-text">{{ form.department.help_text }}</div>
+                        {% if form.department.errors %}
+                            <div class="error-message">{{ form.department.errors.0 }}</div>
+                        {% endif %}
+                    </div>
+                </div>
+                
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label for="{{ form.employee_id.id_for_label }}" class="form-label">Employee ID</label>
+                        {{ form.employee_id }}
+                        <div class="help-text">{{ form.employee_id.help_text }}</div>
+                        {% if form.employee_id.errors %}
+                            <div class="error-message">{{ form.employee_id.errors.0 }}</div>
+                        {% endif %}
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label for="{{ form.phone_number.id_for_label }}" class="form-label">Phone Number</label>
+                        {{ form.phone_number }}
+                        <div class="help-text">{{ form.phone_number.help_text }}</div>
+                        {% if form.phone_number.errors %}
+                            <div class="error-message">{{ form.phone_number.errors.0 }}</div>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Preferences -->
+            <div class="form-section">
+                <h4><i class="fas fa-cog me-2"></i>Preferences</h4>
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label for="{{ form.timezone.id_for_label }}" class="form-label">Timezone</label>
+                        {{ form.timezone }}
+                        {% if form.timezone.errors %}
+                            <div class="error-message">{{ form.timezone.errors.0 }}</div>
+                        {% endif %}
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label for="{{ form.language.id_for_label }}" class="form-label">Language</label>
+                        {{ form.language }}
+                        {% if form.language.errors %}
+                            <div class="error-message">{{ form.language.errors.0 }}</div>
+                        {% endif %}
+                    </div>
+                </div>
+                
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <div class="form-check">
+                            {{ form.email_notifications }}
+                            <label class="form-check-label" for="{{ form.email_notifications.id_for_label }}">
+                                Email Notifications
+                            </label>
+                            <div class="help-text">{{ form.email_notifications.help_text }}</div>
+                        </div>
+                        {% if form.email_notifications.errors %}
+                            <div class="error-message">{{ form.email_notifications.errors.0 }}</div>
+                        {% endif %}
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <div class="form-check">
+                            {{ form.push_notifications }}
+                            <label class="form-check-label" for="{{ form.push_notifications.id_for_label }}">
+                                Push Notifications
+                            </label>
+                            <div class="help-text">{{ form.push_notifications.help_text }}</div>
+                        </div>
+                        {% if form.push_notifications.errors %}
+                            <div class="error-message">{{ form.push_notifications.errors.0 }}</div>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Password Change Section -->
+            <div class="password-section">
+                <h5><i class="fas fa-lock me-2"></i>Change Password (Optional)</h5>
+                <div class="row">
+                    <div class="col-md-12 mb-3">
+                        <label for="{{ form.current_password.id_for_label }}" class="form-label">Current Password</label>
+                        {{ form.current_password }}
+                        <div class="help-text">{{ form.current_password.help_text }}</div>
+                        {% if form.current_password.errors %}
+                            <div class="error-message">{{ form.current_password.errors.0 }}</div>
+                        {% endif %}
+                    </div>
+                </div>
+                
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label for="{{ form.new_password1.id_for_label }}" class="form-label">New Password</label>
+                        {{ form.new_password1 }}
+                        <div class="help-text">{{ form.new_password1.help_text }}</div>
+                        {% if form.new_password1.errors %}
+                            <div class="error-message">{{ form.new_password1.errors.0 }}</div>
+                        {% endif %}
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label for="{{ form.new_password2.id_for_label }}" class="form-label">Confirm New Password</label>
+                        {{ form.new_password2 }}
+                        <div class="help-text">{{ form.new_password2.help_text }}</div>
+                        {% if form.new_password2.errors %}
+                            <div class="error-message">{{ form.new_password2.errors.0 }}</div>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Form Actions -->
+            <div class="text-center">
+                <button type="submit" class="btn btn-primary me-3">
+                    <i class="fas fa-save me-2"></i>Save Changes
+                </button>
+                <a href="{% url 'accounts:profile' %}" class="btn btn-secondary">
+                    <i class="fas fa-times me-2"></i>Cancel
+                </a>
+            </div>
+        </form>
     </div>
 </div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    // Handle avatar preview
+    document.getElementById('id_avatar').addEventListener('change', function(e) {
+        const file = e.target.files[0];
+        if (file) {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const preview = document.getElementById('avatar-preview');
+                if (preview) {
+                    preview.src = e.target.result;
+                } else {
+                    // Create preview if it doesn't exist
+                    const newPreview = document.createElement('img');
+                    newPreview.src = e.target.result;
+                    newPreview.alt = 'Profile Avatar';
+                    newPreview.className = 'avatar-preview';
+                    newPreview.id = 'avatar-preview';
+                    document.querySelector('.avatar-section .mb-3').innerHTML = '';
+                    document.querySelector('.avatar-section .mb-3').appendChild(newPreview);
+                }
+            };
+            reader.readAsDataURL(file);
+        }
+    });
+    
+    // Form validation feedback
+    document.addEventListener('DOMContentLoaded', function() {
+        const form = document.querySelector('form');
+        const inputs = form.querySelectorAll('input, select, textarea');
+        
+        inputs.forEach(input => {
+            input.addEventListener('blur', function() {
+                if (this.value.trim() === '' && this.hasAttribute('required')) {
+                    this.classList.add('is-invalid');
+                } else {
+                    this.classList.remove('is-invalid');
+                }
+            });
+            
+            input.addEventListener('input', function() {
+                if (this.classList.contains('is-invalid')) {
+                    this.classList.remove('is-invalid');
+                }
+            });
+        });
+    });
+</script>
 {% endblock %}

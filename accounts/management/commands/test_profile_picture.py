@@ -174,3 +174,7 @@ class Command(BaseCommand):
         self.stdout.write('  • Test the profile picture upload interface at /profile/picture/')
         self.stdout.write('  • Test the profile edit form at /profile/edit/')
 
+
+
+
+

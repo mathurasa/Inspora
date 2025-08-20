@@ -5,7 +5,7 @@ from django.contrib import admin
 from django.urls import path, include
 from django.conf import settings
 from django.conf.urls.static import static
-from .views import api_status_dashboard, public_landing_page
+from .views import api_status_dashboard, public_landing_page, home_dashboard
 from accounts.views import google_login, google_callback
 from django.shortcuts import render
 
@@ -23,6 +23,9 @@ urlpatterns = [
     
     # Public Landing Page (accessible to everyone)
     path('', public_landing_page, name='public_landing'),
+    
+    # Home Dashboard (for authenticated users)
+    path('home/', home_dashboard, name='home_dashboard'),
     
     # Google OAuth2 Authentication (at root level)
     path('google/login/', google_login, name='google_login'),
@@ -52,6 +55,12 @@ urlpatterns = [
     
     # API Status Dashboard
     path('api-status/', api_status_dashboard, name='api_status_dashboard'),
+    
+    # Blog
+    path('blog/', include('blog.urls')),
+    
+    # Admin System & Sales
+    path('admin-system/', include('admin_system.urls')),
 ]
 
 # Serve static and media files in development

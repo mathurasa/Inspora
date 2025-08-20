@@ -23,7 +23,7 @@ import base64
 import os
 from .models import Team, TeamMembership, AIChat, AISuggestion, AIWorkflowAssistant, AIKnowledgeBase
 from .ai_services import AIChatService, AISuggestionService, AIWorkflowService
-from .forms import CustomUserCreationForm
+from .forms import CustomUserCreationForm, UserProfileEditForm
 from .google_auth import get_google_oauth2_url, exchange_code_for_token, get_user_info_from_token
 import json
 from django.core.exceptions import ValidationError
@@ -84,7 +84,7 @@ class UserProfileView(LoginRequiredMixin, DetailView):
 class UserProfileEditView(LoginRequiredMixin, UpdateView):
     model = User
     template_name = 'accounts/user_profile_edit.html'
-    fields = ['first_name', 'last_name', 'email', 'job_title', 'department', 'bio', 'avatar']
+    form_class = UserProfileEditForm
     
     def get_object(self, queryset=None):
         """Return the current user's profile."""
